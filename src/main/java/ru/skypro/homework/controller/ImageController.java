@@ -1,0 +1,19 @@
+package ru.skypro.homework.controller;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@CrossOrigin(value = "http://localhost:3000")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("image")
+public class ImageController {
+
+    @PostMapping("{id}")
+    public String updateAdsImage(@PathVariable String id) {
+        return null;
+    }
+
+}
