@@ -1,4 +1,4 @@
-package ru.skypro.homework.model;
+package ru.skypro.homework.model.ad;
 
 import java.util.Set;
 

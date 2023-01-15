@@ -1,4 +1,4 @@
-package ru.skypro.homework.service.impl;
+package ru.skypro.homework.service.auth;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,9 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.model.RegisterReq;
-import ru.skypro.homework.model.Role;
-import ru.skypro.homework.service.AuthService;
+import ru.skypro.homework.model.user.RegisterReq;
+import ru.skypro.homework.model.user.Role;
 
 @Service
 public class AuthServiceImpl implements AuthService {

@@ -1,7 +1,7 @@
-package ru.skypro.homework.service;
+package ru.skypro.homework.service.auth;
 
-import ru.skypro.homework.model.RegisterReq;
-import ru.skypro.homework.model.Role;
+import ru.skypro.homework.model.user.RegisterReq;
+import ru.skypro.homework.model.user.Role;
 
 public interface AuthService {
     boolean login(String userName, String password);

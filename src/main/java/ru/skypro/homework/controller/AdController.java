@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.model.Ad;
-import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.ad.Ad;
+import ru.skypro.homework.model.comment.Comment;
 
 import java.util.List;
 
