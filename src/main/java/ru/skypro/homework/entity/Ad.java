@@ -1,4 +1,4 @@
-package ru.skypro.homework.model.ad;
+package ru.skypro.homework.entity;
 
 import java.util.Set;
 
@@ -11,8 +11,10 @@ public class Ad  {
     private int pk;
     private int price;
     private String title;
+    private String description;
 
     public Ad() {
+
     }
 
 }

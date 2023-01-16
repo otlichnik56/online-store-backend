@@ -1,7 +1,7 @@
 package ru.skypro.homework.service.comment;
 
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.model.comment.Comment;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.comment.Comments;
 
 @Service

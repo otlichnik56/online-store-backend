@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.model.ad.Ad;
+import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
-import ru.skypro.homework.model.comment.Comment;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.comment.Comments;
 
 import java.util.List;
@@ -35,12 +35,12 @@ public class AdController {
     }
 
     @GetMapping("/{ad_pk}/comments")
-    public Comments getAllAdComments(@PathVariable Integer adPk) {
+    public Comments getAllAdComments(@PathVariable("ad_pk") Integer adPk) {
         return null;
     }
 
     @GetMapping("/{ad_pk}/comments/{id}")
-    public List<Comment> getAdComments(@PathVariable Integer adPk, @PathVariable Integer id) {
+    public List<Comment> getAdComments(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
         return null;
     }
 
@@ -51,7 +51,7 @@ public class AdController {
     }
 
     @PostMapping("/{ad_pk}/comments")
-    public Comment setComment(@PathVariable Integer adPk) {
+    public Comment setComment(@PathVariable("ad_pk") Integer adPk) {
         return null;
     }
 
@@ -62,7 +62,7 @@ public class AdController {
     }
 
     @PutMapping("/{ad_pk}/comments/{id}")
-    public List<Comment> updateAdsUser(@PathVariable Integer adPk, @PathVariable Integer id) {
+    public List<Comment> updateAdsUser(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
         return null;
     }
 
@@ -73,7 +73,7 @@ public class AdController {
     }
 
     @DeleteMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity removeComments(@PathVariable Integer adPk, @PathVariable Integer id) {
+    public ResponseEntity removeComments(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
         return ResponseEntity.ok().build();
     }
 
