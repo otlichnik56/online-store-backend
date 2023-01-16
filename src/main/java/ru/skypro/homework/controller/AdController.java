@@ -5,7 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.ad.Ad;
+import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.comment.Comment;
+import ru.skypro.homework.model.comment.Comments;
 
 import java.util.List;
 
@@ -13,7 +16,7 @@ import java.util.List;
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("ads")
+@RequestMapping("/ads")
 public class AdController {
 
     @GetMapping
@@ -21,23 +24,23 @@ public class AdController {
         return null;
     }
 
-    @GetMapping("me")
-    public List<Ad> getAdsMe() {
+    @GetMapping("/me")
+    public List<Ads> getAdsMe() {
         return null;
     }
 
-    @GetMapping("{id}")
-    public Ad getFullAd(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public FullAd getFullAd(@PathVariable Integer id) {
         return null;
     }
 
-    @GetMapping("{ad_pk}/comments")
-    public List<Comment> getAllAdComments(@PathVariable String ad_pk) {
+    @GetMapping("/{ad_pk}/comments")
+    public Comments getAllAdComments(@PathVariable Integer adPk) {
         return null;
     }
 
-    @GetMapping("{ad_pk}/comments/{id}")
-    public List<Comment> getAdComments(@PathVariable String ad_pk, @PathVariable Integer id) {
+    @GetMapping("/{ad_pk}/comments/{id}")
+    public List<Comment> getAdComments(@PathVariable Integer adPk, @PathVariable Integer id) {
         return null;
     }
 
@@ -47,30 +50,30 @@ public class AdController {
         return null;
     }
 
-    @PostMapping("{ad_pk}/comments")
-    public Comment setComment(@PathVariable String ad_pk) {
+    @PostMapping("/{ad_pk}/comments")
+    public Comment setComment(@PathVariable Integer adPk) {
         return null;
     }
 
 
-    @PutMapping("{id}")
-    public List<Comment> updateAds(@PathVariable String id) {
+    @PutMapping("/{id}")
+    public ResponseEntity<FullAd> updateAds(@PathVariable Integer id) {
+        return ResponseEntity.status(200).body(new FullAd("descr", 10, "title"));
+    }
+
+    @PutMapping("/{ad_pk}/comments/{id}")
+    public List<Comment> updateAdsUser(@PathVariable Integer adPk, @PathVariable Integer id) {
         return null;
     }
 
-    @PutMapping("{ad_pk}/comments/{id}")
-    public List<Comment> updateAdsUser(@PathVariable String ad_pk, @PathVariable Integer id) {
-        return null;
-    }
 
-
-    @DeleteMapping("{id}")
-    public ResponseEntity removeAds(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity removeAds(@PathVariable Integer id) {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("{ad_pk}/comments/{id}")
-    public ResponseEntity removeComments(@PathVariable String ad_pk, @PathVariable Integer id) {
+    @DeleteMapping("/{ad_pk}/comments/{id}")
+    public ResponseEntity removeComments(@PathVariable Integer adPk, @PathVariable Integer id) {
         return ResponseEntity.ok().build();
     }
 

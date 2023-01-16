@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("image")
+@RequestMapping("/image")
 public class ImageController {
 
-    @PostMapping("{id}")
-    public String updateAdsImage(@PathVariable String id) {
+    @PostMapping("/{id}")
+    public String updateAdsImage(@PathVariable Integer id) {
         return null;
     }
 

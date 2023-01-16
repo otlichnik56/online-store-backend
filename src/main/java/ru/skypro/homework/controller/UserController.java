@@ -9,25 +9,25 @@ import ru.skypro.homework.model.user.User;
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
 
-    @GetMapping("me")
+    @GetMapping("/me")
     public User getUser() {
         return new User();
     }
 
-    @PostMapping("set-password")
+    @PostMapping("/set_password")
     public String setPassword(@RequestBody String currentPassword, @RequestBody String newPassword) {
         return "Ok";
     }
 
-    @PutMapping("me")
+    @PutMapping("/me")
     public User updateUser(@RequestBody User user) {
         return user;
     }
 
-    @PutMapping("me/image")
+    @PutMapping("/me/image")
     public User updateUserImage(@RequestBody User user) {
         return user;
     }
