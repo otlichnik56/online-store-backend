@@ -18,8 +18,7 @@ public class Ad  {
     private String image;
     private String description;
 
-    @ManyToOne
     @JoinColumn(name = "author")
-    private Client author;
+    private Integer author;
 
 }

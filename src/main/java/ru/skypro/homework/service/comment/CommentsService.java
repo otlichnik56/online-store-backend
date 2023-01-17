@@ -27,6 +27,6 @@ public class CommentsService implements CommentsInterface {
     }
     @Override
     public Comment updateComment(int pk, int id) {
-        return new Comment(1, "create", 1, "text");
+        return new Comment();
     }
 }
