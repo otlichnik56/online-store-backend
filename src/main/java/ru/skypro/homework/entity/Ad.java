@@ -1,20 +1,25 @@
 package ru.skypro.homework.entity;
 
-import java.util.Set;
-
 import lombok.Data;
 
+import javax.persistence.*;
+
 @Data
+@Entity
+@Table(name = "ad")
 public class Ad  {
-    private int author;
-    private Set<String> image;
-    private int pk;
-    private int price;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer pk;
+
     private String title;
+    private Integer price;
+    private String image;
     private String description;
 
-    public Ad() {
-
-    }
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private Client author;
 
 }

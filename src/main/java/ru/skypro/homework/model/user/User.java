@@ -1,4 +1,4 @@
-package ru.skypro.homework.entity;
+package ru.skypro.homework.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +19,4 @@ public class User {
 
     }
 
-    public User(String image) {
-        this.image = image;
-    }
 }

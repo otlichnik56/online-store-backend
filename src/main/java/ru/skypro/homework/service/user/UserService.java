@@ -2,7 +2,7 @@ package ru.skypro.homework.service.user;
 
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.model.ad.Ads;
-import ru.skypro.homework.entity.User;
+import ru.skypro.homework.model.user.User;
 
 @Service
 public class UserService implements UserInterface {
