@@ -4,26 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.Mapper;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserInterface {
-
-    Logger logger = LoggerFactory.getLogger(UserService.class);
-
 
     private Mapper mapper;
 
-    public UserService(Mapper mapper) {
-        this.mapper = mapper;
-    }
-
     @Override
     public User getUser() {
-        logger.info(mapper.clientToUser(new Client()).getFirstName() + "");
         return mapper.clientToUser(new Client());
     }
 
