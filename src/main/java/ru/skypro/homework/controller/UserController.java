@@ -2,19 +2,30 @@ package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.user.User;
+import ru.skypro.homework.service.user.UserService;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
+    Logger logger = LoggerFactory.getLogger(UserController.class);
+    private UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/me")
     public User getUser() {
-        return new User();
+        return userService.getUser();
     }
 
     @PostMapping("/set_password")

@@ -1,7 +1,7 @@
 package ru.skypro.homework.service.comment;
 
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.model.comment.Comment;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.comment.Comments;
 
 @Service
@@ -27,6 +27,6 @@ public class CommentsService implements CommentsInterface {
     }
     @Override
     public Comment updateComment(int pk, int id) {
-        return new Comment(1, "create", 1, "text");
+        return new Comment();
     }
 }

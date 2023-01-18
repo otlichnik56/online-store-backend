@@ -1,6 +1,6 @@
 package ru.skypro.homework.service.comment;
 
-import ru.skypro.homework.model.comment.Comment;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.comment.Comments;
 
 public interface CommentsInterface {

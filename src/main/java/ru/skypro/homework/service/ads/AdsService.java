@@ -1,7 +1,7 @@
 package ru.skypro.homework.service.ads;
 
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.model.ad.Ad;
+import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
 
