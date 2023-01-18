@@ -1,9 +1,13 @@
 package ru.skypro.homework.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Client;
+import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.user.RegisterReq;
@@ -48,7 +52,7 @@ public class Mapper {
     }
 
      // из entity в dto 
-     public RegisterReq ClientToregisterReq(Client client) {
+     public RegisterReq clientToregisterReq(Client client) {
         RegisterReq registerReq = new RegisterReq();
         registerReq.setUsername(client.getUsername());
         registerReq.setPassword(client.getPassword());
@@ -71,17 +75,37 @@ public class Mapper {
         return client;
     }
 
+    /**
+     * описание - метод который переводит данные из сущности в дто 
+     * @param ad - сущность (таблица объявлениЯ)
+     * @return - возвращает дто из двух полей:<br>
+     * 1. count<br>
+     * 2. List<Ads> - список объявлениЙ, 
+     * который содержит объявления
+     * из сущности Ad
+     */
+
     // из entity в dto
-    public Ads adToAds(Ad ad) {
+    public AdList adToAds(Ad ad) {
         Ads ads = new Ads();
-        ads.setAuthor(ad.getAuthor());
-        ads.setImage(ad.getImage());
-        ads.setPk(ad.getPk());
-        ads.setPrice(ad.getPrice());
-        ads.setTitle(ad.getTitle());
-        return ads;
+        AdList adList = new AdList();
+        
+        ads.setAuthor(1);
+        ads.setImage("image");
+        ads.setPk(1);
+        ads.setPrice(100);
+        ads.setTitle("title");
+
+        adList.setResults(new ArrayList<>(List.of(ads)));
+        adList.setCount(1);
+        return adList;
     }
 
+    /**
+     * описание - метод который переводит данные из дто в сущность 
+     * @param ads - дто (модель данных)
+     * @return - возвращает сущность
+     */
     // из dto в entity
     public Ad adsToAd(Ads ads) {
         Ad ad = new Ad();
@@ -110,7 +134,7 @@ public class Mapper {
     }
 
     // из dto в entity
-    public Ad FullAdToAd(FullAd fullAd) {
+    public Ad fullAdToAd(FullAd fullAd) {
         Client client = clientRepository.findById(fullAd.getPk()).get();
         Ad ad = new Ad();
         ad.setAuthor(client.getId());

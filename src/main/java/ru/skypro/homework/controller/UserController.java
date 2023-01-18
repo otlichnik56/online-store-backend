@@ -1,5 +1,6 @@
 package ru.skypro.homework.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,16 +13,11 @@ import ru.skypro.homework.service.user.UserService;
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-// @RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-    Logger logger = LoggerFactory.getLogger(UserController.class);
     private UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/me")
     public User getUser() {

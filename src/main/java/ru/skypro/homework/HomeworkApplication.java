@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 
 @SpringBootApplication
 @OpenAPIDefinition
-// @EnableWebMvc
+@EnableWebMvc
 public class HomeworkApplication {
 
     public static void main(String[] args) {

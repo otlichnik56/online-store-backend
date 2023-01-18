@@ -1,32 +1,37 @@
 package ru.skypro.homework.controller;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.comment.Comments;
+import ru.skypro.homework.service.ads.AdsService;
 
 import java.util.List;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/ads")
 public class AdController {
 
+    private final AdsService adsService;
+
+
     @GetMapping
-    public List<Ad> getAds() {
-        return null;
+    public AdList getAds() {
+        return adsService.getAds();
     }
 
     @GetMapping("/me")
-    public List<Ads> getAdsMe() {
-        return null;
+    public AdList getAdsMe() {
+        return adsService.getAdsMe();
     }
 
     @GetMapping("/{id}")
@@ -46,8 +51,8 @@ public class AdController {
 
 
     @PostMapping
-    public String setAds() {
-        return null;
+    public Ads setAds(@RequestBody Ads ads) {
+        return adsService.addAds(ads);
     }
 
     @PostMapping("/{ad_pk}/comments")
