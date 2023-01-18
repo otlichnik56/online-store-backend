@@ -16,8 +16,7 @@ public class Comment {
     private String createdAt;
     private String text;
 
-    @ManyToOne
     @JoinColumn(name = "author")
-    private Client author;
+    private Integer author;
 
 }
