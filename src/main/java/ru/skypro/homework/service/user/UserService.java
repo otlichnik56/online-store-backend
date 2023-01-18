@@ -1,15 +1,30 @@
 package ru.skypro.homework.service.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.user.User;
+import ru.skypro.homework.service.Mapper;
 
 @Service
 public class UserService implements UserInterface {
 
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
+
+    private Mapper mapper;
+
+    public UserService(Mapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Override
     public User getUser() {
-        return new User();
+        logger.info(mapper.clientToUser(new Client()).getFirstName() + "");
+        return mapper.clientToUser(new Client());
     }
 
     @Override
@@ -20,7 +35,7 @@ public class UserService implements UserInterface {
 
     @Override
     public User updateUserImage() {
-        return new User("imageUpdate");
+        return new User(0, "imageUpdate", null, null, null, null, null, null);
     }
 
     @Override
