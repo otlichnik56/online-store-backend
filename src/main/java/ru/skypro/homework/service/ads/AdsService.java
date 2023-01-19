@@ -1,9 +1,13 @@
 package ru.skypro.homework.service.ads;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.model.Image.Image;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
@@ -76,8 +80,10 @@ public class AdsService implements AdsInterface{
     }
 
     @Override
-    public String updateAdsImage(int id) {
-        return "image";
+    public List<Image> updateAdsImage(int id, MultipartFile multipartFile) {
+        Ad ad = adRepository.findById(id).get();
+        ad.setImage(multipartFile.getName());
+        return new Ads().getImage();
     }
 
 }

@@ -1,12 +1,18 @@
 package ru.skypro.homework.service;
+import ru.skypro.homework.model.comment.CommentDto;
+import ru.skypro.homework.model.comment.CommentsList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Client;
+import ru.skypro.homework.entity.Comment;
+import ru.skypro.homework.model.Image.Image;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
@@ -91,7 +97,7 @@ public class Mapper {
         AdList adList = new AdList();
         
         ads.setAuthor(1);
-        ads.setImage("image");
+        ads.setImage(new Ads().getImage());
         ads.setPk(1);
         ads.setPrice(100);
         ads.setTitle("title");
@@ -109,8 +115,9 @@ public class Mapper {
     // из dto в entity
     public Ad adsToAd(Ads ads) {
         Ad ad = new Ad();
+        Image image = new Image();
         ad.setAuthor(ads.getAuthor());
-        ad.setImage(ads.getImage());
+        ad.setImage(image.getImage());
         ad.setPk(ads.getPk());
         ad.setPrice(ads.getPrice());
         ad.setTitle(ads.getTitle());
@@ -125,7 +132,7 @@ public class Mapper {
         fullAd.setAuthorLastName(client.getLastName());
         fullAd.setDescription(ad.getDescription());
         fullAd.setEmail(client.getEmail());
-        fullAd.setImage(client.getImage());
+        fullAd.setImage(new Ads().getImage());
         fullAd.setPhone(client.getPhone());
         fullAd.setPk(ad.getPk());
         fullAd.setPrice(ad.getPrice());
@@ -138,12 +145,49 @@ public class Mapper {
         Client client = clientRepository.findById(fullAd.getPk()).get();
         Ad ad = new Ad();
         ad.setAuthor(client.getId());
-        ad.setImage(fullAd.getImage());
+        ad.setImage(new Image().getImage());
         ad.setPk(fullAd.getPk());
         ad.setPrice(fullAd.getPrice());
         ad.setTitle(fullAd.getTitle());
         return ad;
     }
 
+    // из dto в entity
+    public Comment commentDtoToComment(CommentDto commentDto) {
+        Comment comment = new Comment();
+        comment.setAuthor(commentDto.getAuthor());
+        comment.setCreatedAt(commentDto.getCreatedAt());
+        comment.setPk(commentDto.getPk());
+        comment.setText(commentDto.getText());
+        return comment;
+    }
+
+     // из entity в dto
+     public CommentsList commentToCommentDtoList(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        CommentsList commentsList = new CommentsList();
+
+        commentDto.setAuthor(comment.getAuthor());
+        commentDto.setCreatedAt(comment.getCreatedAt());
+        commentDto.setPk(comment.getPk());
+        commentDto.setText(comment.getText());
+
+        commentsList.setResults(new ArrayList<>(Arrays.asList(commentDto)));
+        commentsList.setCount(commentsList.getResults().size());
+        return commentsList;
+    }
+
+      // из entity в dto
+    public CommentDto commentToCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setAuthor(comment.getAuthor());
+        commentDto.setCreatedAt(comment.getCreatedAt());
+        commentDto.setPk(comment.getPk());
+        commentDto.setText(comment.getText());
+
+        return commentDto;
+    }
+
+    
 
 }
