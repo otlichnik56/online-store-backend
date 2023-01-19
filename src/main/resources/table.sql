@@ -4,11 +4,11 @@ CREATE TABLE client
     username     TEXT,
     password     TEXT,
     role         TEXT,
-    firstName    TEXT,
-    lastName     TEXT,
+    first_name    TEXT,
+    last_name     TEXT,
     phone        TEXT,
     email        TEXT,
-    regDate      TEXT,
+    reg_date      TEXT,
     city         TEXT,
     image        TEXT
 );
@@ -17,7 +17,7 @@ CREATE TABLE client
 CREATE TABLE comment
 (
     pk           INTEGER PRIMARY KEY,
-    createdAt    TEXT,
+    created_at   TEXT,
     text         TEXT,
     author       INTEGER REFERENCES client(id)
 );
