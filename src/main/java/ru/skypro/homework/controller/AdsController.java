@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
@@ -19,7 +18,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/ads")
-public class AdController {
+public class AdsController {
 
     private final AdsService adsService;
 
@@ -34,9 +33,10 @@ public class AdController {
         return adsService.getAdsMe();
     }
 
+    // дописан
     @GetMapping("/{id}")
     public FullAd getFullAd(@PathVariable Integer id) {
-        return null;
+        return adsService.getFullAd(id);
     }
 
     @GetMapping("/{ad_pk}/comments")
@@ -61,21 +61,25 @@ public class AdController {
     }
 
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<FullAd> updateAds(@PathVariable Integer id) {
         return ResponseEntity.status(200).body(new FullAd("descr", 10, "title"));
     }
 
-    @PutMapping("/{ad_pk}/comments/{id}")
+    @PatchMapping("/{ad_pk}/comments/{id}")
     public List<Comment> updateAdsUser(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
         return null;
     }
 
 
+
+    // дописан
     @DeleteMapping("/{id}")
     public ResponseEntity removeAds(@PathVariable Integer id) {
+        adsService.removeAds(id);
         return ResponseEntity.ok().build();
     }
+
 
     @DeleteMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity removeComments(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
