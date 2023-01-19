@@ -7,6 +7,7 @@ import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
+import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.Mapper;
 
 @Service
@@ -14,6 +15,7 @@ import ru.skypro.homework.service.Mapper;
 public class AdsService implements AdsInterface{
 
     private Mapper mapper;
+    private final AdRepository adRepository;
 
 
     /**
@@ -54,14 +56,18 @@ public class AdsService implements AdsInterface{
          return new Ads();
     }
 
+
+    // дописан
     @Override
     public FullAd getFullAd(int id) {
-        return mapper.adToFullAd(new Ad());
+        Ad ad = adRepository.findById(id).get();
+        return mapper.adToFullAd(ad);
     }
 
+    // дописан
     @Override
     public void removeAds(int id) {
-
+        adRepository.deleteById(id);
     }
 
     @Override
