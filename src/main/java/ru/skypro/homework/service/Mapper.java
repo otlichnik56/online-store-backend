@@ -4,9 +4,10 @@ import ru.skypro.homework.model.comment.CommentsList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ru.skypro.homework.entity.Ad;
@@ -16,12 +17,15 @@ import ru.skypro.homework.model.Image.Image;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
+import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.ClientRepository;
 
 @Service
 public class Mapper {
+
+    Logger logger = LoggerFactory.getLogger(Mapper.class);
 
     private final ClientRepository clientRepository;
 
@@ -32,14 +36,14 @@ public class Mapper {
     // из entity в dto  
     public User clientToUser(Client client) {
         User user = new User();
-        user.setId(1);
-        user.setFirstName("first");
-        user.setLastName("last");
-        user.setEmail("email");
-        user.setPhone("phone");
-        user.setRegDate("reg");
-        user.setCity("city");
-        user.setImage("image");
+        user.setId(client.getId());
+        user.setFirstName(client.getFirstName());
+        user.setLastName(client.getLastName());
+        user.setEmail(client.getEmail());
+        user.setPhone(client.getPhone());
+        user.setRegDate(client.getRegDate());
+        user.setCity(client.getCity());
+        user.setImage(client.getImage());
         return user;
     }
 
@@ -78,6 +82,12 @@ public class Mapper {
         client.setLastName(registerReq.getLastName());
         client.setPhone(registerReq.getPhone());
         client.setRole(registerReq.getRole());
+        clientRepository.save(client);
+
+        LoginReq loginReq = new LoginReq();
+        loginReq.setUsername(registerReq.getUsername());
+        loginReq.setPassword(registerReq.getPassword());
+
         return client;
     }
 
