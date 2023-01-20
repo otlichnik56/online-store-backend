@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.User;
+import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.service.Mapper;
 
 @Service
@@ -15,10 +17,12 @@ import ru.skypro.homework.service.Mapper;
 public class UserService implements UserInterface {
 
     private Mapper mapper;
+    private ClientRepository clientRepository;
 
     @Override
     public User getUser() {
-        return mapper.clientToUser(new Client());
+       Client client = clientRepository.findById(1).get();
+        return mapper.clientToUser(client);
     }
 
     @Override
