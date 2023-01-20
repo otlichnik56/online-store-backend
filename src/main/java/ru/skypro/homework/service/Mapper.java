@@ -18,6 +18,7 @@ import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.user.LoginReq;
+import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.ClientRepository;
@@ -36,14 +37,17 @@ public class Mapper {
     // из entity в dto  
     public User clientToUser(Client client) {
         User user = new User();
+        
         user.setId(client.getId());
         user.setFirstName(client.getFirstName());
         user.setLastName(client.getLastName());
-        user.setEmail(client.getEmail());
+        user.setEmail(client.getUsername());
         user.setPhone(client.getPhone());
-        user.setRegDate(client.getRegDate());
-        user.setCity(client.getCity());
-        user.setImage(client.getImage());
+        user.setRegDate("12");
+        user.setCity("12");
+        user.setImage("123");
+
+        logger.info(client + " client");
         return user;
     }
 
@@ -85,11 +89,21 @@ public class Mapper {
         clientRepository.save(client);
 
         LoginReq loginReq = new LoginReq();
-        loginReq.setUsername(registerReq.getUsername());
-        loginReq.setPassword(registerReq.getPassword());
+        loginReq.setUsername(client.getUsername());
+        loginReq.setPassword(client.getPassword());
 
         return client;
     }
+
+    
+    public NewPassword newPassword(String currentPass, String newPass) {
+        NewPassword newPassword = new NewPassword();
+        newPassword.setCurrentPassword(currentPass);
+        newPassword.setNewPassword(newPass);
+        clientRepository.setNewPass(currentPass, newPass);
+        return newPassword;
+    }
+    
 
     /**
      * описание - метод который переводит данные из сущности в дто 
@@ -107,13 +121,13 @@ public class Mapper {
         AdList adList = new AdList();
         
         ads.setAuthor(1);
-        ads.setImage(new Ads().getImage());
+        ads.setImage(new ArrayList(Arrays.asList("1")));
         ads.setPk(1);
         ads.setPrice(100);
-        ads.setTitle("title");
+        ads.setTitle("ad.getTitle()");
 
         adList.setResults(new ArrayList<>(List.of(ads)));
-        adList.setCount(1);
+        adList.setCount(adList.getResults().size());
         return adList;
     }
 

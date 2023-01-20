@@ -39,7 +39,8 @@ public class AdsController {
     // дописан
     @GetMapping("/{id}")
     public FullAd getFullAd(@PathVariable Integer id) {
-        return adsService.getFullAd(id);
+        // return adsService.getFullAd(id);
+        return new FullAd();
     }
 
     @GetMapping("/{ad_pk}/comments")

@@ -7,7 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.User;
+import ru.skypro.homework.service.user.PasswordService;
 import ru.skypro.homework.service.user.UserService;
 
 @Slf4j
@@ -17,7 +20,8 @@ import ru.skypro.homework.service.user.UserService;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final PasswordService passwordService;
 
     @GetMapping("/me")
     public User getUser() {
@@ -25,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/set_password")
-    public String setPassword(@RequestBody String currentPassword, @RequestBody String newPassword) {
-        return "Ok";
+    public NewPassword setPassword(@RequestBody(required = true) NewPassword newPassword) {
+        return passwordService.setPassword(newPassword.getCurrentPassword(), newPassword.getNewPassword());
     }
 
     @PutMapping("/me")
