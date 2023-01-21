@@ -10,8 +10,8 @@ import ru.skypro.homework.entity.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
-    // @Query(value = "SELECT password FROM client WHERE password = ?1", nativeQuery = true)
-    // String findCurrentPassword(String password);
+    @Query(value = "SELECT * FROM client WHERE username = ?1", nativeQuery = true)
+    Client getUserName(String username);
 
     @Transactional
     @Modifying

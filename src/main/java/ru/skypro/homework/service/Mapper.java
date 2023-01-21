@@ -30,55 +30,14 @@ public class Mapper {
 
     private final ClientRepository clientRepository;
 
+    LoginReq loginReq = new LoginReq();
+
     public Mapper(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
-    // из entity в dto  
-    public User clientToUser(Client client) {
-        User user = new User();
-        
-        user.setId(client.getId());
-        user.setFirstName(client.getFirstName());
-        user.setLastName(client.getLastName());
-        user.setEmail(client.getUsername());
-        user.setPhone(client.getPhone());
-        user.setRegDate("12");
-        user.setCity("12");
-        user.setImage("123");
-
-        logger.info(client + " client");
-        return user;
-    }
-
-    // из dto в entity
-    public Client userToClient(User user) {
-        Client client = new Client();
-        client.setId(user.getId());
-        client.setFirstName(user.getFirstName());
-        client.setLastName(user.getLastName());
-        client.setEmail(user.getEmail());
-        client.setPhone(user.getPhone());
-        client.setRegDate(user.getRegDate());
-        client.setCity(user.getCity());
-        client.setImage(user.getImage());
-        return client;
-    }
-
-     // из entity в dto 
-     public RegisterReq clientToregisterReq(Client client) {
-        RegisterReq registerReq = new RegisterReq();
-        registerReq.setUsername(client.getUsername());
-        registerReq.setPassword(client.getPassword());
-        registerReq.setFirstName(client.getFirstName());
-        registerReq.setLastName(client.getLastName());
-        registerReq.setPhone(client.getPhone());
-        registerReq.setRole(client.getRole());
-        return registerReq;
-    }
-
-    // из dto в entity
-    public Client registerReqToClient(RegisterReq registerReq) {
+      // из dto в entity
+      public void registerReqToClient(RegisterReq registerReq) {
         Client client = new Client();
         client.setUsername(registerReq.getUsername());
         client.setPassword(registerReq.getPassword());
@@ -86,14 +45,37 @@ public class Mapper {
         client.setLastName(registerReq.getLastName());
         client.setPhone(registerReq.getPhone());
         client.setRole(registerReq.getRole());
-        clientRepository.save(client);
-
-        LoginReq loginReq = new LoginReq();
-        loginReq.setUsername(client.getUsername());
-        loginReq.setPassword(client.getPassword());
-
-        return client;
+        clientRepository.save(client);   
     }
+
+    public void clientToLoginReg(String userName, String password) {
+        loginReq.setUsername(userName);
+        loginReq.setPassword(password);
+
+        logger.info(loginReq + " login");
+        
+    }
+ // из entity в dto  
+    public User clientToUser() {
+       User user = new User();
+       Client client = clientRepository.getUserName(loginReq.getUsername());
+        user.setId(client.getId());
+        user.setFirstName(client.getFirstName());
+        user.setLastName(client.getLastName());
+        user.setEmail(client.getUsername());
+        user.setPhone(client.getPhone());
+        user.setRegDate("");
+        user.setCity("");
+        user.setImage("");
+
+        logger.info(loginReq + " loginReq");
+        logger.info(client + " client");
+
+        return user;
+        
+    }
+
+  
 
     
     public NewPassword newPassword(String currentPass, String newPass) {
@@ -212,6 +194,5 @@ public class Mapper {
         return commentDto;
     }
 
-    
 
 }
