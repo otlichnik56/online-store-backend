@@ -25,7 +25,7 @@ public class UserController {
 
     @GetMapping("/me")
     public User getUser() {
-        return userService.getUser();
+         return userService.getUser();
     }
 
     @PostMapping("/set_password")
