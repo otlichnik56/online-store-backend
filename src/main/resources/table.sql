@@ -1,7 +1,7 @@
 CREATE TABLE client
 (
     id           INTEGER PRIMARY KEY,
-    username     TEXT,
+    username     TEXT UNIQUE,
     password     TEXT,
     role         TEXT,
     first_name    TEXT,
