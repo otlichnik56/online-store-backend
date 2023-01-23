@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.AdsUser;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.Mapper;
 
@@ -30,8 +31,8 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public Ads getAdsMe() {
-        return new Ads();
+    public AdsUser getAdsMe() {
+        return mapper.clientToAdsUser();
     }
 
    

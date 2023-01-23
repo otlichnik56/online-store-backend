@@ -11,6 +11,7 @@ import ru.skypro.homework.model.Image.Image;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
+import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.Mapper;
 
@@ -29,8 +30,7 @@ public class AdsService implements AdsInterface{
      */
     @Override
     public AdList getAds() {
-        Ad ad = new Ad();
-        return mapper.adToAds(ad);
+        return mapper.adToAds();
     }
 
      /**
@@ -39,9 +39,8 @@ public class AdsService implements AdsInterface{
      * и возвращает в api ответ в виде данных дто
      */
     @Override
-    public AdList getAdsMe() {
-        Ad ad = new Ad();
-        return mapper.adToAds(ad);
+    public RegisterReq getAdsMe() {
+        return new RegisterReq();
     }
 
     /**
@@ -56,8 +55,8 @@ public class AdsService implements AdsInterface{
         // здесь будет операция сохранения данных в сущности
         // Ad ad = mapper.adsToAd(ads);
         // adRespoditory.save(ad);
-         mapper.adsToAd(ads);
-         return new Ads();
+         
+         return mapper.adsToAd(ads);
     }
 
 
