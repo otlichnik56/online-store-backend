@@ -4,7 +4,11 @@ import ru.skypro.homework.model.comment.CommentsList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +20,13 @@ import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.Image.Image;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.AdsUser;
 import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.User;
+import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.ClientRepository;
 
 @Service
@@ -29,11 +35,18 @@ public class Mapper {
     Logger logger = LoggerFactory.getLogger(Mapper.class);
 
     private final ClientRepository clientRepository;
+    private final AdRepository adRepository;
 
     LoginReq loginReq = new LoginReq();
+    Ads adsDto = new Ads();
+    Image image = new Image();
 
-    public Mapper(ClientRepository clientRepository) {
+    public Mapper(
+        ClientRepository clientRepository, 
+        AdRepository adRepository
+        ) {
         this.clientRepository = clientRepository;
+        this.adRepository = adRepository;
     }
 
       // из dto в entity
@@ -55,7 +68,8 @@ public class Mapper {
         logger.info(loginReq + " login");
         
     }
- // из entity в dto  
+
+    // из entity в dto  
     public User clientToUser() {
        User user = new User();
        Client client = clientRepository.getUserName(loginReq.getUsername());
@@ -70,6 +84,7 @@ public class Mapper {
 
         logger.info(loginReq + " loginReq");
         logger.info(client + " client");
+        logger.info(user + " user");
 
         return user;
         
@@ -85,6 +100,18 @@ public class Mapper {
         clientRepository.setNewPass(currentPass, newPass);
         return newPassword;
     }
+
+    public AdsUser clientToAdsUser() {
+        Client client = clientRepository.getUserName(loginReq.getUsername());
+        AdsUser adsUser = new AdsUser();
+        adsUser.setFirstName(client.getFirstName());
+        adsUser.setLastName(client.getLastName());
+        adsUser.setPassword(client.getPassword());
+        adsUser.setPhone(client.getPhone());
+        adsUser.setRole(client.getRole());
+        adsUser.setUsername(client.getUsername());
+        return adsUser;
+    }
     
 
     /**
@@ -97,38 +124,57 @@ public class Mapper {
      * из сущности Ad
      */
 
-    // из entity в dto
-    public AdList adToAds(Ad ad) {
-        Ads ads = new Ads();
-        AdList adList = new AdList();
-        
-        ads.setAuthor(1);
-        ads.setImage(new ArrayList(Arrays.asList("1")));
-        ads.setPk(1);
-        ads.setPrice(100);
-        ads.setTitle("ad.getTitle()");
-
-        adList.setResults(new ArrayList<>(List.of(ads)));
-        adList.setCount(adList.getResults().size());
-        return adList;
-    }
-
     /**
      * описание - метод который переводит данные из дто в сущность 
      * @param ads - дто (модель данных)
      * @return - возвращает сущность
      */
+
     // из dto в entity
-    public Ad adsToAd(Ads ads) {
+    public Ads adsToAd(Ads ads) {
+       
         Ad ad = new Ad();
-        Image image = new Image();
-        ad.setAuthor(ads.getAuthor());
+        Client client = clientRepository.getUserName(loginReq.getUsername());
+        ad.setAuthor(client.getId());
         ad.setImage(image.getImage());
         ad.setPk(ads.getPk());
+        
         ad.setPrice(ads.getPrice());
         ad.setTitle(ads.getTitle());
-        return ad;
+
+        adRepository.save(ad);
+        return ads;
     }
+
+    // из entity в dto
+    public AdList adToAds() {
+       
+        AdList adList = new AdList();
+        Client client = clientRepository.getUserName(loginReq.getUsername());
+        List<Ad> adUser = adRepository.getAd(client.getId());
+        logger.info(adUser + " aduser");
+        if(adUser != null) {
+            List<Ads> resultAds = adUser.stream()
+            .map((Function<Ad, Ads>) ad -> {
+                Ads ads = new Ads();
+                        ads.setAuthor(ad.getAuthor());
+                        ads.setImage(new ArrayList(Arrays.asList("1")));
+                        ads.setPk(ad.getPk());
+                        ads.setPrice(ad.getPrice());
+                        ads.setTitle(ad.getTitle());
+                        return ads;
+            }).collect(Collectors.toList());
+           
+            adList.setResults(resultAds);
+            adList.setCount(resultAds.size());
+            return adList;
+        }
+
+        return adList;
+       
+    }
+
+ 
 
     // из entity в dto
     public FullAd adToFullAd(Ad ad) {

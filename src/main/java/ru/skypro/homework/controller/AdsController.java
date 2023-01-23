@@ -6,14 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.AdsUser;
 import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.comment.CommentDto;
 import ru.skypro.homework.model.comment.CommentsList;
+import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.service.ads.AdsService;
 import ru.skypro.homework.service.comment.CommentsService;
+import ru.skypro.homework.service.user.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -24,16 +28,21 @@ public class AdsController {
 
     private final AdsService adsService;
     private final CommentsService commentsService;
+    private final UserService userService;
 
 
     @GetMapping
-    public AdList getAds() {
-        return adsService.getAds();
+    public ResponseEntity<AdList> getAds() {
+        if(adsService.getAds() != null) {
+            return ResponseEntity.status(200).body(adsService.getAds());
+        } else {
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @GetMapping("/me")
-    public AdList getAdsMe() {
-        return adsService.getAdsMe();
+    public AdsUser getAdsMe() {
+        return userService.getAdsMe();
     }
 
     // дописан
