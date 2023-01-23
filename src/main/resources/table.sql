@@ -1,6 +1,6 @@
 CREATE TABLE client
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     username     TEXT UNIQUE,
     password     TEXT,
     role         TEXT,
@@ -16,7 +16,7 @@ CREATE TABLE client
 
 CREATE TABLE comment
 (
-    pk           INTEGER PRIMARY KEY,
+    pk           SERIAL PRIMARY KEY,
     created_at   TEXT,
     text         TEXT,
     author       INTEGER REFERENCES client(id)
@@ -25,7 +25,7 @@ CREATE TABLE comment
 
 CREATE TABLE ad
 (
-    pk           INTEGER PRIMARY KEY,
+    pk           SERIAL PRIMARY KEY,
     title        TEXT,
     price        INTEGER,
     text         TEXT,
