@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 import ru.skypro.homework.model.comment.CommentDto;
 import ru.skypro.homework.model.comment.CommentsList;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,6 +29,7 @@ import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.ClientRepository;
+import ru.skypro.homework.repository.CommentRepository;
 
 @Service
 public class Mapper {
@@ -36,6 +38,7 @@ public class Mapper {
 
     private final ClientRepository clientRepository;
     private final AdRepository adRepository;
+    private final CommentRepository commentRepository;
 
     LoginReq loginReq = new LoginReq();
     Ads adsDto = new Ads();
@@ -43,10 +46,12 @@ public class Mapper {
 
     public Mapper(
         ClientRepository clientRepository, 
-        AdRepository adRepository
+        AdRepository adRepository,
+        CommentRepository commentRepository
         ) {
         this.clientRepository = clientRepository;
         this.adRepository = adRepository;
+        this.commentRepository = commentRepository;
     }
 
       // из dto в entity
@@ -206,27 +211,43 @@ public class Mapper {
     }
 
     // из dto в entity
-    public Comment commentDtoToComment(CommentDto commentDto) {
+    public CommentDto commentDtoToComment(int adPk) {
         Comment comment = new Comment();
-        comment.setAuthor(commentDto.getAuthor());
-        comment.setCreatedAt(commentDto.getCreatedAt());
-        comment.setPk(commentDto.getPk());
-        comment.setText(commentDto.getText());
-        return comment;
+        Client client = clientRepository.getUserName(loginReq.getUsername());
+        comment.setPk(adPk);
+        comment.setAuthor(client.getId());
+        comment.setCreatedAt(LocalDate.now().toString());
+        comment.setText("text");
+        commentRepository.save(comment);
+        return new CommentDto(comment.getPk(),comment.getCreatedAt(), comment.getText(), comment.getAuthor());
+        
     }
 
      // из entity в dto
-     public CommentsList commentToCommentDtoList(Comment comment) {
-        CommentDto commentDto = new CommentDto();
+     public CommentsList commentToCommentDtoList(int adPk) {
         CommentsList commentsList = new CommentsList();
 
-        commentDto.setAuthor(comment.getAuthor());
-        commentDto.setCreatedAt(comment.getCreatedAt());
-        commentDto.setPk(comment.getPk());
-        commentDto.setText(comment.getText());
+        Client client = clientRepository.getUserName(loginReq.getUsername());
+        List<Comment> resultComments = commentRepository.getComments(adPk);
 
-        commentsList.setResults(new ArrayList<>(Arrays.asList(commentDto)));
-        commentsList.setCount(commentsList.getResults().size());
+     
+        if(resultComments != null) {
+            List<CommentDto> commentDtoList = resultComments.stream()
+             .map((Function<Comment, CommentDto>) comment -> {
+                CommentDto commentDto = new CommentDto();
+                commentDto.setAuthor(comment.getAuthor());
+                commentDto.setCreatedAt(comment.getCreatedAt());
+                commentDto.setPk(comment.getPk());
+                commentDto.setText(comment.getText());
+                return commentDto;
+
+            }).collect(Collectors.toList());
+        
+            commentsList.setResults(commentDtoList);
+            commentsList.setCount(commentDtoList.size());
+            return commentsList;
+        }
+        
         return commentsList;
     }
 

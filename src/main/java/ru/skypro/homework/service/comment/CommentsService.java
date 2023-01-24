@@ -16,12 +16,12 @@ public class CommentsService implements CommentsInterface {
 
     @Override
     public CommentsList getAllComments(int adPk) {
-        return mapper.commentToCommentDtoList(new Comment());
+        return mapper.commentToCommentDtoList(adPk);
     }
 
     @Override
-    public Comment setComments(int adPk) {
-        return mapper.commentDtoToComment(new CommentDto());
+    public CommentDto setComments(int adPk) {
+        return mapper.commentDtoToComment(adPk);
     }
 
     @Override
@@ -34,7 +34,6 @@ public class CommentsService implements CommentsInterface {
     }
     @Override
     public CommentDto updateComment(int pk, int id) {
-         mapper.commentDtoToComment(new CommentDto());
          return mapper.commentToCommentDto(new Comment());
     }
 }
