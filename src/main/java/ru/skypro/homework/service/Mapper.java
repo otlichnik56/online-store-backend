@@ -101,6 +101,7 @@ public class Mapper {
         return newPassword;
     }
 
+    // from entity to dto 
     public AdsUser clientToAdsUser() {
         Client client = clientRepository.getUserName(loginReq.getUsername());
         AdsUser adsUser = new AdsUser();

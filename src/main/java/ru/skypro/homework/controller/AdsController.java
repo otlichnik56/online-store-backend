@@ -41,8 +41,8 @@ public class AdsController {
     }
 
     @GetMapping("/me")
-    public AdsUser getAdsMe() {
-        return userService.getAdsMe();
+    public AdList getAdsMe() {
+        return adsService.getAdsMe();
     }
 
     // дописан
