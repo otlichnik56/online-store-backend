@@ -34,5 +34,12 @@ CREATE TABLE ad
     author       INTEGER REFERENCES client(id)
 );
 
-
+CREATE TABLE image
+(
+    id SERIAL references ad(pk), 
+    file_path text, 
+    file_size bigint, 
+    media_type text, 
+    data bytea
+);
 
