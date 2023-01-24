@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Ad  {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
 
     private String title;
