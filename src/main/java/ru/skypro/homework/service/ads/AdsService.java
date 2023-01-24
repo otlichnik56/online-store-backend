@@ -39,8 +39,8 @@ public class AdsService implements AdsInterface{
      * и возвращает в api ответ в виде данных дто
      */
     @Override
-    public RegisterReq getAdsMe() {
-        return new RegisterReq();
+    public AdList getAdsMe() {
+        return mapper.adToAds();
     }
 
     /**

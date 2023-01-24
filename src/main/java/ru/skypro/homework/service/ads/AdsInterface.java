@@ -20,6 +20,6 @@ public interface AdsInterface {
     void removeAds(int id);
     FullAd updateAds(int id);
     List<Image> updateAdsImage(int id, MultipartFile multipartFile);
-    RegisterReq getAdsMe();
+    AdList getAdsMe();
 
 }
