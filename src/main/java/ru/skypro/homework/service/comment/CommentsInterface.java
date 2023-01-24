@@ -8,7 +8,7 @@ public interface CommentsInterface {
 
     CommentsList getAllComments(int adPk);
 
-    Comment setComments(int adPk);
+    CommentDto setComments(int adPk);
 
     CommentDto getComment(int pk, int id);
 

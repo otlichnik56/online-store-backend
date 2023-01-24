@@ -69,8 +69,8 @@ public class AdsController {
     }
 
     @PostMapping("/{ad_pk}/comments")
-    public Comment setComment(@PathVariable(value = "ad_pk") Integer adPk) {
-        return commentsService.setComments(1);
+    public CommentDto setComment(@PathVariable(value = "ad_pk") Integer adPk) {
+        return commentsService.setComments(adPk);
     }
 
 
