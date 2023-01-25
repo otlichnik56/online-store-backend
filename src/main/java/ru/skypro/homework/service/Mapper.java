@@ -2,6 +2,9 @@ package ru.skypro.homework.service;
 import ru.skypro.homework.model.comment.CommentDto;
 import ru.skypro.homework.model.comment.CommentsList;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,11 +17,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.model.Image.Image;
+import ru.skypro.homework.entity.Image;
+import ru.skypro.homework.model.Image.ImageDto;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.AdsUser;
@@ -30,6 +35,7 @@ import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.repository.CommentRepository;
+import ru.skypro.homework.repository.ImageRepository;
 
 @Service
 public class Mapper {
@@ -39,19 +45,22 @@ public class Mapper {
     private final ClientRepository clientRepository;
     private final AdRepository adRepository;
     private final CommentRepository commentRepository;
+    private final ImageRepository imageRepository;
 
     LoginReq loginReq = new LoginReq();
     Ads adsDto = new Ads();
-    Image image = new Image();
+    // Image image = new Image();
 
     public Mapper(
         ClientRepository clientRepository, 
         AdRepository adRepository,
-        CommentRepository commentRepository
+        CommentRepository commentRepository,
+        ImageRepository imageRepository
         ) {
         this.clientRepository = clientRepository;
         this.adRepository = adRepository;
         this.commentRepository = commentRepository;
+        this.imageRepository = imageRepository;
     }
 
       // из dto в entity
@@ -142,7 +151,7 @@ public class Mapper {
         Ad ad = new Ad();
         Client client = clientRepository.getUserName(loginReq.getUsername());
         ad.setAuthor(client.getId());
-        ad.setImage(image.getImage());
+        // ad.setImage(image.getImage());
         ad.setPk(ads.getPk());
         
         ad.setPrice(ads.getPrice());
@@ -164,7 +173,7 @@ public class Mapper {
             .map((Function<Ad, Ads>) ad -> {
                 Ads ads = new Ads();
                         ads.setAuthor(ad.getAuthor());
-                        ads.setImage(new ArrayList(Arrays.asList("1")));
+                        ads.setImage(new ImageDto());
                         ads.setPk(ad.getPk());
                         ads.setPrice(ad.getPrice());
                         ads.setTitle(ad.getTitle());
@@ -203,7 +212,7 @@ public class Mapper {
         Client client = clientRepository.findById(fullAd.getPk()).get();
         Ad ad = new Ad();
         ad.setAuthor(client.getId());
-        ad.setImage(new Image().getImage());
+        // ad.setImage(new Image().getImage());
         ad.setPk(fullAd.getPk());
         ad.setPrice(fullAd.getPrice());
         ad.setTitle(fullAd.getTitle());
@@ -262,5 +271,31 @@ public class Mapper {
         return commentDto;
     }
 
+    // from dto to entity
+    public ImageDto imageDtoToImage(int id, MultipartFile imageFile) throws IOException {
+        ImageDto imageDto = new ImageDto();
+        Image image = new Image();
+        try (
+            InputStream inputStream = imageFile.getInputStream();
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+            ) {
+                byte[] imageByteas = bufferedInputStream.readAllBytes();
+                image.setId(id);
+                image.setFileName(imageFile.getOriginalFilename());
+                image.setFileSize(imageFile.getSize());
+                image.setMediaType(imageFile.getContentType());
+                image.setFileName(imageFile.getOriginalFilename());
+                image.setData(imageByteas);
+                logger.info("image loaded");
+            } catch(IOException exception) {
+                logger.info(exception.getMessage());
+            }
+
+            imageRepository.save(image);
+            List<String> getAddedImages = imageRepository.getAddedImages(); 
+            logger.info(getAddedImages + " images");
+            imageDto.setImage(getAddedImages);
+        return imageDto;
+    }
 
 }

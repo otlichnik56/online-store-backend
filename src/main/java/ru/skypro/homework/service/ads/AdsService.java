@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.ads;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -7,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.model.Image.Image;
+import ru.skypro.homework.model.Image.ImageDto;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
@@ -79,10 +80,8 @@ public class AdsService implements AdsInterface{
     }
 
     @Override
-    public List<Image> updateAdsImage(int id, MultipartFile multipartFile) {
-        Ad ad = adRepository.findById(id).get();
-        ad.setImage(multipartFile.getName());
-        return new Ads().getImage();
+    public ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException {
+            return mapper.imageDtoToImage(id, multipartFile);
     }
 
 }

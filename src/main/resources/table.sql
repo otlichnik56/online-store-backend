@@ -36,10 +36,10 @@ CREATE TABLE ad
 
 CREATE TABLE image
 (
-    id SERIAL references ad(pk), 
-    file_path text, 
+    id SERIAL references ad(pk),  
     file_size bigint, 
     media_type text, 
+    fine_name text,
     data bytea
 );
 
