@@ -47,9 +47,9 @@ public class Mapper {
     private final CommentRepository commentRepository;
     private final ImageRepository imageRepository;
 
+    
     LoginReq loginReq = new LoginReq();
     Ads adsDto = new Ads();
-    // Image image = new Image();
 
     public Mapper(
         ClientRepository clientRepository, 
@@ -149,14 +149,23 @@ public class Mapper {
     public Ads adsToAd(Ads ads) {
        
         Ad ad = new Ad();
+        // вот здесь мы извлекаем того пользователя который у нас есть в базе
+        // и который сейчас авторизовался
         Client client = clientRepository.getUserName(loginReq.getUsername());
+        // далее мы считываем из базы идентификатор этого пользователя, чтобы знать
+        // кто автор объявления и записываем в поле author
         ad.setAuthor(client.getId());
-        // ad.setImage(image.getImage());
+        // далее четыре сеттера мы заполняем данными
+        // которые приходят с фронта в теле post запроса
+        ad.setImage("");
         ad.setPk(ads.getPk());
         
         ad.setPrice(ads.getPrice());
         ad.setTitle(ads.getTitle());
-
+        // сохраняем в базе данных
+        // в базе это будет выглядить так:
+        // id image pk price title author
+        // 1  ""    1   100 "title" id залогиненного пользователя (например 25)
         adRepository.save(ad);
         return ads;
     }
@@ -165,7 +174,15 @@ public class Mapper {
     public AdList adToAds() {
        
         AdList adList = new AdList();
+        // для получения объявлений того или иного пользователя
+        // мы получаем сначала его (пользователя) из базы данных по введенному ранее логину
         Client client = clientRepository.getUserName(loginReq.getUsername());
+        // далее мы по id этого пользователя берем из базы все его объявления
+        // которые он добавил
+        //  @Query(value = "SELECT * FROM ad WHERE author = ?1", nativeQuery = true)
+        //  List<Ad> getAd(int authorId);
+        // т.е если наш клиент имеет идентификатор или порядковый номер = 25
+        // то запрос выше нам выкатит все объявления поля author = 25 
         List<Ad> adUser = adRepository.getAd(client.getId());
         logger.info(adUser + " aduser");
         if(adUser != null) {
@@ -173,7 +190,35 @@ public class Mapper {
             .map((Function<Ad, Ads>) ad -> {
                 Ads ads = new Ads();
                         ads.setAuthor(ad.getAuthor());
-                        ads.setImage(new ImageDto());
+                        ads.setImage(Arrays.asList(ad.getImage()));
+                        ads.setPk(ad.getPk());
+                        ads.setPrice(ad.getPrice());
+                        ads.setTitle(ad.getTitle());
+                        return ads;
+            }).collect(Collectors.toList());
+           
+            adList.setResults(resultAds);
+            adList.setCount(resultAds.size());
+            return adList;
+        }
+
+        return adList;
+       
+    }
+
+       // из entity в dto
+       public AdList getAllAds() {
+       
+        AdList adList = new AdList();
+        
+        List<Ad> adUser = adRepository.getAllAds();
+        logger.info(adUser + " aduser");
+        if(adUser != null) {
+            List<Ads> resultAds = adUser.stream()
+            .map((Function<Ad, Ads>) ad -> {
+                Ads ads = new Ads();
+                        ads.setAuthor(ad.getAuthor());
+                        ads.setImage(Arrays.asList(ad.getImage()));
                         ads.setPk(ad.getPk());
                         ads.setPrice(ad.getPrice());
                         ads.setTitle(ad.getTitle());
@@ -199,7 +244,7 @@ public class Mapper {
         fullAd.setAuthorLastName(client.getLastName());
         fullAd.setDescription(ad.getDescription());
         fullAd.setEmail(client.getEmail());
-        fullAd.setImage(new Ads().getImage());
+        // fullAd.setImage(new Ads().getImage());
         fullAd.setPhone(client.getPhone());
         fullAd.setPk(ad.getPk());
         fullAd.setPrice(ad.getPrice());

@@ -30,8 +30,8 @@ public class AdsService implements AdsInterface{
      * и возвращает в api ответ в виде данных дто
      */
     @Override
-    public AdList getAds() {
-        return mapper.adToAds();
+    public AdList getAllAds() {
+        return mapper.getAllAds();
     }
 
      /**

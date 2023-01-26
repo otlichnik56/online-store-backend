@@ -11,4 +11,9 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
 
     @Query(value = "SELECT * FROM ad WHERE author = ?1", nativeQuery = true)
     List<Ad> getAd(int authorId);
+
+    @Query(value = "SELECT * FROM ad", nativeQuery = true)
+    List<Ad> getAllAds();
+
+
 }

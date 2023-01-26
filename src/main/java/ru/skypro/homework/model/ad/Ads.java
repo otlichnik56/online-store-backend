@@ -10,7 +10,7 @@ import ru.skypro.homework.model.Image.ImageDto;
 @NoArgsConstructor
 public class Ads {
     private int author;
-    private ImageDto image;
+    private List<String> image;
     private int pk;
     private int price;
     private String title;

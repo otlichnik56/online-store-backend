@@ -33,8 +33,8 @@ public class AdsController {
 
     @GetMapping
     public ResponseEntity<AdList> getAds() {
-        if(adsService.getAds() != null) {
-            return ResponseEntity.status(200).body(adsService.getAds());
+        if(adsService.getAllAds() != null) {
+            return ResponseEntity.status(200).body(adsService.getAllAds());
         } else {
             return ResponseEntity.status(500).build();
         }
