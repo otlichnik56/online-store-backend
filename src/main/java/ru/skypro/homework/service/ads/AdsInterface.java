@@ -14,7 +14,7 @@ import ru.skypro.homework.model.ad.FullAd;
 public interface AdsInterface {
 
 
-    AdList getAds();
+    AdList getAllAds();
     Ads addAds(Ads ads);
     FullAd getFullAd(int id);
     void removeAds(int id);

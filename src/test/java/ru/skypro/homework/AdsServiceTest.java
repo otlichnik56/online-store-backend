@@ -27,7 +27,7 @@ public class AdsServiceTest {
      */
     @Test
     public void shoudlReturnResponseValueAsAdListDto() {
-        AdList adList = adsService.getAds();
+        AdList adList = adsService.getAllAds();
         Ads ads = new Ads();
         List<Ads> listAds = new ArrayList<Ads>(Arrays.asList(ads));
         adList.setResults(listAds);
