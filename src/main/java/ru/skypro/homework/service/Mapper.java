@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import ru.skypro.homework.WebSecurityConfig;
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.entity.Comment;
@@ -31,6 +33,7 @@ import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.RegisterReq;
+import ru.skypro.homework.model.user.Role;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.ClientRepository;
@@ -46,7 +49,6 @@ public class Mapper {
     private final AdRepository adRepository;
     private final CommentRepository commentRepository;
     private final ImageRepository imageRepository;
-
     
     LoginReq loginReq = new LoginReq();
     Ads adsDto = new Ads();
@@ -61,6 +63,7 @@ public class Mapper {
         this.adRepository = adRepository;
         this.commentRepository = commentRepository;
         this.imageRepository = imageRepository;
+        
     }
 
       // из dto в entity
@@ -71,14 +74,14 @@ public class Mapper {
         client.setFirstName(registerReq.getFirstName());
         client.setLastName(registerReq.getLastName());
         client.setPhone(registerReq.getPhone());
-        client.setRole(registerReq.getRole());
+        client.setRole(Role.USER);
         clientRepository.save(client);   
     }
 
     public void clientToLoginReg(String userName, String password) {
         loginReq.setUsername(userName);
         loginReq.setPassword(password);
-
+        
         logger.info(loginReq + " login");
         
     }
@@ -87,6 +90,7 @@ public class Mapper {
     public User clientToUser() {
        User user = new User();
        Client client = clientRepository.getUserName(loginReq.getUsername());
+       logger.info(client + " client");
         user.setId(client.getId());
         user.setFirstName(client.getFirstName());
         user.setLastName(client.getLastName());

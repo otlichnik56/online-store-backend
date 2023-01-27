@@ -22,7 +22,8 @@ public class ImageController {
 
     private final AdsService adsService;
 
-    @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+                                  produces = {MediaType.APPLICATION_JSON_VALUE})
     public ImageDto updateAdsImage(@PathVariable Integer id, @RequestParam MultipartFile multipartFile) throws IOException {
         return adsService.updateAdsImage(id, multipartFile);
     }
