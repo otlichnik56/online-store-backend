@@ -13,7 +13,7 @@ import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.user.PasswordService;
 import ru.skypro.homework.service.user.UserService;
 
-@Slf4j
+
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @AllArgsConstructor
