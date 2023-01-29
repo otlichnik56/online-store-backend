@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.model.Image.ImageDto;
 import ru.skypro.homework.model.ad.AdList;
@@ -15,7 +16,7 @@ public interface AdsInterface {
 
 
     AdList getAllAds();
-    Ads addAds(Ads ads);
+    Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file);
     FullAd getFullAd(int id);
     void removeAds(int id);
     FullAd updateAds(int id);

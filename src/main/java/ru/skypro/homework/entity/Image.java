@@ -5,9 +5,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +31,10 @@ public class Image {
     @Lob
     @Type(type="org.hibernate.type.BinaryType")
     private byte[] data;
+
+    // @JsonIgnore
+    // @OneToOne
+    // private Client client;
 
     public Image() {}
 }

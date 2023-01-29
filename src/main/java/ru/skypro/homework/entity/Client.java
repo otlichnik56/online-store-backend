@@ -6,6 +6,8 @@ import ru.skypro.homework.model.user.Role;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Data
 @Entity
 @Table(name = "client")
@@ -26,6 +28,10 @@ public class Client {
     private String regDate;
     private String city;
     private String image;
+
+    // @JsonIgnore
+    // @OneToOne(mappedBy = "client")
+    // private String image;
 
     public Client() {
 

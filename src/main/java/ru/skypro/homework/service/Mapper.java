@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import ru.skypro.homework.WebSecurityConfig;
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Client;
@@ -150,32 +151,47 @@ public class Mapper {
      */
 
     // из dto в entity
-    public Ads adsToAd(Ads ads) {
+    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) {
        
-        Ad ad = new Ad();
+        Ad adEntity = new Ad();
+        Ads ads = new Ads();
         // вот здесь мы извлекаем того пользователя который у нас есть в базе
         // и который сейчас авторизовался
         Client client = clientRepository.getUserName(loginReq.getUsername());
         // далее мы считываем из базы идентификатор этого пользователя, чтобы знать
         // кто автор объявления и записываем в поле author
-        ad.setAuthor(client.getId());
+        adEntity.setAuthor(client.getId());
+        ads.setAuthor(client.getId());
         // далее четыре сеттера мы заполняем данными
         // которые приходят с фронта в теле post запроса
-        ad.setImage("");
-        ad.setPk(ads.getPk());
+       
+        adEntity.setImage(file.getOriginalFilename());
+        List<String> listImage = new ArrayList<>(Arrays.asList());
+        listImage.add(adEntity.getImage());
+
+        ads.setImage(listImage);
+        adEntity.setPk(adEntity.getPk());
+
+        ads.setPk(adEntity.getPk());
         
-        ad.setPrice(ads.getPrice());
-        ad.setTitle(ads.getTitle());
+        adEntity.setPrice(ad.getPrice());
+        ads.setPrice(ad.getPrice());
+
+        adEntity.setTitle(ad.getTitle());
+        ads.setTitle(ad.getTitle());
+
+        adEntity.setDescription(ad.getDescription());
+        logger.info(ads + " ads");
         // сохраняем в базе данных
         // в базе это будет выглядить так:
         // id image pk price title author
         // 1  ""    1   100 "title" id залогиненного пользователя (например 25)
-        adRepository.save(ad);
+        adRepository.save(adEntity);
         return ads;
     }
 
     // из entity в dto
-    public AdList adToAds() {
+    public AdList getAdsMe() {
        
         AdList adList = new AdList();
         // для получения объявлений того или иного пользователя
@@ -189,6 +205,7 @@ public class Mapper {
         // то запрос выше нам выкатит все объявления поля author = 25 
         List<Ad> adUser = adRepository.getAd(client.getId());
         logger.info(adUser + " aduser");
+        
         if(adUser != null) {
             List<Ads> resultAds = adUser.stream()
             .map((Function<Ad, Ads>) ad -> {
