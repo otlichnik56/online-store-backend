@@ -1,14 +1,14 @@
 CREATE TABLE client
 (
-    id           INTEGER PRIMARY KEY,
-    username     TEXT,
+    id           SERIAL PRIMARY KEY,
+    username     TEXT UNIQUE,
     password     TEXT,
     role         TEXT,
-    firstName    TEXT,
-    lastName     TEXT,
+    first_name    TEXT,
+    last_name     TEXT,
     phone        TEXT,
     email        TEXT,
-    regDate      TEXT,
+    reg_date      TEXT,
     city         TEXT,
     image        TEXT
 );
@@ -16,16 +16,17 @@ CREATE TABLE client
 
 CREATE TABLE comment
 (
-    pk           INTEGER PRIMARY KEY,
-    createdAt    TEXT,
+    pk           SERIAL PRIMARY KEY,
+    created_at   TEXT,
     text         TEXT,
-    author       INTEGER REFERENCES client(id)
+    author       INTEGER REFERENCES client(id),
+    ads_pk       INTEGER REFERENCES ad(pk)
 );
 
 
 CREATE TABLE ad
 (
-    pk           INTEGER PRIMARY KEY,
+    pk           SERIAL PRIMARY KEY,
     title        TEXT,
     price        INTEGER,
     text         TEXT,
@@ -34,5 +35,12 @@ CREATE TABLE ad
     author       INTEGER REFERENCES client(id)
 );
 
-
+CREATE TABLE image
+(
+    id SERIAL references ad(pk),  
+    file_size bigint, 
+    media_type text, 
+    fine_name text,
+    data bytea
+);
 

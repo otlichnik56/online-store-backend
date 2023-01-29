@@ -1,11 +1,13 @@
-package ru.skypro.homework.model.user;
+package ru.skypro.homework.model.ad;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.skypro.homework.model.user.Role;
 
 @Data
 @AllArgsConstructor
-public class RegisterReq {
+public class AdsUser {
+    
     private String username;
     private String password;
     private String firstName;
@@ -13,7 +15,7 @@ public class RegisterReq {
     private String phone;
     private Role role;
 
-    public RegisterReq() {
+    public AdsUser() {
         
     }
 }

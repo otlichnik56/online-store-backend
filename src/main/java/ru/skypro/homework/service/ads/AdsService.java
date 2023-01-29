@@ -1,12 +1,21 @@
 package ru.skypro.homework.service.ads;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.entity.Comment;
+import ru.skypro.homework.model.Image.ImageDto;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
+import ru.skypro.homework.model.user.RegisterReq;
+import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.Mapper;
 
 @Service
@@ -14,6 +23,8 @@ import ru.skypro.homework.service.Mapper;
 public class AdsService implements AdsInterface{
 
     private Mapper mapper;
+    private final AdRepository adRepository;
+    private final CommentRepository commentRepository;
 
 
     /**
@@ -22,9 +33,8 @@ public class AdsService implements AdsInterface{
      * и возвращает в api ответ в виде данных дто
      */
     @Override
-    public AdList getAds() {
-        Ad ad = new Ad();
-        return mapper.adToAds(ad);
+    public AdList getAllAds() {
+        return mapper.getAllAds();
     }
 
      /**
@@ -34,8 +44,7 @@ public class AdsService implements AdsInterface{
      */
     @Override
     public AdList getAdsMe() {
-        Ad ad = new Ad();
-        return mapper.adToAds(ad);
+        return mapper.adToAds();
     }
 
     /**
@@ -50,18 +59,22 @@ public class AdsService implements AdsInterface{
         // здесь будет операция сохранения данных в сущности
         // Ad ad = mapper.adsToAd(ads);
         // adRespoditory.save(ad);
-         mapper.adsToAd(ads);
-         return new Ads();
+         
+         return mapper.adsToAd(ads);
     }
 
+
+    // дописан
     @Override
     public FullAd getFullAd(int id) {
-        return mapper.adToFullAd(new Ad());
+        Ad ad = adRepository.findById(id).get();
+        return mapper.adToFullAd(ad);
     }
 
+    // дописан
     @Override
     public void removeAds(int id) {
-
+        adRepository.deleteById(id);
     }
 
     @Override
@@ -70,8 +83,12 @@ public class AdsService implements AdsInterface{
     }
 
     @Override
-    public String updateAdsImage(int id) {
-        return "image";
+    public ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException {
+            return mapper.imageDtoToImage(id, multipartFile);
     }
 
+    public void removeComment(int id) {
+        Comment comment = commentRepository.findById(id).get();
+        commentRepository.delete(comment);
+    }
 }
