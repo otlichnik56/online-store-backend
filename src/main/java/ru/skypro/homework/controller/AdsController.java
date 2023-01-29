@@ -2,12 +2,17 @@ package ru.skypro.homework.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.AdsUser;
 import ru.skypro.homework.model.ad.FullAd;
+import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.comment.CommentDto;
 import ru.skypro.homework.model.comment.CommentsList;
@@ -63,10 +68,12 @@ public class AdsController {
     }
 
 
-    @PostMapping
-    public Ads setAds(@RequestBody Ads ads) {
-        return adsService.addAds(ads);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    public Ads setAds(@RequestBody ru.skypro.homework.model.ad.Ad ad, @RequestBody MultipartFile file) {
+        return adsService.addAds(ad, file);
     }
+
 
     @PostMapping("/{ad_pk}/comments")
     public CommentDto setComment(@PathVariable(value = "ad_pk") Integer adPk) {

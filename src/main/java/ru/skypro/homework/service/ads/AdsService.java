@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.model.Image.ImageDto;
@@ -41,7 +42,7 @@ public class AdsService implements AdsInterface{
      */
     @Override
     public AdList getAdsMe() {
-        return mapper.adToAds();
+        return mapper.getAdsMe();
     }
 
     /**
@@ -52,12 +53,12 @@ public class AdsService implements AdsInterface{
      * данных дто
      */
     @Override
-    public Ads addAds(Ads ads) {
+    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) {
         // здесь будет операция сохранения данных в сущности
         // Ad ad = mapper.adsToAd(ads);
         // adRespoditory.save(ad);
          
-         return mapper.adsToAd(ads);
+         return mapper.addAds(ad, file);
     }
 
 
