@@ -269,15 +269,13 @@ public class Mapper {
     }
 
     // из dto в entity
-    public CommentDto commentDtoToComment(int adPk) {
+    public Comment commentDtoToComment(int adPk, CommentDto commentDto) {
         Comment comment = new Comment();
-        Client client = clientRepository.getUserName(loginReq.getUsername());
-        comment.setPk(adPk);
-        comment.setAuthor(client.getId());
-        comment.setCreatedAt(LocalDate.now().toString());
-        comment.setText("text");
-        commentRepository.save(comment);
-        return new CommentDto(comment.getPk(),comment.getCreatedAt(), comment.getText(), comment.getAuthor());
+        comment.setAuthor(commentDto.getAuthor());
+        comment.setCreatedAt(commentDto.getCreatedAt());
+        comment.setText(commentDto.getText());
+        comment.setAdsPk(adPk);
+        return comment;
         
     }
 
@@ -285,20 +283,18 @@ public class Mapper {
      public CommentsList commentToCommentDtoList(int adPk) {
         CommentsList commentsList = new CommentsList();
 
-        Client client = clientRepository.getUserName(loginReq.getUsername());
+        //Client client = clientRepository.getUserName(loginReq.getUsername());
         List<Comment> resultComments = commentRepository.getComments(adPk);
 
-     
         if(resultComments != null) {
             List<CommentDto> commentDtoList = resultComments.stream()
-             .map((Function<Comment, CommentDto>) comment -> {
+             .map(comment -> {
                 CommentDto commentDto = new CommentDto();
                 commentDto.setAuthor(comment.getAuthor());
                 commentDto.setCreatedAt(comment.getCreatedAt());
                 commentDto.setPk(comment.getPk());
                 commentDto.setText(comment.getText());
                 return commentDto;
-
             }).collect(Collectors.toList());
         
             commentsList.setResults(commentDtoList);
@@ -310,13 +306,13 @@ public class Mapper {
     }
 
       // из entity в dto
-    public CommentDto commentToCommentDto(Comment comment) {
+    public CommentDto commentToCommentDto(int id) {
+        Comment comment = commentRepository.findById(id).get();
         CommentDto commentDto = new CommentDto();
         commentDto.setAuthor(comment.getAuthor());
         commentDto.setCreatedAt(comment.getCreatedAt());
         commentDto.setPk(comment.getPk());
         commentDto.setText(comment.getText());
-
         return commentDto;
     }
 

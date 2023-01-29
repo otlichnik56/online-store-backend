@@ -8,12 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.model.Image.ImageDto;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.Mapper;
 
 @Service
@@ -22,6 +24,7 @@ public class AdsService implements AdsInterface{
 
     private Mapper mapper;
     private final AdRepository adRepository;
+    private final CommentRepository commentRepository;
 
 
     /**
@@ -84,4 +87,8 @@ public class AdsService implements AdsInterface{
             return mapper.imageDtoToImage(id, multipartFile);
     }
 
+    public void removeComment(int id) {
+        Comment comment = commentRepository.findById(id).get();
+        commentRepository.delete(comment);
+    }
 }
