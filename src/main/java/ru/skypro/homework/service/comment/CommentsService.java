@@ -54,9 +54,8 @@ public class CommentsService implements CommentsInterface {
 
     @Override
     public CommentDto updateComment(int adPk, int id, CommentDto commentDto) {
-        int pk = commentRepository.findById(id).get().getPk();
         Comment comment = mapper.commentDtoToComment(adPk, commentDto);
-        comment.setPk(pk);
+        comment.setPk(id);
         commentRepository.save(comment);
         return commentDto;
     }
