@@ -1,15 +1,20 @@
 package ru.skypro.homework;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import ru.skypro.homework.model.user.Role;
+
+import javax.sql.DataSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -17,6 +22,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
@@ -27,6 +33,10 @@ public class WebSecurityConfig {
             "/login", "/register"
     };
 
+    @Autowired
+    public DataSource dataSource;
+
+    /**
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
@@ -35,6 +45,13 @@ public class WebSecurityConfig {
                 .roles(Role.ADMIN.toString())
                 .build();
                 return new InMemoryUserDetailsManager(user);
+    } */
+
+    @Bean
+    public JdbcUserDetailsManager jdbcUserDetailsService() {
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager();
+        jdbcUserDetailsManager.setDataSource(dataSource);
+        return jdbcUserDetailsManager;
     }
 
     @Bean
