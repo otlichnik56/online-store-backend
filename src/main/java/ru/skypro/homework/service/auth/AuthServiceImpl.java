@@ -35,6 +35,7 @@ public class AuthServiceImpl implements AuthService {
         String encryptedPassword = userDetails.getPassword();
         String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
         mapper.clientToLoginReg(userName, password);
+        
         return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
     }
 

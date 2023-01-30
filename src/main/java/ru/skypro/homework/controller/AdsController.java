@@ -68,10 +68,10 @@ public class AdsController {
     }
 
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE)
-    public Ads setAds(@RequestBody ru.skypro.homework.model.ad.Ad ad, @RequestBody MultipartFile file) {
-        return adsService.addAds(ad, file);
+    @PostMapping(consumes = {"multipart/form-data", "application/json"})
+    public ResponseEntity<Ads> setAds(@RequestPart ru.skypro.homework.model.ad.Ad ad, 
+    @RequestPart(name = "image") MultipartFile file) {
+        return ResponseEntity.status(200).body(adsService.addAds(ad, file));
     }
 
 
