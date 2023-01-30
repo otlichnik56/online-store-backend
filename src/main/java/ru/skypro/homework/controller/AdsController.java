@@ -57,42 +57,6 @@ public class AdsController {
         return new FullAd();
     }
 
-    @GetMapping("/{ad_pk}/comments")
-    public CommentsList getAllComments(@PathVariable(value =  "ad_pk") Integer adPk) {
-        return commentsService.getAllComments(1);
-    }
-
-    @GetMapping("/{ad_pk}/comments/{id}")
-    public CommentDto getAdComments(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
-        return commentsService.getComment(adPk, id);
-    }
-
-
-    @PostMapping(consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity<Ads> setAds(@RequestPart ru.skypro.homework.model.ad.Ad ad, 
-    @RequestPart(name = "image") MultipartFile file) {
-        return ResponseEntity.status(200).body(adsService.addAds(ad, file));
-    }
-
-
-    @PostMapping("/{ad_pk}/comments")
-    public CommentDto setComment(@PathVariable(value = "ad_pk") Integer adPk) {
-        return commentsService.setComments(adPk);
-    }
-
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<FullAd> updateAds(@PathVariable Integer id) {
-        return ResponseEntity.status(200).body(adsService.updateAds(id));
-    }
-
-    @PatchMapping("/{ad_pk}/comments/{id}")
-    public CommentDto updateAdsUser(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
-        return commentsService.updateComment(adPk, id);
-    }
-
-
-
     // дописан
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeAds(@PathVariable Integer id) {
@@ -100,9 +64,70 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<FullAd> updateAds(@PathVariable Integer id) {
+        return ResponseEntity.status(200).body(adsService.updateAds(id));
+    }
 
+    @PostMapping(consumes = {"multipart/form-data", "application/json"})
+    public ResponseEntity<Ads> setAds(@RequestPart ru.skypro.homework.model.ad.Ad ad,
+    @RequestPart(name = "image") MultipartFile file) {
+        return ResponseEntity.status(200).body(adsService.addAds(ad, file));
+    }
+
+    /**
+     * Возвращает все коментарии к объявлению
+     * @param adPk
+     * @return
+     */
+    @GetMapping("/{ad_pk}/comments")
+    public CommentsList getAllComments(@PathVariable(value =  "ad_pk") Integer adPk) {
+        return commentsService.getAllComments(adPk);
+    }
+
+    /**
+     * Добавляет коментарий к объявлению
+     * @param adPk
+     * @return
+     */
+    @PostMapping("/{ad_pk}/comments")
+    public CommentDto setComment(@PathVariable(value = "ad_pk") Integer adPk,
+                                 @RequestBody CommentDto commentDto) {
+        return commentsService.setComments(adPk, commentDto);
+    }
+
+    /**
+     * Возвращает коментарий к объявлению определенного автора
+     * @param adPk
+     * @param id
+     * @return
+     */
+    @GetMapping("/{ad_pk}/comments/{id}")
+    public CommentDto getAdComments(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id) {
+        return commentsService.getComment(id);
+    }
+
+    /**
+     * Редактирования коментария определенного автора
+     * @param adPk
+     * @param id
+     * @return
+     */
+    @PatchMapping("/{ad_pk}/comments/{id}")
+    public CommentDto updateCommentUser(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
+                                        @RequestBody CommentDto commentDto) {
+        return commentsService.updateComment(adPk, id, commentDto);
+    }
+
+    /**
+     * Удаляет коментарий к объявлению определенного пользователя
+     * @param adPk
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity<?> removeComments(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
+        commentsService.removeComment(adPk, id);
         return ResponseEntity.ok().build();
     }
 

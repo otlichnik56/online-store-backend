@@ -19,4 +19,7 @@ public class Comment {
     @JoinColumn(name = "author")
     private Integer author;
 
+    @JoinColumn(name = "ads_pk")
+    private Integer adsPk;
+
 }
