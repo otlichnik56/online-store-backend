@@ -87,7 +87,7 @@ public class AdsController {
     }
 
     /**
-     *
+     * Добавляет коментарий к объявлению
      * @param adPk
      * @return
      */
