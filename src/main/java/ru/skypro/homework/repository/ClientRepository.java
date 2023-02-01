@@ -10,6 +10,8 @@ import ru.skypro.homework.entity.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
+    Client findByUsernameIgnoreCase(String username);
+
     @Query(value = "SELECT * FROM client WHERE username = ?1", nativeQuery = true)
     Client getUserName(String username);
 
