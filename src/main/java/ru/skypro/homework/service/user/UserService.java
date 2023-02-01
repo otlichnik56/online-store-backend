@@ -1,12 +1,10 @@
 package ru.skypro.homework.service.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.AdsUser;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.Mapper;
 
@@ -18,7 +16,7 @@ public class UserService implements UserInterface {
 
     @Override
     public User getUser() {
-        return mapper.clientToUser(new Client());
+        return mapper.clientToUser();
     }
 
     @Override
@@ -33,7 +31,9 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public Ads getAdsMe() {
-        return new Ads();
+    public AdsUser getAdsMe() {
+        return mapper.clientToAdsUser();
     }
+
+   
 }

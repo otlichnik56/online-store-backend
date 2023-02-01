@@ -1,9 +1,10 @@
 package ru.skypro.homework.model.ad;
 
-import java.util.Set;
+import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skypro.homework.model.Image.ImageDto;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +13,7 @@ public class FullAd {
     private String authorLastName;
     private String description;
     private String email;
-    private String image;
+    private ImageDto image;
     private String phone;
     private int pk;
     private int price;

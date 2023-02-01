@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.user;
 
 import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.AdsUser;
 import ru.skypro.homework.model.user.User;
 
 public interface UserInterface {
@@ -11,6 +12,6 @@ public interface UserInterface {
 
     User updateUserImage();
 
-    Ads getAdsMe();
+    AdsUser getAdsMe();
 
 }
