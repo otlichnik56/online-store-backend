@@ -12,12 +12,12 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
     Client findByUsernameIgnoreCase(String username);
 
-    @Query(value = "SELECT * FROM client WHERE username = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE username = ?1", nativeQuery = true)
     Client getUserName(String username);
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE client SET password = ?2 WHERE password = ?1", nativeQuery = true)
+    @Query(value = "UPDATE users SET password = ?2 WHERE password = ?1", nativeQuery = true)
     void setNewPass(String currentPass, String newPass);
 
 

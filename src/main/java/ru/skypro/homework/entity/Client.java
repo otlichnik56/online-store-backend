@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
-@Table(name = "client")
+@Table(name = "users")
 @AllArgsConstructor
 public class Client {
 

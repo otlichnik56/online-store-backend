@@ -11,6 +11,6 @@ import ru.skypro.homework.entity.Image;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     
-    @Query(value = "SELECT file_name FROM image", nativeQuery = true)
+    @Query(value = "SELECT file_name FROM images", nativeQuery = true)
     List<String> getAddedImages();
 }

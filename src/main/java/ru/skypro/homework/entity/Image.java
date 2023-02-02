@@ -17,7 +17,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "image")
+@Table(name = "images")
 @AllArgsConstructor
 public class Image {
     

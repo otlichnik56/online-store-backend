@@ -1,30 +1,21 @@
-CREATE TABLE client
+CREATE TABLE users
 (
     id           SERIAL PRIMARY KEY,
     username     TEXT UNIQUE,
     password     TEXT,
+    enabled      TEXT,
     role         TEXT,
-    first_name    TEXT,
-    last_name     TEXT,
+    first_name   TEXT,
+    last_name    TEXT,
     phone        TEXT,
     email        TEXT,
-    reg_date      TEXT,
+    reg_date     TEXT,
     city         TEXT,
     image        TEXT
 );
 
 
-CREATE TABLE comment
-(
-    pk           SERIAL PRIMARY KEY,
-    created_at   TEXT,
-    text         TEXT,
-    author       INTEGER REFERENCES client(id),
-    ads_pk       INTEGER REFERENCES ad(pk)
-);
-
-
-CREATE TABLE ad
+CREATE TABLE ads
 (
     pk           SERIAL PRIMARY KEY,
     title        TEXT,
@@ -32,15 +23,25 @@ CREATE TABLE ad
     text         TEXT,
     image        TEXT,
     description  TEXT,
-    author       INTEGER REFERENCES client(id)
+    author       INTEGER REFERENCES users(id)
 );
 
-CREATE TABLE image
+
+CREATE TABLE comments
 (
-    id SERIAL references ad(pk),  
+    pk           SERIAL PRIMARY KEY,
+    created_at   TEXT,
+    text         TEXT,
+    author       INTEGER REFERENCES users(id),
+    ads_pk       INTEGER REFERENCES ads(pk)
+);
+
+CREATE TABLE images
+(
+    id SERIAL references ads(pk),
     file_size bigint, 
     media_type text, 
-    fine_name text,
+    file_name text,
     data bytea
 );
 

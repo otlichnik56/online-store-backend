@@ -9,10 +9,10 @@ import ru.skypro.homework.entity.Ad;
 
 public interface AdRepository extends JpaRepository<Ad, Integer> {
 
-    @Query(value = "SELECT * FROM ad WHERE author = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM ads WHERE author = ?1", nativeQuery = true)
     List<Ad> getAd(int authorId);
 
-    @Query(value = "SELECT * FROM ad", nativeQuery = true)
+    @Query(value = "SELECT * FROM ads", nativeQuery = true)
     List<Ad> getAllAds();
 
 

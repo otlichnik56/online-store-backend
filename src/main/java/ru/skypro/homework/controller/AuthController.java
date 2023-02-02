@@ -51,12 +51,9 @@ public class AuthController {
         )
     @ApiResponse(responseCode = "201", description = "Пользователь создан")    
     @PostMapping("/register")
-    public ResponseEntity<?> register(
-        @Parameter(description = "принимает объект с регистрационными данными",
-        schema = @Schema(implementation = RegisterReq.class)
-        )
-        @RequestBody RegisterReq req
-        ) {
+    public ResponseEntity<?> register(@Parameter(description = "принимает объект с регистрационными данными",
+                                                 schema = @Schema(implementation = RegisterReq.class))
+                                          @RequestBody RegisterReq req) {
         Role role = req.getRole() == null ? USER : req.getRole();
         if (authService.register(req, role)) {
             return ResponseEntity.ok().build();
