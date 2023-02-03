@@ -10,9 +10,17 @@ public interface CommentsInterface {
 
     CommentDto setComments(int adPk);
 
+    CommentDto setComments(int adPk, CommentDto commentDto);
+
     CommentDto getComment(int pk, int id);
+
+    CommentDto getComment(int id);
 
     void removeComment(int pk, int id);
 
+    void removeComment(int id);
+
     CommentDto updateComment(int pk, int id);
+
+    CommentDto updateComment(int adPk, int id, CommentDto commentDto);
 }

@@ -19,7 +19,8 @@ CREATE TABLE comment
     pk           SERIAL PRIMARY KEY,
     created_at   TEXT,
     text         TEXT,
-    author       INTEGER REFERENCES client(id)
+    author       INTEGER REFERENCES client(id),
+    ads_pk       INTEGER REFERENCES ad(pk)
 );
 
 

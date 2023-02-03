@@ -141,7 +141,7 @@ public class Mapper {
 
     /**
      * описание - метод который переводит данные из дто в сущность 
-     * @param ads - дто (модель данных)
+     * @param  - дто (модель данных)
      * @return - возвращает сущность
      */
 
@@ -303,16 +303,13 @@ public class Mapper {
 
 
     // из dto в entity
-    public CommentDto commentDtoToComment(int adPk) {
+    public Comment commentDtoToComment(int adPk, CommentDto commentDto) {
         Comment comment = new Comment();
-        Client client = clientRepository.getUserName(loginReq.getUsername());
-        comment.setPk(adPk);
-        comment.setAuthor(client.getId());
-        comment.setCreatedAt(LocalDate.now().toString());
-        comment.setText("text");
-        commentRepository.save(comment);
-        return new CommentDto(comment.getPk(),comment.getCreatedAt(), comment.getText(), comment.getAuthor());
-        
+        comment.setAuthor(commentDto.getAuthor());
+        comment.setCreatedAt(commentDto.getCreatedAt());
+        comment.setText(commentDto.getText());
+        comment.setAdsPk(adPk);
+        return comment;
     }
 
      // из entity в dto
@@ -344,15 +341,15 @@ public class Mapper {
     }
 
       // из entity в dto
-    public CommentDto commentToCommentDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setAuthor(comment.getAuthor());
-        commentDto.setCreatedAt(comment.getCreatedAt());
-        commentDto.setPk(comment.getPk());
-        commentDto.setText(comment.getText());
-
-        return commentDto;
-    }
+      public CommentDto commentToCommentDto(int id) {
+          Comment comment = commentRepository.findById(id).get();
+          CommentDto commentDto = new CommentDto();
+          commentDto.setAuthor(comment.getAuthor());
+          commentDto.setCreatedAt(comment.getCreatedAt());
+          commentDto.setPk(comment.getPk());
+          commentDto.setText(comment.getText());
+          return commentDto;
+      }
 
     // from dto to entity
     public ImageDto imageDtoToImage(int id, MultipartFile imageFile) throws IOException {
