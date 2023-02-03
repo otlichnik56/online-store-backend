@@ -167,6 +167,7 @@ public class Mapper {
         // ads.setPrice(ad.getPrice());
         // ads.setTitle(ad.getTitle());
 
+        // для отладки
         adEntity.setAuthor(1);
         adEntity.setImage("image");
         adEntity.setPrice(100);
@@ -239,6 +240,8 @@ public class Mapper {
         //     adList.setCount(resultAds.size());
         //     return adList;
         // }
+
+        // для отладки
         Ads ads = new Ads();
         Ad ad = new Ad();
 
