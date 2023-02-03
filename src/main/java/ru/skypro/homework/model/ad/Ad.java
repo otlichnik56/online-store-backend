@@ -9,5 +9,4 @@ public class Ad {
     private int price;
     private String title;
     private String description;
-    private MultipartFile image;
 }

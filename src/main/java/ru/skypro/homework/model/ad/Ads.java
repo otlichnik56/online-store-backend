@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.skypro.homework.model.Image.ImageDto;
+import ru.skypro.homework.model.image.ImageDto;
 
 @Data
 @NoArgsConstructor

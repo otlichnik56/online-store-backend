@@ -1,4 +1,4 @@
-package ru.skypro.homework.model.Image;
+package ru.skypro.homework.model.image;
 
 import java.util.List;
 

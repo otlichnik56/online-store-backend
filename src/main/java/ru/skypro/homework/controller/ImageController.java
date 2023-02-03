@@ -3,7 +3,7 @@ package ru.skypro.homework.controller;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.skypro.homework.model.Image.ImageDto;
+import ru.skypro.homework.model.image.ImageDto;
 import ru.skypro.homework.service.ads.AdsService;
 
 import java.io.IOException;
@@ -21,11 +21,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageController {
 
     private final AdsService adsService;
-
-    @PostMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-                                  produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ImageDto updateAdsImage(@PathVariable Integer id, @RequestParam MultipartFile multipartFile) throws IOException {
-        return adsService.updateAdsImage(id, multipartFile);
-    }
 
 }
