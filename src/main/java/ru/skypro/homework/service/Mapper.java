@@ -75,8 +75,9 @@ public class Mapper {
     }
 
     public void clientToLoginReg(String userName, String password) {
-        loginReq.setUsername(userName);
-        loginReq.setPassword(password);
+        Client client = clientRepository.findByUsername(userName);
+        loginReq.setUsername(client.getUsername());
+        loginReq.setPassword(client.getPassword());
         
         logger.info(loginReq + " login");
         
