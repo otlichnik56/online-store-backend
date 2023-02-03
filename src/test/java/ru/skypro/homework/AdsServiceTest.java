@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import ru.skypro.homework.model.ad.AdList;
-import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.service.ad.AdList;
+import ru.skypro.homework.service.ad.Ads;
 import ru.skypro.homework.service.ads.AdsService;
 
 @SpringBootTest

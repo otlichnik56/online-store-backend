@@ -1,19 +1,14 @@
 package ru.skypro.homework.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-
 import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.user.PasswordService;
 import ru.skypro.homework.service.user.UserService;
 
-
+@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @AllArgsConstructor

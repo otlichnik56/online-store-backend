@@ -7,33 +7,31 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.model.ad.FullAd;
+import ru.skypro.homework.entity.Advert;
 
-
-public interface AdRepository extends JpaRepository<Ad, Integer> {
+public interface AdvertRepository extends JpaRepository<Advert, Integer> {
 
     @Query(value = "SELECT * FROM ads WHERE author = ?1", nativeQuery = true)
-    List<Ad> getAd(int authorId);
+    List<Advert> getAd(int authorId);
 
     @Query(value = "SELECT * FROM ads", nativeQuery = true)
-    List<Ad> getAllAds();
+    List<Advert> getAllAds();
 
-    @Query(value = "SELECT * FROM ad WHERE ad.pk = ?1 LIMIT 1", nativeQuery = true)
-    Ad getFullAd(int id);
+    @Query(value = "SELECT * FROM ads WHERE ads.pk = ?1 LIMIT 1", nativeQuery = true)
+    Advert getFullAd(int id);
 
-    @Query(value = "SELECT image FROM ad WHERE ad.author = ?1", nativeQuery = true)
+    @Query(value = "SELECT image FROM ads WHERE ads.author = ?1", nativeQuery = true)
     List<String> getImages(int id);
 
-    @Query(value = "SELECT image FROM ad", nativeQuery = true)
+    @Query(value = "SELECT image FROM ads", nativeQuery = true)
     List<String> getAllImages();
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE ad SET price = ?2, title = ?3, description = ?4 WHERE ad.pk = ?1", nativeQuery = true)
+    @Query(value = "UPDATE ads SET price = ?2, title = ?3, description = ?4 WHERE ads.pk = ?1", nativeQuery = true)
     void updateAd(int id, int price, String title, String description);
 
-    @Query(value = "SELECT image FROM ad WHERE ad.pk = ?1", nativeQuery = true)
+    @Query(value = "SELECT image FROM ads WHERE ads.pk = ?1", nativeQuery = true)
     List<String> getImage(int id);
     
 

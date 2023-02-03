@@ -5,12 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +16,7 @@ import lombok.Data;
 @Entity
 @Table(name = "images")
 @AllArgsConstructor
-public class Image {
+public class Picture {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +33,5 @@ public class Image {
     // @OneToOne
     // private Client client;
 
-    public Image() {}
+    public Picture() {}
 }

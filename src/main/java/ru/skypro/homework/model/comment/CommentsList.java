@@ -8,6 +8,6 @@ import lombok.Data;
 public class CommentsList {
 
     private int count;
-    private List<CommentDto> results;
+    private List<Comment> results;
 
 }

@@ -9,17 +9,22 @@ import org.springframework.stereotype.Service;
 
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
+import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.service.Mapper;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
+
+
+    private final ClientRepository clientRepository;
     private final UserDetailsManager manager;
     private final Mapper mapper;
 
     private final PasswordEncoder encoder;
 
-    public AuthServiceImpl(UserDetailsManager manager, Mapper mapper) {
+    public AuthServiceImpl(ClientRepository clientRepository, UserDetailsManager manager, Mapper mapper) {
+        this.clientRepository = clientRepository;
         this.manager = manager;
         this.mapper = mapper;
         this.encoder = new BCryptPasswordEncoder();
@@ -35,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         String encryptedPassword = userDetails.getPassword();
         String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
         mapper.clientToLoginReg(userName, password);
-        
+        // write
         return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
     }
 
@@ -51,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
                         .roles(role.name())
                         .build()
         );
-        mapper.registerReqToClient(registerReq);
+        clientRepository.save(mapper.registerReqToClient(registerReq));
         return true;
     }
 }

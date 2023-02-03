@@ -1,12 +1,11 @@
 package ru.skypro.homework.service;
-import ru.skypro.homework.model.comment.CommentDto;
+import ru.skypro.homework.entity.Commentary;
+import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
-import ru.skypro.homework.model.image.ImageDto;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,23 +17,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.entity.Advert;
 import ru.skypro.homework.entity.Client;
-import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.entity.Image;
-import ru.skypro.homework.model.ad.AdList;
-import ru.skypro.homework.model.ad.Ads;
-import ru.skypro.homework.model.ad.AdsUser;
-import ru.skypro.homework.model.ad.FullAd;
+import ru.skypro.homework.entity.Picture;
+import ru.skypro.homework.model.image.Image;
 import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
 import ru.skypro.homework.model.user.User;
-import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.AdvertRepository;
 import ru.skypro.homework.repository.ClientRepository;
-import ru.skypro.homework.repository.CommentRepository;
-import ru.skypro.homework.repository.ImageRepository;
+import ru.skypro.homework.repository.CommentaryRepository;
+import ru.skypro.homework.repository.PictureRepository;
+import ru.skypro.homework.service.ad.*;
 
 @Service
 public class Mapper {
@@ -42,28 +38,28 @@ public class Mapper {
     Logger logger = LoggerFactory.getLogger(Mapper.class);
 
     private final ClientRepository clientRepository;
-    private final AdRepository adRepository;
-    private final CommentRepository commentRepository;
-    private final ImageRepository imageRepository;
+    private final AdvertRepository advertRepository;
+    private final CommentaryRepository commentaryRepository;
+    private final PictureRepository pictureRepository;
     
     LoginReq loginReq = new LoginReq();
     Ads adsDto = new Ads();
 
     public Mapper(
         ClientRepository clientRepository, 
-        AdRepository adRepository,
-        CommentRepository commentRepository,
-        ImageRepository imageRepository
+        AdvertRepository advertRepository,
+        CommentaryRepository commentaryRepository,
+        PictureRepository pictureRepository
         ) {
         this.clientRepository = clientRepository;
-        this.adRepository = adRepository;
-        this.commentRepository = commentRepository;
-        this.imageRepository = imageRepository;
+        this.advertRepository = advertRepository;
+        this.commentaryRepository = commentaryRepository;
+        this.pictureRepository = pictureRepository;
         
     }
 
-      // из dto в entity
-      public void registerReqToClient(RegisterReq registerReq) {
+      // из dto RegisterReq в entity Client
+      public Client registerReqToClient(RegisterReq registerReq) {
         Client client = new Client();
         client.setUsername(registerReq.getUsername());
         client.setPassword(registerReq.getPassword());
@@ -71,43 +67,37 @@ public class Mapper {
         client.setLastName(registerReq.getLastName());
         client.setPhone(registerReq.getPhone());
         client.setRole(Role.USER);
-        clientRepository.save(client);   
+        return client;
     }
 
-    public void clientToLoginReg(String userName, String password) {
+    // из entity Client в dto LoginReg
+    public LoginReq clientToLoginReg(String userName, String password) {
         Client client = clientRepository.findByUsername(userName);
         loginReq.setUsername(client.getUsername());
         loginReq.setPassword(client.getPassword());
-        
-        logger.info(loginReq + " login");
-        
+        return loginReq;
     }
 
-    // из entity в dto  
+    // из entity Client в dto User
     public User clientToUser() {
        User user = new User();
        Client client = clientRepository.getUserName(loginReq.getUsername());
        logger.info(client + " client");
-        user.setId(client.getId());
-        user.setFirstName(client.getFirstName());
-        user.setLastName(client.getLastName());
-        user.setEmail(client.getUsername());
-        user.setPhone(client.getPhone());
-        user.setRegDate("");
-        user.setCity("");
-        user.setImage("");
-
-        logger.info(loginReq + " loginReq");
-        logger.info(client + " client");
-        logger.info(user + " user");
-
-        return user;
-        
+       user.setId(client.getId());
+       user.setFirstName(client.getFirstName());
+       user.setLastName(client.getLastName());
+       user.setEmail(client.getUsername());
+       user.setPhone(client.getPhone());
+       user.setRegDate("");
+       user.setCity("");
+       user.setImage("");
+       logger.info(loginReq + " loginReq");
+       logger.info(client + " client");
+       logger.info(user + " user");
+       return user;
     }
 
-  
-
-    
+    // редактирование пароля, должно быть не здесь!!!!!!!!!!!!!!!!!!
     public NewPassword newPassword(String currentPass, String newPass) {
         NewPassword newPassword = new NewPassword();
         newPassword.setCurrentPassword(currentPass);
@@ -116,7 +106,7 @@ public class Mapper {
         return newPassword;
     }
 
-    // from entity to dto 
+    // из entity Client в dto AdsUser
     public AdsUser clientToAdsUser() {
         Client client = clientRepository.getUserName(loginReq.getUsername());
         AdsUser adsUser = new AdsUser();
@@ -128,50 +118,44 @@ public class Mapper {
         adsUser.setUsername(client.getUsername());
         return adsUser;
     }
-    
 
-    public ImageDto addImage(MultipartFile imageFile) throws IOException {
-        ImageDto imageDto = new ImageDto();
-        Image image = new Image();
+    // Добавить Image. Должно быть не здесь!!!!!!!
+    public Image addImage(MultipartFile imageFile) throws IOException {
+        Image image = new ru.skypro.homework.model.image.Image();
+        Picture picture = new Picture();
         try (
             InputStream inputStream = imageFile.getInputStream();
             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
             ) {
                 byte[] imageByteas = bufferedInputStream.readAllBytes();
-                image.setFileName(imageFile.getOriginalFilename());
-                image.setFileSize(imageFile.getSize());
-                image.setMediaType(imageFile.getContentType());
-                image.setFileName(imageFile.getOriginalFilename());
-                image.setData(imageByteas);
+                picture.setFileName(imageFile.getOriginalFilename());
+                picture.setFileSize(imageFile.getSize());
+                picture.setMediaType(imageFile.getContentType());
+                picture.setFileName(imageFile.getOriginalFilename());
+                picture.setData(imageByteas);
                 logger.info("image loaded");
             } catch(IOException exception) {
                 logger.info(exception.getMessage());
             }
-
-            imageRepository.save(image);
-            List<String> getAddedImages = imageRepository.getAddedImages(); 
+            pictureRepository.save(picture);
+            List<String> getAddedImages = pictureRepository.getAddedImages();
             logger.info(getAddedImages + " images");
-            imageDto.setImage(getAddedImages);
-        return imageDto;
+            image.setImage(getAddedImages);
+        return image;
     }
   
-
-    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) throws IOException {
-       
-        Ad adEntity = new Ad();
+    // Добавление объявлений. Должно быть не здесь!!!!!!!!!!!!!
+    public Ads addAds(Ad ad, MultipartFile file) throws IOException {
+        Advert adEntity = new Advert();
         Ads ads = new Ads();
-       
         addImage(file);
-
         Client client = clientRepository.getUserName(loginReq.getUsername());
-      
         adEntity.setAuthor(client.getId());
         adEntity.setImage("http://localhost:8080/image");
         adEntity.setPrice(ad.getPrice());
         adEntity.setTitle(ad.getTitle());
         adEntity.setDescription(ad.getDescription());
-        adRepository.save(adEntity);
-
+        advertRepository.save(adEntity);
         ads.setAuthor(client.getId());
         List<String> listImage = new ArrayList<>(Arrays.asList());
         listImage.add(adEntity.getImage());
@@ -197,22 +181,18 @@ public class Mapper {
         // ads.setTitle("title");
 
         logger.info(ads + " ads");
-      
         return ads;
     }
 
+    // Возврат объявлений пользователя. Должно быть не здесь!!!!!!!!!!!!!
     public AdList getAdsMe() {
-       
         AdList adList = new AdList();
-     
         Client client = clientRepository.getUserName(loginReq.getUsername());
-        
-        List<Ad> adUser = adRepository.getAd(1);
+        List<Advert> adUser = advertRepository.getAd(1);
         logger.info(adUser + " aduser");
-        
         if(adUser != null) {
             List<Ads> resultAds = adUser.stream()
-            .map((Function<Ad, Ads>) ad -> {
+            .map((Function<Advert, Ads>) ad -> {
                 Ads ads = new Ads();
                         ads.setAuthor(ad.getAuthor());
                         ads.setImage(Arrays.asList(ad.getImage()));
@@ -221,25 +201,21 @@ public class Mapper {
                         ads.setTitle(ad.getTitle());
                         return ads;
             }).collect(Collectors.toList());
-           
             adList.setResults(resultAds);
             adList.setCount(resultAds.size());
             return adList;
         }
-
         return adList;
-       
     }
 
-       public AdList getAllAds() {
-       
+    // Возврат всех объявлений. Должно быть не здесь!!!!!!!!!!!!!
+    public AdList getAllAds() {
         AdList adList = new AdList();
-        
-        List<Ad> adUser = adRepository.getAllAds();
+        List<Advert> adUser = advertRepository.getAllAds();
         logger.info(adUser + " aduser");
         if(adUser != null) {
             List<Ads> resultAds = adUser.stream()
-            .map((Function<Ad, Ads>) ad -> {
+            .map((Function<Advert, Ads>) ad -> {
                 Ads ads = new Ads();
                         ads.setAuthor(ad.getAuthor());
                         ads.setImage(Arrays.asList(ad.getImage()));
@@ -248,7 +224,6 @@ public class Mapper {
                         ads.setTitle(ad.getTitle());
                         return ads;
             }).collect(Collectors.toList());
-           
             adList.setResults(resultAds);
             adList.setCount(resultAds.size());
             return adList;
@@ -277,91 +252,81 @@ public class Mapper {
         return adList;
     }
 
- 
+    // Возврат полного объявления. Должно быть не здесь!!!!!!!!!!!!!
     public FullAd getFullAd(int id) {
-       Ad ad = adRepository.getFullAd(id);
-       Client client = clientRepository.findById(ad.getAuthor()).orElseThrow();
+       Advert advert = advertRepository.getFullAd(id);
+       Client client = clientRepository.findById(advert.getAuthor()).orElseThrow();
        FullAd fullAd = new FullAd();
        fullAd.setAuthorFirstName(client.getFirstName());
        fullAd.setAuthorLastName(client.getLastName());
-       fullAd.setDescription(ad.getDescription());
+       fullAd.setDescription(advert.getDescription());
        fullAd.setEmail(client.getEmail());
-       fullAd.setImage(adRepository.getImages(client.getId()));
+       fullAd.setImage(advertRepository.getImages(client.getId()));
        fullAd.setPhone(client.getPhone());
-       fullAd.setPk(ad.getPk());
-       fullAd.setPrice(ad.getPrice());
-       fullAd.setTitle(ad.getTitle());
+       fullAd.setPk(advert.getPk());
+       fullAd.setPrice(advert.getPrice());
+       fullAd.setTitle(advert.getTitle());
        return fullAd; 
     }
 
-     public AdList updateAds(int id, ru.skypro.homework.model.ad.Ad update) {
+    // Редактирование объявления. Должно быть не здесь!!!!!!!!!!!!!
+     public AdList updateAds(int id, Ad update) {
        Ads ads = new Ads();
        AdList adList = new AdList();
        Client client = clientRepository.getUserName(loginReq.getUsername());
        ads.setPrice(update.getPrice());
        ads.setTitle(update.getTitle());
-       ads.setImage(adRepository.getImage(id));
+       ads.setImage(advertRepository.getImage(id));
        ads.setAuthor(client.getId());
        ads.setPk(id);
-       adRepository.updateAd(id, update.getPrice(), update.getTitle(), update.getDescription());
-     
+       advertRepository.updateAd(id, update.getPrice(), update.getTitle(), update.getDescription());
        List<Ads> resultAds = new ArrayList<Ads>(Arrays.asList(ads)); 
        adList.setResults(resultAds);
        adList.setCount(resultAds.size());
-
        return adList; 
     }
 
-
-
-
-    // из dto в entity
-    public Comment commentDtoToComment(int adPk, CommentDto commentDto) {
-        Comment comment = new Comment();
-        comment.setAuthor(commentDto.getAuthor());
-        comment.setCreatedAt(commentDto.getCreatedAt());
-        comment.setText(commentDto.getText());
-        comment.setAdsPk(adPk);
-        return comment;
+    // из dto Comment в entity Commentary
+    public Commentary commentToCommentary(int adPk, Comment comment) {
+        Commentary commentary = new Commentary();
+        commentary.setAuthor(comment.getAuthor());
+        commentary.setCreatedAt(comment.getCreatedAt());
+        commentary.setText(comment.getText());
+        commentary.setAdsPk(adPk);
+        return commentary;
     }
 
-     // из entity в dto
-     public CommentsList commentToCommentDtoList(int adPk) {
+     // из entity Commentary в dto CommentsList
+     public CommentsList commentaryToCommentsList(int adPk) {
         CommentsList commentsList = new CommentsList();
-
         Client client = clientRepository.getUserName(loginReq.getUsername());
-        List<Comment> resultComments = commentRepository.getComments(adPk);
-
-     
-        if(resultComments != null) {
-            List<CommentDto> commentDtoList = resultComments.stream()
-             .map((Function<Comment, CommentDto>) comment -> {
-                CommentDto commentDto = new CommentDto();
-                commentDto.setAuthor(comment.getAuthor());
-                commentDto.setCreatedAt(comment.getCreatedAt());
-                commentDto.setPk(comment.getPk());
-                commentDto.setText(comment.getText());
-                return commentDto;
-
+        List<Commentary> resultCommentaries = commentaryRepository.getComments(adPk);
+        if(resultCommentaries != null) {
+            List<Comment> commentList = resultCommentaries.stream()
+             .map((Function<Commentary, Comment>) commentary -> {
+                Comment comment = new Comment();
+                comment.setAuthor(commentary.getAuthor());
+                comment.setCreatedAt(commentary.getCreatedAt());
+                comment.setPk(commentary.getPk());
+                comment.setText(commentary.getText());
+                return comment;
             }).collect(Collectors.toList());
-        
-            commentsList.setResults(commentDtoList);
-            commentsList.setCount(commentDtoList.size());
+            commentsList.setResults(commentList);
+            commentsList.setCount(commentList.size());
             return commentsList;
         }
-        
         return commentsList;
     }
 
-      // из entity в dto
-      public CommentDto commentToCommentDto(int id) {
-          Comment comment = commentRepository.findById(id).get();
-          CommentDto commentDto = new CommentDto();
-          commentDto.setAuthor(comment.getAuthor());
-          commentDto.setCreatedAt(comment.getCreatedAt());
-          commentDto.setPk(comment.getPk());
-          commentDto.setText(comment.getText());
-          return commentDto;
+      // из entity Commentary в dto Comment
+      public Comment commentaryToComment(int id) {
+          Commentary commentary = commentaryRepository.findById(id).get();
+          Comment comment = new Comment();
+          comment.setAuthor(commentary.getAuthor());
+          comment.setCreatedAt(commentary.getCreatedAt());
+          comment.setPk(commentary.getPk());
+          comment.setText(commentary.getText());
+          return comment;
       }   
 
 }

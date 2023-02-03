@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,16 +27,14 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(
-        summary = "авторизация пользователя",
-        description = "принимает логин и пароль, проверяет в базе среди зарегистрированных и если есть совпадение открывает доступ пользователю"
-    )
+    @Operation( summary = "авторизация пользователя",
+                description = "принимает логин и пароль, проверяет в базе среди зарегистрированных и если есть совпадение открывает доступ пользователю"
+                )
     @PostMapping("/login")
-    public ResponseEntity<?> login(
-        @Parameter(description = "принимает объект со значениями полей username и password", 
-        schema = @Schema(implementation = LoginReq.class)
-        )
-        @RequestBody LoginReq req) {
+    public ResponseEntity<?> login(@Parameter(description = "принимает объект со значениями полей username и password",
+                                              schema = @Schema(implementation = LoginReq.class)
+                                    )
+                                   @RequestBody LoginReq req) {
         if (authService.login(req.getUsername(), req.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
@@ -45,11 +42,9 @@ public class AuthController {
         }
     }
 
-    @Operation(
-        summary = "регистрация пользователя",
-        description = "принимает объект с регистрационными данными из формы пользовательского интерфейса и сохраняет пользвателя в базе данных"
-        )
-    @ApiResponse(responseCode = "201", description = "Пользователь создан")    
+    @Operation(summary = "регистрация пользователя",
+               description = "принимает объект с регистрационными данными из формы пользовательского интерфейса и сохраняет пользователя в базе данных"
+               ) @ApiResponse(responseCode = "201", description = "Пользователь создан")
     @PostMapping("/register")
     public ResponseEntity<?> register(@Parameter(description = "принимает объект с регистрационными данными",
                                                  schema = @Schema(implementation = RegisterReq.class))
@@ -61,4 +56,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
 }

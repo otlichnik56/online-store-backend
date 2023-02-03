@@ -6,8 +6,6 @@ import ru.skypro.homework.model.user.Role;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Data
 @Entity
 @Table(name = "users")

@@ -1,20 +1,16 @@
 package ru.skypro.homework.service.ads;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
-import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.model.ad.AdList;
-import ru.skypro.homework.model.ad.Ads;
-import ru.skypro.homework.model.ad.FullAd;
-import ru.skypro.homework.model.image.ImageDto;
-import ru.skypro.homework.model.user.RegisterReq;
-import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.service.ad.Ad;
+import ru.skypro.homework.service.ad.AdList;
+import ru.skypro.homework.service.ad.Ads;
+import ru.skypro.homework.service.ad.FullAd;
+import ru.skypro.homework.repository.AdvertRepository;
 import ru.skypro.homework.service.Mapper;
 
 @Service
@@ -22,7 +18,7 @@ import ru.skypro.homework.service.Mapper;
 public class AdsService implements AdsInterface{
 
     private Mapper mapper;
-    private final AdRepository adRepository;
+    private final AdvertRepository advertRepository;
 
 
     /**
@@ -53,7 +49,7 @@ public class AdsService implements AdsInterface{
      * данных дто
      */
     @Override
-    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) throws IOException {
+    public Ads addAds(Ad ad, MultipartFile file) throws IOException {
          return mapper.addAds(ad, file);
     }
 
@@ -66,11 +62,11 @@ public class AdsService implements AdsInterface{
 
     @Override
     public void removeAds(int id) {
-        adRepository.deleteById(id);
+        advertRepository.deleteById(id);
     }
 
     @Override
-    public AdList updateAds(int id, ru.skypro.homework.model.ad.Ad update) {
+    public AdList updateAds(int id, Ad update) {
         return mapper.updateAds(id, update);
     }
 

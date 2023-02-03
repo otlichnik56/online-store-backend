@@ -1,4 +1,4 @@
-package ru.skypro.homework.model.ad;
+package ru.skypro.homework.service.ad;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

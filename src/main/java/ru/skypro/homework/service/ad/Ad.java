@@ -1,6 +1,4 @@
-package ru.skypro.homework.model.ad;
-
-import org.springframework.web.multipart.MultipartFile;
+package ru.skypro.homework.service.ad;
 
 import lombok.Data;
 
