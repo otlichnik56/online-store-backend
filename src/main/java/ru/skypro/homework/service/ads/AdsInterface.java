@@ -16,11 +16,11 @@ public interface AdsInterface {
 
 
     AdList getAllAds();
-    Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file);
+    Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) throws IOException;
     FullAd getFullAd(int id);
     void removeAds(int id);
     AdList updateAds(int id, ru.skypro.homework.model.ad.Ad update);
-    ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException;
+    // ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException;
     AdList getAdsMe();
 
 }

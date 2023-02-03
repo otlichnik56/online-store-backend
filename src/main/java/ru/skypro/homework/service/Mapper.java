@@ -130,59 +130,71 @@ public class Mapper {
     }
     
 
-    /**
-     * описание - метод который переводит данные из сущности в дто 
-     * @param ad - сущность (таблица объявлениЯ)
-     * @return - возвращает дто из двух полей:<br>
-     * 1. count<br>
-     * 2. List<Ads> - список объявлениЙ, 
-     * который содержит объявления
-     * из сущности Ad
-     */
+    public ImageDto addImage(MultipartFile imageFile) throws IOException {
+        ImageDto imageDto = new ImageDto();
+        Image image = new Image();
+        try (
+            InputStream inputStream = imageFile.getInputStream();
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+            ) {
+                byte[] imageByteas = bufferedInputStream.readAllBytes();
+                image.setFileName(imageFile.getOriginalFilename());
+                image.setFileSize(imageFile.getSize());
+                image.setMediaType(imageFile.getContentType());
+                image.setFileName(imageFile.getOriginalFilename());
+                image.setData(imageByteas);
+                logger.info("image loaded");
+            } catch(IOException exception) {
+                logger.info(exception.getMessage());
+            }
 
-    /**
-     * описание - метод который переводит данные из дто в сущность 
-     * @param  - дто (модель данных)
-     * @return - возвращает сущность
-     */
+            imageRepository.save(image);
+            List<String> getAddedImages = imageRepository.getAddedImages(); 
+            logger.info(getAddedImages + " images");
+            imageDto.setImage(getAddedImages);
+        return imageDto;
+    }
+  
 
-    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) {
+    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) throws IOException {
        
         Ad adEntity = new Ad();
         Ads ads = new Ads();
        
+        addImage(file);
+
         Client client = clientRepository.getUserName(loginReq.getUsername());
       
-        // adEntity.setAuthor(client.getId());
-        // adEntity.setImage(file.getOriginalFilename());
-        // adEntity.setPrice(ad.getPrice());
-        // adEntity.setTitle(ad.getTitle());
-        // adEntity.setDescription(ad.getDescription());
-        // adRepository.save(adEntity);
-
-        // ads.setAuthor(client.getId());
-        // List<String> listImage = new ArrayList<>(Arrays.asList());
-        // listImage.add(adEntity.getImage());
-        // ads.setImage(listImage);
-        // ads.setPk(adEntity.getPk());
-        // ads.setPrice(ad.getPrice());
-        // ads.setTitle(ad.getTitle());
-
-        // для отладки
-        adEntity.setAuthor(1);
-        adEntity.setImage("image");
-        adEntity.setPrice(100);
-        adEntity.setTitle("title");
-        adEntity.setDescription("desc");
+        adEntity.setAuthor(client.getId());
+        adEntity.setImage("http://localhost:8080/image");
+        adEntity.setPrice(ad.getPrice());
+        adEntity.setTitle(ad.getTitle());
+        adEntity.setDescription(ad.getDescription());
         adRepository.save(adEntity);
 
-        ads.setAuthor(1);
+        ads.setAuthor(client.getId());
         List<String> listImage = new ArrayList<>(Arrays.asList());
         listImage.add(adEntity.getImage());
         ads.setImage(listImage);
         ads.setPk(adEntity.getPk());
-        ads.setPrice(100);
-        ads.setTitle("title");
+        ads.setPrice(ad.getPrice());
+        ads.setTitle(ad.getTitle());
+
+        // для отладки
+        // adEntity.setAuthor(1);
+        // adEntity.setImage("image");
+        // adEntity.setPrice(100);
+        // adEntity.setTitle("title");
+        // adEntity.setDescription("desc");
+        // adRepository.save(adEntity);
+
+        // ads.setAuthor(1);
+        // List<String> listImage = new ArrayList<>(Arrays.asList());
+        // listImage.add(adEntity.getImage());
+        // ads.setImage(listImage);
+        // ads.setPk(adEntity.getPk());
+        // ads.setPrice(100);
+        // ads.setTitle("title");
 
         logger.info(ads + " ads");
       
@@ -223,45 +235,45 @@ public class Mapper {
        
         AdList adList = new AdList();
         
-        // List<Ad> adUser = adRepository.getAllAds();
-        // logger.info(adUser + " aduser");
-        // if(adUser != null) {
-        //     List<Ads> resultAds = adUser.stream()
-        //     .map((Function<Ad, Ads>) ad -> {
-        //         Ads ads = new Ads();
-        //                 ads.setAuthor(ad.getAuthor());
-        //                 ads.setImage(Arrays.asList(ad.getImage()));
-        //                 ads.setPk(ad.getPk());
-        //                 ads.setPrice(ad.getPrice());
-        //                 ads.setTitle(ad.getTitle());
-        //                 return ads;
-        //     }).collect(Collectors.toList());
+        List<Ad> adUser = adRepository.getAllAds();
+        logger.info(adUser + " aduser");
+        if(adUser != null) {
+            List<Ads> resultAds = adUser.stream()
+            .map((Function<Ad, Ads>) ad -> {
+                Ads ads = new Ads();
+                        ads.setAuthor(ad.getAuthor());
+                        ads.setImage(Arrays.asList(ad.getImage()));
+                        ads.setPk(ad.getPk());
+                        ads.setPrice(ad.getPrice());
+                        ads.setTitle(ad.getTitle());
+                        return ads;
+            }).collect(Collectors.toList());
            
-        //     adList.setResults(resultAds);
-        //     adList.setCount(resultAds.size());
-        //     return adList;
-        // }
+            adList.setResults(resultAds);
+            adList.setCount(resultAds.size());
+            return adList;
+        }
 
-        // для отладки
-        Ads ads = new Ads();
-        Ad ad = new Ad();
+        // // для отладки
+        // Ads ads = new Ads();
+        // Ad ad = new Ad();
 
-        ad.setAuthor(1);
-        ad.setImage("ad.getImage()");
-        ad.setPrice(100);
-        ad.setTitle("ad.getTitle()");
-        ad.setDescription("desc");
-        adRepository.save(ad);
+        // ad.setAuthor(1);
+        // ad.setImage("http://localhost:8080/image");
+        // ad.setPrice(100);
+        // ad.setTitle("ad.getTitle()");
+        // ad.setDescription("desc");
+        // adRepository.save(ad);
 
-        ads.setAuthor(1);
-        ads.setImage(Arrays.asList("ad.getImage()"));
-        ads.setPk(ad.getPk());
-        ads.setPrice(100);
-        ads.setTitle("ad.getTitle()");
+        // ads.setAuthor(1);
+        // ads.setImage(Arrays.asList("http://localhost:8080/image"));
+        // ads.setPk(ad.getPk());
+        // ads.setPrice(100);
+        // ads.setTitle("ad.getTitle()");
 
-        List<Ads> resultAds = new ArrayList<Ads>(Arrays.asList(ads)); 
-        adList.setResults(resultAds);
-        adList.setCount(resultAds.size());
+        // List<Ads> resultAds = new ArrayList<Ads>(Arrays.asList(ads)); 
+        // adList.setResults(resultAds);
+        // adList.setCount(resultAds.size());
         return adList;
     }
 
@@ -350,33 +362,6 @@ public class Mapper {
           commentDto.setPk(comment.getPk());
           commentDto.setText(comment.getText());
           return commentDto;
-      }
-
-    // from dto to entity
-    public ImageDto imageDtoToImage(int id, MultipartFile imageFile) throws IOException {
-        ImageDto imageDto = new ImageDto();
-        Image image = new Image();
-        try (
-            InputStream inputStream = imageFile.getInputStream();
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
-            ) {
-                byte[] imageByteas = bufferedInputStream.readAllBytes();
-                image.setId(id);
-                image.setFileName(imageFile.getOriginalFilename());
-                image.setFileSize(imageFile.getSize());
-                image.setMediaType(imageFile.getContentType());
-                image.setFileName(imageFile.getOriginalFilename());
-                image.setData(imageByteas);
-                logger.info("image loaded");
-            } catch(IOException exception) {
-                logger.info(exception.getMessage());
-            }
-
-            imageRepository.save(image);
-            List<String> getAddedImages = imageRepository.getAddedImages(); 
-            logger.info(getAddedImages + " images");
-            imageDto.setImage(getAddedImages);
-        return imageDto;
-    }
+      }   
 
 }

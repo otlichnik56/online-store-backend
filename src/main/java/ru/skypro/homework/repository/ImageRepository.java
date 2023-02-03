@@ -13,4 +13,8 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     
     @Query(value = "SELECT file_name FROM image", nativeQuery = true)
     List<String> getAddedImages();
+
+
+    @Query(value = "SELECT * FROM image LIMIT 1", nativeQuery = true)
+    Image getImage();
 }

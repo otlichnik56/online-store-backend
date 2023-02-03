@@ -3,6 +3,8 @@ package ru.skypro.homework.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +67,7 @@ public class AdsController {
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") ru.skypro.homework.model.ad.Ad ad, 
-    @RequestPart(value = "image") MultipartFile file) {
+    @RequestPart(value = "image") MultipartFile file) throws IOException {
         return ResponseEntity.status(201).body(adsService.addAds(ad, file));
     }
 
