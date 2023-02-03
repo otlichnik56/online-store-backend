@@ -53,7 +53,7 @@ public class AdsService implements AdsInterface{
      * данных дто
      */
     @Override
-    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) {
+    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) throws IOException {
          return mapper.addAds(ad, file);
     }
 
@@ -74,9 +74,9 @@ public class AdsService implements AdsInterface{
         return mapper.updateAds(id, update);
     }
 
-    @Override
-    public ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException {
-            return mapper.imageDtoToImage(id, multipartFile);
-    }
+    // @Override
+    // public ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException {
+    //         return mapper.addImage(id, multipartFile);
+    // }
 
 }

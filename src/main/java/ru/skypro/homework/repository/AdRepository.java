@@ -25,6 +25,9 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
     @Query(value = "SELECT image FROM ad WHERE ad.author = ?1", nativeQuery = true)
     List<String> getImages(int id);
 
+    @Query(value = "SELECT image FROM ad", nativeQuery = true)
+    List<String> getAllImages();
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE ad SET price = ?2, title = ?3, description = ?4 WHERE ad.pk = ?1", nativeQuery = true)
