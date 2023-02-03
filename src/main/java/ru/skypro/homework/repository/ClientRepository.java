@@ -15,6 +15,8 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
     @Query(value = "SELECT * FROM users WHERE username = ?1", nativeQuery = true)
     Client getUserName(String username);
 
+    Client findByUsername(String username);
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE users SET password = ?2 WHERE password = ?1", nativeQuery = true)

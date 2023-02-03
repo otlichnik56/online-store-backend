@@ -3,6 +3,8 @@ package ru.skypro.homework.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,29 +52,23 @@ public class AdsController {
         return adsService.getAdsMe();
     }
 
-    // дописан
     @GetMapping("/{id}")
     public FullAd getFullAd(@PathVariable Integer id) {
-        // return adsService.getFullAd(id);
-        return new FullAd();
-    }
-
-    // дописан
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAds(@PathVariable Integer id) {
-        adsService.removeAds(id);
-        return ResponseEntity.ok().build();
+        return adsService.getFullAd(id);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FullAd> updateAds(@PathVariable Integer id) {
-        return ResponseEntity.status(200).body(adsService.updateAds(id));
+    public ResponseEntity<AdList> updateAds(
+         @RequestBody ru.skypro.homework.model.ad.Ad update,
+         @PathVariable Integer id) {
+        return ResponseEntity.status(200).body(adsService.updateAds(id, update));
     }
 
-    @PostMapping(consumes = {"multipart/form-data", "application/json"})
-    public ResponseEntity<Ads> setAds(@RequestPart ru.skypro.homework.model.ad.Ad ad,
-    @RequestPart(name = "image") MultipartFile file) {
-        return ResponseEntity.status(200).body(adsService.addAds(ad, file));
+
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") ru.skypro.homework.model.ad.Ad ad, 
+    @RequestPart(value = "image") MultipartFile file) throws IOException {
+        return ResponseEntity.status(201).body(adsService.addAds(ad, file));
     }
 
     /**
@@ -95,6 +91,7 @@ public class AdsController {
                                  @RequestBody CommentDto commentDto) {
         return commentsService.setComments(adPk, commentDto);
     }
+
 
     /**
      * Возвращает коментарий к объявлению определенного автора
@@ -119,6 +116,13 @@ public class AdsController {
         return commentsService.updateComment(adPk, id, commentDto);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeAds(@PathVariable Integer id) {
+        adsService.removeAds(id);
+        return ResponseEntity.status(204).build();
+    }
+
+
     /**
      * Удаляет коментарий к объявлению определенного пользователя
      * @param adPk
@@ -132,4 +136,3 @@ public class AdsController {
     }
 
 }
-

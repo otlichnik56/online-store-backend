@@ -1,6 +1,7 @@
 package ru.skypro.homework.service;
 import ru.skypro.homework.model.comment.CommentDto;
 import ru.skypro.homework.model.comment.CommentsList;
+import ru.skypro.homework.model.image.ImageDto;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -8,25 +9,19 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import ru.skypro.homework.WebSecurityConfig;
 import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.Image;
-import ru.skypro.homework.model.Image.ImageDto;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.AdsUser;
@@ -80,8 +75,9 @@ public class Mapper {
     }
 
     public void clientToLoginReg(String userName, String password) {
-        loginReq.setUsername(userName);
-        loginReq.setPassword(password);
+        Client client = clientRepository.findByUsername(userName);
+        loginReq.setUsername(client.getUsername());
+        loginReq.setPassword(client.getPassword());
         
         logger.info(loginReq + " login");
         
@@ -134,76 +130,84 @@ public class Mapper {
     }
     
 
-    /**
-     * описание - метод который переводит данные из сущности в дто 
-     * @param ad - сущность (таблица объявлениЯ)
-     * @return - возвращает дто из двух полей:<br>
-     * 1. count<br>
-     * 2. List<Ads> - список объявлениЙ, 
-     * который содержит объявления
-     * из сущности Ad
-     */
+    public ImageDto addImage(MultipartFile imageFile) throws IOException {
+        ImageDto imageDto = new ImageDto();
+        Image image = new Image();
+        try (
+            InputStream inputStream = imageFile.getInputStream();
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
+            ) {
+                byte[] imageByteas = bufferedInputStream.readAllBytes();
+                image.setFileName(imageFile.getOriginalFilename());
+                image.setFileSize(imageFile.getSize());
+                image.setMediaType(imageFile.getContentType());
+                image.setFileName(imageFile.getOriginalFilename());
+                image.setData(imageByteas);
+                logger.info("image loaded");
+            } catch(IOException exception) {
+                logger.info(exception.getMessage());
+            }
 
-    /**
-     * описание - метод который переводит данные из дто в сущность 
-     * @param  - дто (модель данных)
-     * @return - возвращает сущность
-     */
+            imageRepository.save(image);
+            List<String> getAddedImages = imageRepository.getAddedImages(); 
+            logger.info(getAddedImages + " images");
+            imageDto.setImage(getAddedImages);
+        return imageDto;
+    }
+  
 
-    // из dto в entity
-    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) {
+    public Ads addAds(ru.skypro.homework.model.ad.Ad ad, MultipartFile file) throws IOException {
        
         Ad adEntity = new Ad();
         Ads ads = new Ads();
-        // вот здесь мы извлекаем того пользователя который у нас есть в базе
-        // и который сейчас авторизовался
-        Client client = clientRepository.getUserName(loginReq.getUsername());
-        // далее мы считываем из базы идентификатор этого пользователя, чтобы знать
-        // кто автор объявления и записываем в поле author
-        adEntity.setAuthor(client.getId());
-        ads.setAuthor(client.getId());
-        // далее четыре сеттера мы заполняем данными
-        // которые приходят с фронта в теле post запроса
        
-        adEntity.setImage(file.getOriginalFilename());
+        addImage(file);
+
+        Client client = clientRepository.getUserName(loginReq.getUsername());
+      
+        adEntity.setAuthor(client.getId());
+        adEntity.setImage("http://localhost:8080/image");
+        adEntity.setPrice(ad.getPrice());
+        adEntity.setTitle(ad.getTitle());
+        adEntity.setDescription(ad.getDescription());
+        adRepository.save(adEntity);
+
+        ads.setAuthor(client.getId());
         List<String> listImage = new ArrayList<>(Arrays.asList());
         listImage.add(adEntity.getImage());
-
         ads.setImage(listImage);
-        adEntity.setPk(adEntity.getPk());
-
         ads.setPk(adEntity.getPk());
-        
-        adEntity.setPrice(ad.getPrice());
         ads.setPrice(ad.getPrice());
-
-        adEntity.setTitle(ad.getTitle());
         ads.setTitle(ad.getTitle());
 
-        adEntity.setDescription(ad.getDescription());
+        // для отладки
+        // adEntity.setAuthor(1);
+        // adEntity.setImage("image");
+        // adEntity.setPrice(100);
+        // adEntity.setTitle("title");
+        // adEntity.setDescription("desc");
+        // adRepository.save(adEntity);
+
+        // ads.setAuthor(1);
+        // List<String> listImage = new ArrayList<>(Arrays.asList());
+        // listImage.add(adEntity.getImage());
+        // ads.setImage(listImage);
+        // ads.setPk(adEntity.getPk());
+        // ads.setPrice(100);
+        // ads.setTitle("title");
+
         logger.info(ads + " ads");
-        // сохраняем в базе данных
-        // в базе это будет выглядить так:
-        // id image pk price title author
-        // 1  ""    1   100 "title" id залогиненного пользователя (например 25)
-        adRepository.save(adEntity);
+      
         return ads;
     }
 
-    // из entity в dto
     public AdList getAdsMe() {
        
         AdList adList = new AdList();
-        // для получения объявлений того или иного пользователя
-        // мы получаем сначала его (пользователя) из базы данных по введенному ранее логину
+     
         Client client = clientRepository.getUserName(loginReq.getUsername());
-        // далее мы по id этого пользователя берем из базы все его объявления
-        // которые он добавил
-        //  @Query(value = "SELECT * FROM ad WHERE author = ?1", nativeQuery = true)
-        //  List<Ad> getAd(int authorId);
-        // т.е если наш клиент имеет идентификатор или порядковый номер = 25
-        // то запрос выше нам выкатит все объявления поля author = 25 
-        List<Ad> adUser = adRepository.getAd(client.getId());
+        
+        List<Ad> adUser = adRepository.getAd(1);
         logger.info(adUser + " aduser");
         
         if(adUser != null) {
@@ -227,7 +231,6 @@ public class Mapper {
        
     }
 
-       // из entity в dto
        public AdList getAllAds() {
        
         AdList adList = new AdList();
@@ -251,39 +254,66 @@ public class Mapper {
             return adList;
         }
 
+        // // для отладки
+        // Ads ads = new Ads();
+        // Ad ad = new Ad();
+
+        // ad.setAuthor(1);
+        // ad.setImage("http://localhost:8080/image");
+        // ad.setPrice(100);
+        // ad.setTitle("ad.getTitle()");
+        // ad.setDescription("desc");
+        // adRepository.save(ad);
+
+        // ads.setAuthor(1);
+        // ads.setImage(Arrays.asList("http://localhost:8080/image"));
+        // ads.setPk(ad.getPk());
+        // ads.setPrice(100);
+        // ads.setTitle("ad.getTitle()");
+
+        // List<Ads> resultAds = new ArrayList<Ads>(Arrays.asList(ads)); 
+        // adList.setResults(resultAds);
+        // adList.setCount(resultAds.size());
         return adList;
-       
     }
 
  
-
-    // из entity в dto
-    public FullAd adToFullAd(Ad ad) {
-        Client client = clientRepository.findById(ad.getAuthor()).get();
-        FullAd fullAd = new FullAd();
-        fullAd.setAuthorFirstName(client.getFirstName());
-        fullAd.setAuthorLastName(client.getLastName());
-        fullAd.setDescription(ad.getDescription());
-        fullAd.setEmail(client.getEmail());
-        // fullAd.setImage(new Ads().getImage());
-        fullAd.setPhone(client.getPhone());
-        fullAd.setPk(ad.getPk());
-        fullAd.setPrice(ad.getPrice());
-        fullAd.setTitle(ad.getTitle());
-        return fullAd;
+    public FullAd getFullAd(int id) {
+       Ad ad = adRepository.getFullAd(id);
+       Client client = clientRepository.findById(ad.getAuthor()).orElseThrow();
+       FullAd fullAd = new FullAd();
+       fullAd.setAuthorFirstName(client.getFirstName());
+       fullAd.setAuthorLastName(client.getLastName());
+       fullAd.setDescription(ad.getDescription());
+       fullAd.setEmail(client.getEmail());
+       fullAd.setImage(adRepository.getImages(client.getId()));
+       fullAd.setPhone(client.getPhone());
+       fullAd.setPk(ad.getPk());
+       fullAd.setPrice(ad.getPrice());
+       fullAd.setTitle(ad.getTitle());
+       return fullAd; 
     }
 
-    // из dto в entity
-    public Ad fullAdToAd(FullAd fullAd) {
-        Client client = clientRepository.findById(fullAd.getPk()).get();
-        Ad ad = new Ad();
-        ad.setAuthor(client.getId());
-        // ad.setImage(new Image().getImage());
-        ad.setPk(fullAd.getPk());
-        ad.setPrice(fullAd.getPrice());
-        ad.setTitle(fullAd.getTitle());
-        return ad;
+     public AdList updateAds(int id, ru.skypro.homework.model.ad.Ad update) {
+       Ads ads = new Ads();
+       AdList adList = new AdList();
+       Client client = clientRepository.getUserName(loginReq.getUsername());
+       ads.setPrice(update.getPrice());
+       ads.setTitle(update.getTitle());
+       ads.setImage(adRepository.getImage(id));
+       ads.setAuthor(client.getId());
+       ads.setPk(id);
+       adRepository.updateAd(id, update.getPrice(), update.getTitle(), update.getDescription());
+     
+       List<Ads> resultAds = new ArrayList<Ads>(Arrays.asList(ads)); 
+       adList.setResults(resultAds);
+       adList.setCount(resultAds.size());
+
+       return adList; 
     }
+
+
+
 
     // из dto в entity
     public Comment commentDtoToComment(int adPk, CommentDto commentDto) {
@@ -332,33 +362,6 @@ public class Mapper {
           commentDto.setPk(comment.getPk());
           commentDto.setText(comment.getText());
           return commentDto;
-      }
-
-    // from dto to entity
-    public ImageDto imageDtoToImage(int id, MultipartFile imageFile) throws IOException {
-        ImageDto imageDto = new ImageDto();
-        Image image = new Image();
-        try (
-            InputStream inputStream = imageFile.getInputStream();
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
-            ) {
-                byte[] imageByteas = bufferedInputStream.readAllBytes();
-                image.setId(id);
-                image.setFileName(imageFile.getOriginalFilename());
-                image.setFileSize(imageFile.getSize());
-                image.setMediaType(imageFile.getContentType());
-                image.setFileName(imageFile.getOriginalFilename());
-                image.setData(imageByteas);
-                logger.info("image loaded");
-            } catch(IOException exception) {
-                logger.info(exception.getMessage());
-            }
-
-            imageRepository.save(image);
-            List<String> getAddedImages = imageRepository.getAddedImages(); 
-            logger.info(getAddedImages + " images");
-            imageDto.setImage(getAddedImages);
-        return imageDto;
-    }
+      }   
 
 }
