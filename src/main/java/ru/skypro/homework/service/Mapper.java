@@ -166,7 +166,7 @@ public class Mapper {
         Client client = clientRepository.getUserName(loginReq.getUsername());
       
         adEntity.setAuthor(client.getId());
-        adEntity.setImage("http://localhost:8080/image");
+        adEntity.setImage("/image");
         adEntity.setPrice(ad.getPrice());
         adEntity.setTitle(ad.getTitle());
         adEntity.setDescription(ad.getDescription());
