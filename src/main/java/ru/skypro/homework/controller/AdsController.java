@@ -6,9 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.ad.Ad;
 import ru.skypro.homework.service.ad.AdList;
 import ru.skypro.homework.service.ad.Ads;
@@ -18,6 +21,8 @@ import ru.skypro.homework.model.comment.CommentsList;
 import ru.skypro.homework.service.ads.AdsService;
 import ru.skypro.homework.service.comment.CommentsService;
 import ru.skypro.homework.service.user.UserService;
+
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -41,8 +46,10 @@ public class AdsController {
     }
 
     @GetMapping("/me")
-    public AdList getAdsMe() {
-        return adsService.getAdsMe();
+    //@PreAuthorize("isFullyAuthenticated()")
+    public AdList getAdsMe(HttpSession httpSession) {
+        User user = (User)httpSession.getAttribute("user");
+        return adsService.getAdsMe(user.getId());
     }
 
     @GetMapping("/{id}")

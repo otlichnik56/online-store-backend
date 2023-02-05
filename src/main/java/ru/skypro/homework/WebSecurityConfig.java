@@ -40,11 +40,9 @@ public class WebSecurityConfig  {
             "/login", "/register"
     };
 
-    @Autowired
-    public DataSource dataSource;
 
     @Bean
-    public JdbcUserDetailsManager jdbcUserDetailsService() {
+    public JdbcUserDetailsManager jdbcUserDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager();
         jdbcUserDetailsManager.setDataSource(dataSource);
         return jdbcUserDetailsManager;
@@ -65,7 +63,11 @@ public class WebSecurityConfig  {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        
+
+        http
+                .requestMatchers()
+                .antMatchers("/ads/me");
+
         http
                 .csrf().disable()
                 .authorizeHttpRequests((authz) ->

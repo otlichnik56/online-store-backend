@@ -18,6 +18,6 @@ public interface AdsInterface {
     void removeAds(int id);
     AdList updateAds(int id, Ad update);
     // ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException;
-    AdList getAdsMe();
+    AdList getAdsMe(int id);
 
 }

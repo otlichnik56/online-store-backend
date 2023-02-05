@@ -15,7 +15,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
+import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.auth.AuthService;
+import ru.skypro.homework.service.user.UserService;
+
+import javax.servlet.http.HttpSession;
 
 import static ru.skypro.homework.model.user.Role.USER;
 
@@ -26,6 +30,7 @@ import static ru.skypro.homework.model.user.Role.USER;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     @Operation( summary = "авторизация пользователя",
                 description = "принимает логин и пароль, проверяет в базе среди зарегистрированных и если есть совпадение открывает доступ пользователю"
@@ -34,8 +39,14 @@ public class AuthController {
     public ResponseEntity<?> login(@Parameter(description = "принимает объект со значениями полей username и password",
                                               schema = @Schema(implementation = LoginReq.class)
                                     )
-                                   @RequestBody LoginReq req) {
+                                   @RequestBody LoginReq req,
+                                   HttpSession httpSession) {
+        //System.out.println(req);
+
         if (authService.login(req.getUsername(), req.getPassword())) {
+            User user = userService.getUser();
+            httpSession.setAttribute("user", user);
+            System.out.println("Пользователь  !!!!!   " + httpSession.getAttribute("user"));
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -49,6 +60,7 @@ public class AuthController {
     public ResponseEntity<?> register(@Parameter(description = "принимает объект с регистрационными данными",
                                                  schema = @Schema(implementation = RegisterReq.class))
                                           @RequestBody RegisterReq req) {
+        //System.out.println(req);
         Role role = req.getRole() == null ? USER : req.getRole();
         if (authService.register(req, role)) {
             return ResponseEntity.ok().build();

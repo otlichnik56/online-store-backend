@@ -82,7 +82,6 @@ public class Mapper {
     public User clientToUser() {
        User user = new User();
        Client client = clientRepository.getUserName(loginReq.getUsername());
-       logger.info(client + " client");
        user.setId(client.getId());
        user.setFirstName(client.getFirstName());
        user.setLastName(client.getLastName());
@@ -91,9 +90,6 @@ public class Mapper {
        user.setRegDate("");
        user.setCity("");
        user.setImage("");
-       logger.info(loginReq + " loginReq");
-       logger.info(client + " client");
-       logger.info(user + " user");
        return user;
     }
 
@@ -133,13 +129,11 @@ public class Mapper {
                 picture.setMediaType(imageFile.getContentType());
                 picture.setFileName(imageFile.getOriginalFilename());
                 picture.setData(imageByteas);
-                logger.info("image loaded");
             } catch(IOException exception) {
                 logger.info(exception.getMessage());
             }
             pictureRepository.save(picture);
             List<String> getAddedImages = pictureRepository.getAddedImages();
-            logger.info(getAddedImages + " images");
             image.setImage(getAddedImages);
         return image;
     }
@@ -180,7 +174,6 @@ public class Mapper {
         // ads.setPrice(100);
         // ads.setTitle("title");
 
-        logger.info(ads + " ads");
         return ads;
     }
 
@@ -189,7 +182,6 @@ public class Mapper {
         AdList adList = new AdList();
         Client client = clientRepository.getUserName(loginReq.getUsername());
         List<Advert> adUser = advertRepository.getAd(1);
-        logger.info(adUser + " aduser");
         if(adUser != null) {
             List<Ads> resultAds = adUser.stream()
             .map((Function<Advert, Ads>) ad -> {
@@ -212,7 +204,6 @@ public class Mapper {
     public AdList getAllAds() {
         AdList adList = new AdList();
         List<Advert> adUser = advertRepository.getAllAds();
-        logger.info(adUser + " aduser");
         if(adUser != null) {
             List<Ads> resultAds = adUser.stream()
             .map((Function<Advert, Ads>) ad -> {

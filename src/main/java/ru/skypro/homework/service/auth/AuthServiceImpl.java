@@ -56,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
                         .roles(role.name())
                         .build()
         );
-        clientRepository.save(mapper.registerReqToClient(registerReq));
         return true;
     }
 }

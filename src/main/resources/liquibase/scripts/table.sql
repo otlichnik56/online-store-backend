@@ -49,6 +49,12 @@ CREATE TABLE images
     data        BYTEA
 );
 
+CREATE TABLE authorities
+(
+    id           SERIAL PRIMARY KEY,
+    username     TEXT UNIQUE,
+    authority    TEXT
+);
 
 -- changeset nurkatovich:2
 
