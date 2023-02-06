@@ -9,38 +9,26 @@ import org.springframework.stereotype.Service;
 
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
-import ru.skypro.homework.repository.ClientRepository;
-import ru.skypro.homework.service.Mapper;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-
-
-    private final ClientRepository clientRepository;
     private final UserDetailsManager manager;
-    private final Mapper mapper;
-
     private final PasswordEncoder encoder;
 
-    public AuthServiceImpl(ClientRepository clientRepository, UserDetailsManager manager, Mapper mapper) {
-        this.clientRepository = clientRepository;
+    public AuthServiceImpl(UserDetailsManager manager) {
         this.manager = manager;
-        this.mapper = mapper;
         this.encoder = new BCryptPasswordEncoder();
     }
 
     @Override
     public boolean login(String userName, String password) {
-        
         if (!manager.userExists(userName)) {
             return false;
         }
         UserDetails userDetails = manager.loadUserByUsername(userName);
         String encryptedPassword = userDetails.getPassword();
         String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
-        mapper.clientToLoginReg(userName, password);
-        // write
         return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
     }
 

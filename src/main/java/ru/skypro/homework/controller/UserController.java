@@ -30,7 +30,9 @@ public class UserController {
     }
 
     @PostMapping("/set_password")
-    public NewPassword setPassword(@RequestBody(required = true) NewPassword newPassword) {
+    public NewPassword setPassword(@RequestBody NewPassword newPassword,
+                                   Authentication authentication) {
+        authentication.getName();
         return passwordService.setPassword(newPassword.getCurrentPassword(), newPassword.getNewPassword());
     }
 

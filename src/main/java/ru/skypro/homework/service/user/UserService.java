@@ -27,6 +27,7 @@ public class UserService implements UserInterface {
         return mapper.clientToUser(client);
     }
 
+
     @Override
     public User updateUser() {
         return new User(1, "jon", "slith", "test@mail.ru", "89991234545",
