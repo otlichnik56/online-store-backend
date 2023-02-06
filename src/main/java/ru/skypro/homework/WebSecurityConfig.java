@@ -20,7 +20,7 @@ public class WebSecurityConfig  {
             "/swagger-ui.html",
             "/v3/api-docs",
             "/webjars/**",
-            "/login", "/register"
+            "/login", "/register", "/ads"
     };
 
 
@@ -38,8 +38,7 @@ public class WebSecurityConfig  {
                 .authorizeHttpRequests((authz) ->
                         authz
                                 .mvcMatchers(AUTH_WHITELIST).permitAll()
-                                .mvcMatchers("/ads/**", "/users/**").authenticated()
-
+                                .mvcMatchers("/ads/**", "/users/**", "/image/**").authenticated()
                 )
                 .cors().and()
                 .httpBasic(withDefaults());
