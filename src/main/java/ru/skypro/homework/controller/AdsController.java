@@ -6,24 +6,20 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import ru.skypro.homework.model.user.User;
-import ru.skypro.homework.service.ad.Ad;
-import ru.skypro.homework.service.ad.AdList;
-import ru.skypro.homework.service.ad.Ads;
-import ru.skypro.homework.service.ad.FullAd;
+import ru.skypro.homework.model.ad.AdList;
+import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.CreateAds;
+import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
 import ru.skypro.homework.service.ads.AdsService;
 import ru.skypro.homework.service.comment.CommentsService;
-import ru.skypro.homework.service.user.UserService;
-
-import javax.servlet.http.HttpSession;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -34,9 +30,12 @@ public class AdsController {
 
     private final AdsService adsService;
     private final CommentsService commentsService;
-    private final UserService userService;
 
 
+    /** НЕ ПРОВЕРЕН
+     *
+     * @return
+     */
     @GetMapping
     public ResponseEntity<AdList> getAds() {
         if(adsService.getAllAds() != null) {
@@ -51,94 +50,123 @@ public class AdsController {
      * @param authentication
      * @return
      */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @GetMapping("/me")
-    //@PreAuthorize("isFullyAuthenticated()")
     public AdList getAdsMe(Authentication authentication) {
-        //System.out.println("!!!!!!!!!!!!!!!!!    " + authentication.getName());
-        //User user = (User)httpSession.getAttribute("user");
         return adsService.getAdsMe(authentication.getName());
     }
 
+    /** НЕ ПРОВЕРЕН
+     *
+     * @param id
+     * @return
+     */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @GetMapping("/{id}")
     public FullAd getFullAd(@PathVariable Integer id) {
         return adsService.getFullAd(id);
     }
 
+    /** НЕ ПРОВЕРЕН
+     *
+     * @param ads
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") Ads ads,
+                                      @RequestPart(value = "image") MultipartFile file,
+                                      Authentication authentication) throws IOException {
+        return ResponseEntity.status(201).body(adsService.addAds(ads, file, authentication));
+    }
+
+    /** НЕ ПРОВЕРЕН
+     *
+     * @param update
+     * @param id
+     * @return
+     */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @PatchMapping("/{id}")
-    public ResponseEntity<AdList> updateAds(
-         @RequestBody Ad update,
-         @PathVariable Integer id) {
+    public ResponseEntity<Ads> updateAds(@RequestBody CreateAds update,
+                                            @PathVariable Integer id) {
         return ResponseEntity.status(200).body(adsService.updateAds(id, update));
     }
 
-
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") Ad ad,
-    @RequestPart(value = "image") MultipartFile file) throws IOException {
-        return ResponseEntity.status(201).body(adsService.addAds(ad, file));
-    }
-
-    /**
-     * Возвращает все коментарии к объявлению
-     * @param adPk
-     * @return
-     */
-    @GetMapping("/{ad_pk}/comments")
-    public CommentsList getAllComments(@PathVariable(value =  "ad_pk") Integer adPk) {
-        return commentsService.getAllComments(adPk);
-    }
-
-    /**
-     * Добавляет коментарий к объявлению
-     * @param adPk
-     * @return
-     */
-    @PostMapping("/{ad_pk}/comments")
-    public Comment setComment(@PathVariable(value = "ad_pk") Integer adPk,
-                              @RequestBody Comment comment) {
-        return commentsService.setComments(adPk, comment);
-    }
-
-
-    /**
-     * Возвращает коментарий к объявлению определенного автора
-     * @param adPk
+    /** НЕ ПРОВЕРЕН
+     *
      * @param id
      * @return
      */
-    @GetMapping("/{ad_pk}/comments/{id}")
-    public Comment getAdComments(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id) {
-        return commentsService.getComment(id);
-    }
-
-    /**
-     * Редактирования коментария определенного автора
-     * @param adPk
-     * @param id
-     * @return
-     */
-    @PatchMapping("/{ad_pk}/comments/{id}")
-    public Comment updateCommentUser(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
-                                     @RequestBody Comment comment) {
-        return commentsService.updateComment(adPk, id, comment);
-    }
-
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeAds(@PathVariable Integer id) {
         adsService.removeAds(id);
         return ResponseEntity.status(204).build();
     }
 
+    /** НЕ ПРОВЕРЕН
+     * Возвращает все коментарии к объявлению
+     * @param adPk
+     * @return
+     */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    @GetMapping("/{ad_pk}/comments")
+    public CommentsList getComments(@PathVariable(value =  "ad_pk") Integer adPk) {
+        return commentsService.getAllComments(adPk);
+    }
 
-    /**
-     * Удаляет коментарий к объявлению определенного пользователя
+    /** НЕ ПРОВЕРЕН
+     * Добавляет коментарий к объявлению
+     * @param adPk
+     * @return
+     */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    @PostMapping("/{ad_pk}/comments")
+    public Comment addComment(@PathVariable(value = "ad_pk") Integer adPk,
+                              @RequestBody Comment comment) {
+        return commentsService.addComments(adPk, comment);
+    }
+
+
+    /** НЕ ПРОВЕРЕН
+     * Возвращает коментарий
      * @param adPk
      * @param id
      * @return
      */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    @GetMapping("/{ad_pk}/comments/{id}")
+    public Comment getAdComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id) {
+        return commentsService.getComment(id);
+    }
+
+    /** НЕ ПРОВЕРЕН
+     * Редактирования коментария
+     * @param adPk
+     * @param id
+     * @return
+     */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    @PatchMapping("/{ad_pk}/comments/{id}")
+    public Comment updateComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
+                                 @RequestBody Comment comment) {
+        return commentsService.updateComment(id, comment);
+    }
+
+
+    /** НЕ ПРОВЕРЕН
+     * Удаляет коментарий к объявлению
+     * @param adPk
+     * @param id
+     * @return
+     */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @DeleteMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity<?> removeComments(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
-        commentsService.removeComment(adPk, id);
+        commentsService.removeComment(id);
         return ResponseEntity.ok().build();
     }
 

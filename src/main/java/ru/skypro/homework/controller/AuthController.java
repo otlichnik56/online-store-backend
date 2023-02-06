@@ -16,7 +16,7 @@ import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
 import ru.skypro.homework.service.auth.AuthService;
-import ru.skypro.homework.service.user.UserService;
+import ru.skypro.homework.service.user.UserServiceImpl;
 
 import static ru.skypro.homework.model.user.Role.USER;
 
@@ -27,7 +27,6 @@ import static ru.skypro.homework.model.user.Role.USER;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserService userService;
 
     @Operation( summary = "авторизация пользователя",
                 description = "принимает логин и пароль, проверяет в базе среди зарегистрированных и если есть совпадение открывает доступ пользователю"

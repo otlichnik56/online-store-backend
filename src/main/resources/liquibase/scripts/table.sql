@@ -25,7 +25,7 @@ CREATE TABLE ads
     title        TEXT,
     price        INTEGER,
     text         TEXT,
-    picture      TEXT,
+    image        TEXT,
     description  TEXT,
     author       INTEGER REFERENCES users(id)
 );

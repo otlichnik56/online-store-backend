@@ -1,36 +1,24 @@
 package ru.skypro.homework.service;
 import ru.skypro.homework.entity.Commentary;
+
 import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
+import ru.skypro.homework.model.ad.*;
 import ru.skypro.homework.entity.Advert;
 import ru.skypro.homework.entity.Client;
-import ru.skypro.homework.entity.Picture;
-import ru.skypro.homework.model.image.Image;
-import ru.skypro.homework.model.user.LoginReq;
-import ru.skypro.homework.model.user.NewPassword;
-import ru.skypro.homework.model.user.RegisterReq;
-import ru.skypro.homework.model.user.Role;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.AdvertRepository;
 import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.repository.CommentaryRepository;
-import ru.skypro.homework.repository.PictureRepository;
-import ru.skypro.homework.service.ad.*;
 
 @Service
 public class Mapper {
@@ -40,24 +28,20 @@ public class Mapper {
     private final ClientRepository clientRepository;
     private final AdvertRepository advertRepository;
     private final CommentaryRepository commentaryRepository;
-    private final PictureRepository pictureRepository;
     
-    LoginReq loginReq = new LoginReq();
-    Ads adsDto = new Ads();
 
     public Mapper(
         ClientRepository clientRepository, 
         AdvertRepository advertRepository,
-        CommentaryRepository commentaryRepository,
-        PictureRepository pictureRepository
+        CommentaryRepository commentaryRepository
         ) {
         this.clientRepository = clientRepository;
         this.advertRepository = advertRepository;
         this.commentaryRepository = commentaryRepository;
-        this.pictureRepository = pictureRepository;
         
     }
 
+    /**
       // из dto RegisterReq в entity Client
       public Client registerReqToClient(RegisterReq registerReq) {
         Client client = new Client();
@@ -68,15 +52,16 @@ public class Mapper {
         client.setPhone(registerReq.getPhone());
         client.setRole(Role.USER);
         return client;
-    }
+    } */
 
+    /**
     // из entity Client в dto LoginReg
     public LoginReq clientToLoginReg(String userName, String password) {
         Client client = clientRepository.findByUsername(userName);
         loginReq.setUsername(client.getUsername());
         loginReq.setPassword(client.getPassword());
         return loginReq;
-    }
+    }*/
 
     // из entity Client в dto User
     public User clientToUser(Client client) {
@@ -92,6 +77,7 @@ public class Mapper {
        return user;
     }
 
+    /**
     // редактирование пароля, должно быть не здесь!!!!!!!!!!!!!!!!!!
     public NewPassword newPassword(String currentPass, String newPass) {
         NewPassword newPassword = new NewPassword();
@@ -99,9 +85,10 @@ public class Mapper {
         newPassword.setNewPassword(newPass);
         clientRepository.setNewPass(currentPass, newPass);
         return newPassword;
-    }
+    }*/
 
     // из entity Client в dto AdsUser
+    /**
     public AdsUser clientToAdsUser() {
         Client client = clientRepository.getUserName(loginReq.getUsername());
         AdsUser adsUser = new AdsUser();
@@ -112,8 +99,9 @@ public class Mapper {
         adsUser.setRole(client.getRole());
         adsUser.setUsername(client.getUsername());
         return adsUser;
-    }
+    }*/
 
+    /**
     // Добавить Image. Должно быть не здесь!!!!!!!
     public Image addImage(MultipartFile imageFile) throws IOException {
         Image image = new ru.skypro.homework.model.image.Image();
@@ -135,55 +123,35 @@ public class Mapper {
             List<String> getAddedImages = pictureRepository.getAddedImages();
             image.setImage(getAddedImages);
         return image;
-    }
+    }*/
   
-    // Добавление объявлений. Должно быть не здесь!!!!!!!!!!!!!
-    public Ads addAds(Ad ad, MultipartFile file) throws IOException {
-        Advert adEntity = new Advert();
+    //
+    public Advert adsToAdvert(Ads ads, Client client) {
+        Advert advert = new Advert();
+        advert.setImage("/image");
+        advert.setPrice(ads.getPrice());
+        advert.setTitle(ads.getTitle());
+        advert.setAuthor(client.getId());
+        return advert;
+    }
+
+    //
+    public Ads advertToAds(Advert advert) {
         Ads ads = new Ads();
-        addImage(file);
-        Client client = clientRepository.getUserName(loginReq.getUsername());
-        adEntity.setAuthor(client.getId());
-        adEntity.setImage("/image");
-        adEntity.setPrice(ad.getPrice());
-        adEntity.setTitle(ad.getTitle());
-        adEntity.setDescription(ad.getDescription());
-        advertRepository.save(adEntity);
-        ads.setAuthor(client.getId());
-        List<String> listImage = new ArrayList<>(Arrays.asList());
-        listImage.add(adEntity.getImage());
-        ads.setImage(listImage);
-        ads.setPk(adEntity.getPk());
-        ads.setPrice(ad.getPrice());
-        ads.setTitle(ad.getTitle());
-
-        // для отладки
-        // adEntity.setAuthor(1);
-        // adEntity.setImage("image");
-        // adEntity.setPrice(100);
-        // adEntity.setTitle("title");
-        // adEntity.setDescription("desc");
-        // adRepository.save(adEntity);
-
-        // ads.setAuthor(1);
-        // List<String> listImage = new ArrayList<>(Arrays.asList());
-        // listImage.add(adEntity.getImage());
-        // ads.setImage(listImage);
-        // ads.setPk(adEntity.getPk());
-        // ads.setPrice(100);
-        // ads.setTitle("title");
-
+        ads.setAuthor(advert.getAuthor());
+        ads.setImage(new ArrayList<>());
+        ads.setPk(advert.getPk());
+        ads.setPrice(advert.getPrice());
+        ads.setTitle(advert.getTitle());
         return ads;
     }
 
-    // Возврат объявлений пользователя. Должно быть не здесь!!!!!!!!!!!!!
-    public AdList getAdsMe() {
-        AdList adList = new AdList();
-        Client client = clientRepository.getUserName(loginReq.getUsername());
-        List<Advert> adUser = advertRepository.getAd(1);
-        if(adUser != null) {
-            List<Ads> resultAds = adUser.stream()
-            .map((Function<Advert, Ads>) ad -> {
+    //
+    public AdList listAdvertToAdList(List<Advert> adsMe) {
+        AdList adsList = new AdList();
+        if(adsMe != null) {
+            List<Ads> resultAds = adsMe.stream()
+            .map(ad -> {
                 Ads ads = new Ads();
                         ads.setAuthor(ad.getAuthor());
                         ads.setImage(Arrays.asList(ad.getImage()));
@@ -192,60 +160,15 @@ public class Mapper {
                         ads.setTitle(ad.getTitle());
                         return ads;
             }).collect(Collectors.toList());
-            adList.setResults(resultAds);
-            adList.setCount(resultAds.size());
-            return adList;
+            adsList.setResults(resultAds);
+            adsList.setCount(resultAds.size());
+            return adsList;
         }
-        return adList;
+        return adsList;
     }
 
-    // Возврат всех объявлений. Должно быть не здесь!!!!!!!!!!!!!
-    public AdList getAllAds() {
-        AdList adList = new AdList();
-        List<Advert> adUser = advertRepository.getAllAds();
-        if(adUser != null) {
-            List<Ads> resultAds = adUser.stream()
-            .map((Function<Advert, Ads>) ad -> {
-                Ads ads = new Ads();
-                        ads.setAuthor(ad.getAuthor());
-                        ads.setImage(Arrays.asList(ad.getImage()));
-                        ads.setPk(ad.getPk());
-                        ads.setPrice(ad.getPrice());
-                        ads.setTitle(ad.getTitle());
-                        return ads;
-            }).collect(Collectors.toList());
-            adList.setResults(resultAds);
-            adList.setCount(resultAds.size());
-            return adList;
-        }
-
-        // // для отладки
-        // Ads ads = new Ads();
-        // Ad ad = new Ad();
-
-        // ad.setAuthor(1);
-        // ad.setImage("http://localhost:8080/image");
-        // ad.setPrice(100);
-        // ad.setTitle("ad.getTitle()");
-        // ad.setDescription("desc");
-        // adRepository.save(ad);
-
-        // ads.setAuthor(1);
-        // ads.setImage(Arrays.asList("http://localhost:8080/image"));
-        // ads.setPk(ad.getPk());
-        // ads.setPrice(100);
-        // ads.setTitle("ad.getTitle()");
-
-        // List<Ads> resultAds = new ArrayList<Ads>(Arrays.asList(ads)); 
-        // adList.setResults(resultAds);
-        // adList.setCount(resultAds.size());
-        return adList;
-    }
-
-    // Возврат полного объявления. Должно быть не здесь!!!!!!!!!!!!!
-    public FullAd getFullAd(int id) {
-       Advert advert = advertRepository.getFullAd(id);
-       Client client = clientRepository.findById(advert.getAuthor()).orElseThrow();
+    // Создание FullAd из Advert и Client
+    public FullAd linkageFullAd(Advert advert, Client client) {
        FullAd fullAd = new FullAd();
        fullAd.setAuthorFirstName(client.getFirstName());
        fullAd.setAuthorLastName(client.getLastName());
@@ -259,25 +182,16 @@ public class Mapper {
        return fullAd; 
     }
 
-    // Редактирование объявления. Должно быть не здесь!!!!!!!!!!!!!
-     public AdList updateAds(int id, Ad update) {
-       Ads ads = new Ads();
-       AdList adList = new AdList();
-       Client client = clientRepository.getUserName(loginReq.getUsername());
-       ads.setPrice(update.getPrice());
-       ads.setTitle(update.getTitle());
-       ads.setImage(advertRepository.getImage(id));
-       ads.setAuthor(client.getId());
-       ads.setPk(id);
-       advertRepository.updateAd(id, update.getPrice(), update.getTitle(), update.getDescription());
-       List<Ads> resultAds = new ArrayList<Ads>(Arrays.asList(ads)); 
-       adList.setResults(resultAds);
-       adList.setCount(resultAds.size());
-       return adList; 
+    //
+     public Advert createAdsIntoAds(Advert advert, CreateAds update) {
+       advert.setPrice(update.getPrice());
+       advert.setTitle(update.getTitle());
+       advert.setDescription(update.getDescription());
+       return advert;
     }
 
     // из dto Comment в entity Commentary
-    public Commentary commentToCommentary(int adPk, Comment comment) {
+    public Commentary commentToCommentary(Integer adPk, Comment comment) {
         Commentary commentary = new Commentary();
         commentary.setAuthor(comment.getAuthor());
         commentary.setCreatedAt(comment.getCreatedAt());
@@ -286,14 +200,29 @@ public class Mapper {
         return commentary;
     }
 
-     // из entity Commentary в dto CommentsList
-     public CommentsList commentaryToCommentsList(int adPk) {
+    public Commentary commentToCommentaryEdit(Commentary commentary, Comment comment) {
+        commentary.setAuthor(comment.getAuthor());
+        commentary.setCreatedAt(comment.getCreatedAt());
+        commentary.setText(comment.getText());
+        return commentary;
+    }
+
+     // из entity Commentary в dto Comment
+     public Comment commentaryToComment(Commentary commentary) {
+         Comment comment = new Comment();
+         comment.setAuthor(commentary.getAuthor());
+         comment.setCreatedAt(commentary.getCreatedAt());
+         comment.setPk(commentary.getPk());
+         comment.setText(commentary.getText());
+         return comment;
+     }
+
+    // из entity Commentary в dto CommentsList
+     public CommentsList commentaryToCommentsList(List<Commentary> comments) {
         CommentsList commentsList = new CommentsList();
-        Client client = clientRepository.getUserName(loginReq.getUsername());
-        List<Commentary> resultCommentaries = commentaryRepository.getComments(adPk);
-        if(resultCommentaries != null) {
-            List<Comment> commentList = resultCommentaries.stream()
-             .map((Function<Commentary, Comment>) commentary -> {
+        if(comments != null) {
+            List<Comment> commentList = comments.stream()
+             .map(commentary -> {
                 Comment comment = new Comment();
                 comment.setAuthor(commentary.getAuthor());
                 comment.setCreatedAt(commentary.getCreatedAt());
@@ -308,15 +237,17 @@ public class Mapper {
         return commentsList;
     }
 
-      // из entity Commentary в dto Comment
-      public Comment commentaryToComment(int id) {
-          Commentary commentary = commentaryRepository.findById(id).get();
-          Comment comment = new Comment();
-          comment.setAuthor(commentary.getAuthor());
-          comment.setCreatedAt(commentary.getCreatedAt());
-          comment.setPk(commentary.getPk());
-          comment.setText(commentary.getText());
-          return comment;
-      }   
+
+    // из dto User в entity Client
+    public Client userToClient(User user, Client client) {
+        client.setFirstName(user.getFirstName());
+        client.setLastName(user.getLastName());
+        client.setEmail(user.getEmail());
+        client.setPhone(user.getPhone());
+        client.setRegDate(user.getRegDate());
+        client.setCity(user.getCity());
+        client.setImage(user.getImage());
+        return client;
+    }
 
 }

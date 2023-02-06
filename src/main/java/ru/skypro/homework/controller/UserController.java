@@ -2,11 +2,12 @@ package ru.skypro.homework.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.User;
-import ru.skypro.homework.service.user.PasswordService;
 import ru.skypro.homework.service.user.UserService;
 
 @Slf4j
@@ -17,7 +18,6 @@ import ru.skypro.homework.service.user.UserService;
 public class UserController {
 
     private final UserService userService;
-    private final PasswordService passwordService;
 
     /** ПРОВЕРЕН
      *
@@ -29,16 +29,28 @@ public class UserController {
         return userService.getUser(authentication.getName());
     }
 
+    /** НЕ ПРОВЕРЕН
+     *
+     * @param newPassword
+     * @param authentication
+     * @return
+     */
     @PostMapping("/set_password")
-    public NewPassword setPassword(@RequestBody NewPassword newPassword,
-                                   Authentication authentication) {
-        authentication.getName();
-        return passwordService.setPassword(newPassword.getCurrentPassword(), newPassword.getNewPassword());
+    public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword,
+                                        Authentication authentication) {
+        System.out.println("Пароль " + newPassword);
+        if (userService.setPassword(newPassword, authentication.getName())) {
+            return ResponseEntity.ok().body(newPassword);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PutMapping("/me")
     public User updateUser(@RequestBody User user, Authentication authentication) {
-
+        //System.out.println("Приходит JSON " + user);
+        //System.out.println("Приходит authentication " + authentication);
+        userService.updateUser(user, authentication);
         return user;
     }
 

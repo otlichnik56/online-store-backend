@@ -1,48 +1,17 @@
 package ru.skypro.homework.service.user;
 
-import org.springframework.stereotype.Service;
-
-import lombok.AllArgsConstructor;
-import ru.skypro.homework.entity.Client;
-import ru.skypro.homework.repository.ClientRepository;
-import ru.skypro.homework.service.ad.AdsUser;
+import org.springframework.security.core.Authentication;
+import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.User;
-import ru.skypro.homework.service.Mapper;
 
-@Service
-@AllArgsConstructor
-public class UserService implements UserInterface {
+public interface UserService {
 
-    private Mapper mapper;
-    private final ClientRepository clientRepository;
+    User getUser(String username);
 
-    /** ПРОВЕРЕН
-     *
-     * @param username
-     * @return
-     */
-    @Override
-    public User getUser(String username) {
-        Client client = clientRepository.getUserName(username);
-        return mapper.clientToUser(client);
-    }
+    boolean setPassword(NewPassword newPassword, String username);
 
+    User updateUser(User user, Authentication authentication);
 
-    @Override
-    public User updateUser() {
-        return new User(1, "jon", "slith", "test@mail.ru", "89991234545",
-                "123", "Moscow", "image" );
-    }
+    User updateUserImage();
 
-    @Override
-    public User updateUserImage() {
-        return new User(0, "imageUpdate", null, null, null, null, null, null);
-    }
-
-    @Override
-    public AdsUser getAdsMe() {
-        return mapper.clientToAdsUser();
-    }
-
-   
 }

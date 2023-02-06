@@ -7,12 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import ru.skypro.homework.entity.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
-
-    Client findByUsernameIgnoreCase(String username);
 
     @Query(value = "SELECT * FROM users WHERE username = :username", nativeQuery = true)
     Client getUserName(@Param("username") String username);

@@ -15,6 +15,7 @@ public class Advert {
 
     private String title;
     private Integer price;
+    private String text;
     private String image;
     private String description;
 
