@@ -11,6 +11,8 @@ import ru.skypro.homework.entity.Advert;
 
 public interface AdvertRepository extends JpaRepository<Advert, Integer> {
 
+
+
     @Query(value = "SELECT * FROM ads WHERE author = ?1", nativeQuery = true)
     List<Advert> getAd(int authorId);
 

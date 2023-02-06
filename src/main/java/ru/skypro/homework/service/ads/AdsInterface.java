@@ -13,11 +13,13 @@ public interface AdsInterface {
 
 
     AdList getAllAds();
+
+    AdList getAdsMe(String username);
+
     Ads addAds(Ad ad, MultipartFile file) throws IOException;
     FullAd getFullAd(int id);
     void removeAds(int id);
     AdList updateAds(int id, Ad update);
     // ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException;
-    AdList getAdsMe(int id);
 
 }

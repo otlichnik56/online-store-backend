@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
+import ru.skypro.homework.entity.Client;
+import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.service.ad.Ad;
 import ru.skypro.homework.service.ad.AdList;
 import ru.skypro.homework.service.ad.Ads;
@@ -19,6 +21,7 @@ public class AdsService implements AdsInterface{
 
     private Mapper mapper;
     private final AdvertRepository advertRepository;
+    private final ClientRepository clientRepository;
 
 
     /**
@@ -31,13 +34,15 @@ public class AdsService implements AdsInterface{
         return mapper.getAllAds();
     }
 
-     /**
+     /** ПРОВЕРЕН
      * описание - метод сервиса, который вызывает метод
      * маппера для перевода данных из сущности в дто
      * и возвращает в api ответ в виде данных дто
      */
     @Override
-    public AdList getAdsMe(int id) {
+    public AdList getAdsMe(String username) {
+        Client user = clientRepository.findByUsername(username);
+        advertRepository.getAd(user.getId());
         return mapper.getAdsMe();
     }
 
@@ -69,6 +74,8 @@ public class AdsService implements AdsInterface{
     public AdList updateAds(int id, Ad update) {
         return mapper.updateAds(id, update);
     }
+
+
 
     // @Override
     // public ImageDto updateAdsImage(int id, MultipartFile multipartFile) throws IOException {

@@ -79,9 +79,8 @@ public class Mapper {
     }
 
     // из entity Client в dto User
-    public User clientToUser() {
+    public User clientToUser(Client client) {
        User user = new User();
-       Client client = clientRepository.getUserName(loginReq.getUsername());
        user.setId(client.getId());
        user.setFirstName(client.getFirstName());
        user.setLastName(client.getLastName());

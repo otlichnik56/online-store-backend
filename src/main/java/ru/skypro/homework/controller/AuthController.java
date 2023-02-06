@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import ru.skypro.homework.filter.BasicAuthCorsFilter;
 import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
@@ -19,6 +20,7 @@ import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.auth.AuthService;
 import ru.skypro.homework.service.user.UserService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static ru.skypro.homework.model.user.Role.USER;
@@ -39,14 +41,13 @@ public class AuthController {
     public ResponseEntity<?> login(@Parameter(description = "принимает объект со значениями полей username и password",
                                               schema = @Schema(implementation = LoginReq.class)
                                     )
-                                   @RequestBody LoginReq req,
-                                   HttpSession httpSession) {
+                                   @RequestBody LoginReq req) {
         //System.out.println(req);
 
         if (authService.login(req.getUsername(), req.getPassword())) {
-            User user = userService.getUser();
-            httpSession.setAttribute("user", user);
-            System.out.println("Пользователь  !!!!!   " + httpSession.getAttribute("user"));
+            //User user = userService.getUser();
+            //httpServletResponse.addHeader("user", user.toString());
+            //System.out.println("Пользователь  !!!!!   " + httpServletResponse.getHeader("user"));
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

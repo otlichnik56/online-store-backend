@@ -5,7 +5,8 @@ import ru.skypro.homework.model.user.User;
 
 public interface UserInterface {
 
-    User getUser();
+
+    User getUser(String username);
 
     User updateUser();
 

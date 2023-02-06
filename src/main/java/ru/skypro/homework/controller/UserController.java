@@ -2,6 +2,7 @@ package ru.skypro.homework.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.User;
@@ -18,9 +19,14 @@ public class UserController {
     private final UserService userService;
     private final PasswordService passwordService;
 
+    /** ПРОВЕРЕН
+     *
+     * @param authentication
+     * @return
+     */
     @GetMapping("/me")
-    public User getUser() {
-         return userService.getUser();
+    public User getUser(Authentication authentication) {
+        return userService.getUser(authentication.getName());
     }
 
     @PostMapping("/set_password")
@@ -29,7 +35,8 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public User updateUser(@RequestBody User user) {
+    public User updateUser(@RequestBody User user, Authentication authentication) {
+
         return user;
     }
 

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,11 +46,17 @@ public class AdsController {
         }
     }
 
+    /** ПРОВЕРЕН
+     *
+     * @param authentication
+     * @return
+     */
     @GetMapping("/me")
     //@PreAuthorize("isFullyAuthenticated()")
-    public AdList getAdsMe(HttpSession httpSession) {
-        User user = (User)httpSession.getAttribute("user");
-        return adsService.getAdsMe(user.getId());
+    public AdList getAdsMe(Authentication authentication) {
+        //System.out.println("!!!!!!!!!!!!!!!!!    " + authentication.getName());
+        //User user = (User)httpSession.getAttribute("user");
+        return adsService.getAdsMe(authentication.getName());
     }
 
     @GetMapping("/{id}")

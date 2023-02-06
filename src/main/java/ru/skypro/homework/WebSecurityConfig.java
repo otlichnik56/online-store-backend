@@ -64,9 +64,9 @@ public class WebSecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .requestMatchers()
-                .antMatchers("/ads/me");
+        //http
+          //      .requestMatchers()
+            //    .antMatchers("/ads/me");
 
         http
                 .csrf().disable()

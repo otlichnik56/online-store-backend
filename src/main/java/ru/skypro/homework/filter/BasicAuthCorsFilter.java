@@ -27,11 +27,12 @@ public class BasicAuthCorsFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
         httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
-        HttpSession session = httpServletRequest.getSession();
-        User user = (User) session.getAttribute("user");
-        System.out.println("Сессия " + session.getAttribute("user"));
-        UserAuthentication authentication = new UserAuthentication(user);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        //Session session = httpServletRequest.getSession();
+        //User user = (User) session.getAttribute("user");
+        //httpServletRequest.getSession().getAttribute("user");
+        //System.out.println("Сессия " + httpServletResponse.getHeader("user"));
+        //UserAuthentication authentication = new UserAuthentication(user);
+        //SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
