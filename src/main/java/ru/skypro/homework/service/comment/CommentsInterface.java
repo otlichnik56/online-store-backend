@@ -1,26 +1,25 @@
 package ru.skypro.homework.service.comment;
 
-import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.model.comment.CommentDto;
+import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
 
 public interface CommentsInterface {
 
     CommentsList getAllComments(int adPk);
 
-    CommentDto setComments(int adPk);
+    Comment setComments(int adPk);
 
-    CommentDto setComments(int adPk, CommentDto commentDto);
+    Comment setComments(int adPk, Comment comment);
 
-    CommentDto getComment(int pk, int id);
+    Comment getComment(int pk, int id);
 
-    CommentDto getComment(int id);
+    Comment getComment(int id);
 
     void removeComment(int pk, int id);
 
     void removeComment(int id);
 
-    CommentDto updateComment(int pk, int id);
+    Comment updateComment(int pk, int id);
 
-    CommentDto updateComment(int adPk, int id, CommentDto commentDto);
+    Comment updateComment(int adPk, int id, Comment comment);
 }

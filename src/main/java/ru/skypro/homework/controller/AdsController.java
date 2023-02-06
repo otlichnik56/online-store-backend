@@ -5,26 +5,25 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import ru.skypro.homework.model.ad.AdList;
-import ru.skypro.homework.model.ad.Ads;
-import ru.skypro.homework.model.ad.AdsUser;
-import ru.skypro.homework.model.ad.FullAd;
-import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.model.comment.CommentDto;
+import ru.skypro.homework.model.user.User;
+import ru.skypro.homework.service.ad.Ad;
+import ru.skypro.homework.service.ad.AdList;
+import ru.skypro.homework.service.ad.Ads;
+import ru.skypro.homework.service.ad.FullAd;
+import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
-import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.service.ads.AdsService;
 import ru.skypro.homework.service.comment.CommentsService;
 import ru.skypro.homework.service.user.UserService;
 
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -47,9 +46,17 @@ public class AdsController {
         }
     }
 
+    /** ПРОВЕРЕН
+     *
+     * @param authentication
+     * @return
+     */
     @GetMapping("/me")
-    public AdList getAdsMe() {
-        return adsService.getAdsMe();
+    //@PreAuthorize("isFullyAuthenticated()")
+    public AdList getAdsMe(Authentication authentication) {
+        //System.out.println("!!!!!!!!!!!!!!!!!    " + authentication.getName());
+        //User user = (User)httpSession.getAttribute("user");
+        return adsService.getAdsMe(authentication.getName());
     }
 
     @GetMapping("/{id}")
@@ -59,14 +66,14 @@ public class AdsController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<AdList> updateAds(
-         @RequestBody ru.skypro.homework.model.ad.Ad update,
+         @RequestBody Ad update,
          @PathVariable Integer id) {
         return ResponseEntity.status(200).body(adsService.updateAds(id, update));
     }
 
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") ru.skypro.homework.model.ad.Ad ad, 
+    public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") Ad ad,
     @RequestPart(value = "image") MultipartFile file) throws IOException {
         return ResponseEntity.status(201).body(adsService.addAds(ad, file));
     }
@@ -87,9 +94,9 @@ public class AdsController {
      * @return
      */
     @PostMapping("/{ad_pk}/comments")
-    public CommentDto setComment(@PathVariable(value = "ad_pk") Integer adPk,
-                                 @RequestBody CommentDto commentDto) {
-        return commentsService.setComments(adPk, commentDto);
+    public Comment setComment(@PathVariable(value = "ad_pk") Integer adPk,
+                              @RequestBody Comment comment) {
+        return commentsService.setComments(adPk, comment);
     }
 
 
@@ -100,7 +107,7 @@ public class AdsController {
      * @return
      */
     @GetMapping("/{ad_pk}/comments/{id}")
-    public CommentDto getAdComments(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id) {
+    public Comment getAdComments(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id) {
         return commentsService.getComment(id);
     }
 
@@ -111,9 +118,9 @@ public class AdsController {
      * @return
      */
     @PatchMapping("/{ad_pk}/comments/{id}")
-    public CommentDto updateCommentUser(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
-                                        @RequestBody CommentDto commentDto) {
-        return commentsService.updateComment(adPk, id, commentDto);
+    public Comment updateCommentUser(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
+                                     @RequestBody Comment comment) {
+        return commentsService.updateComment(adPk, id, comment);
     }
 
     @DeleteMapping("/{id}")

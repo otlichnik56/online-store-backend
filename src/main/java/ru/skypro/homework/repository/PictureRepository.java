@@ -6,15 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import ru.skypro.homework.entity.Image;
+import ru.skypro.homework.entity.Picture;
 
 @Repository
-public interface ImageRepository extends JpaRepository<Image, Integer> {
+public interface PictureRepository extends JpaRepository<Picture, Integer> {
     
-    @Query(value = "SELECT file_name FROM image", nativeQuery = true)
+    @Query(value = "SELECT file_name FROM images", nativeQuery = true)
     List<String> getAddedImages();
 
 
-    @Query(value = "SELECT * FROM image LIMIT 1", nativeQuery = true)
-    Image getImage();
+    @Query(value = "SELECT * FROM images LIMIT 1", nativeQuery = true)
+    Picture getImage();
 }

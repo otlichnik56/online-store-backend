@@ -3,8 +3,9 @@ package ru.skypro.homework.service.user;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import ru.skypro.homework.model.ad.Ads;
-import ru.skypro.homework.model.ad.AdsUser;
+import ru.skypro.homework.entity.Client;
+import ru.skypro.homework.repository.ClientRepository;
+import ru.skypro.homework.service.ad.AdsUser;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.Mapper;
 
@@ -13,11 +14,19 @@ import ru.skypro.homework.service.Mapper;
 public class UserService implements UserInterface {
 
     private Mapper mapper;
+    private final ClientRepository clientRepository;
 
+    /** ПРОВЕРЕН
+     *
+     * @param username
+     * @return
+     */
     @Override
-    public User getUser() {
-        return mapper.clientToUser();
+    public User getUser(String username) {
+        Client client = clientRepository.getUserName(username);
+        return mapper.clientToUser(client);
     }
+
 
     @Override
     public User updateUser() {

@@ -1,9 +1,8 @@
-package ru.skypro.homework.model.ad;
+package ru.skypro.homework.service.ad;
 
 import java.util.List;
 
 import lombok.Data;
-import ru.skypro.homework.entity.Ad;
 
 @Data
 public class AdList {

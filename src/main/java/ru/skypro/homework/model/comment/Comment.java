@@ -5,14 +5,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CommentDto {
+public class Comment {
     private Integer pk;
     private String createdAt;
     private String text;
     private Integer author;
 
-
-    public CommentDto() {
+    public Comment() {
         
     }
 }

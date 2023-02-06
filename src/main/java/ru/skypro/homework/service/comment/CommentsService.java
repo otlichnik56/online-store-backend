@@ -3,10 +3,10 @@ package ru.skypro.homework.service.comment;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.model.comment.CommentDto;
+import ru.skypro.homework.entity.Commentary;
+import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
-import ru.skypro.homework.repository.CommentRepository;
+import ru.skypro.homework.repository.CommentaryRepository;
 import ru.skypro.homework.service.Mapper;
 
 @Service
@@ -14,21 +14,21 @@ import ru.skypro.homework.service.Mapper;
 public class CommentsService implements CommentsInterface {
 
     private Mapper mapper;
-    private final CommentRepository commentRepository;
+    private final CommentaryRepository commentaryRepository;
 
     @Override
     public CommentsList getAllComments(int adPk) {
-        return mapper.commentToCommentDtoList(adPk);
+        return mapper.commentaryToCommentsList(adPk);
     }
 
     @Override
-    public CommentDto setComments(int adPk) {
+    public Comment setComments(int adPk) {
         return null;
     }
 
     @Override
-    public CommentDto getComment(int id) {
-        return mapper.commentToCommentDto(id);
+    public Comment getComment(int id) {
+        return mapper.commentaryToComment(id);
     }
 
     @Override
@@ -38,31 +38,31 @@ public class CommentsService implements CommentsInterface {
 
     @Override
     public void removeComment(int id) {
-        commentRepository.deleteById(id);
+        commentaryRepository.deleteById(id);
     }
 
     @Override
-    public CommentDto updateComment(int pk, int id) {
+    public Comment updateComment(int pk, int id) {
         return null;
     }
 
     @Override
-    public CommentDto setComments(int adPk, CommentDto commentDto) {
-        commentRepository.save(mapper.commentDtoToComment(adPk, commentDto));
-        return commentDto;
+    public Comment setComments(int adPk, Comment comment) {
+        commentaryRepository.save(mapper.commentToCommentary(adPk, comment));
+        return comment;
     }
 
     @Override
-    public CommentDto getComment(int pk, int id) {
+    public Comment getComment(int pk, int id) {
         return null;
     }
 
     @Override
-    public CommentDto updateComment(int adPk, int id, CommentDto commentDto) {
-        Comment comment = mapper.commentDtoToComment(adPk, commentDto);
-        comment.setPk(id);
-        commentRepository.save(comment);
-        return commentDto;
+    public Comment updateComment(int adPk, int id, Comment comment) {
+        Commentary commentary = mapper.commentToCommentary(adPk, comment);
+        commentary.setPk(id);
+        commentaryRepository.save(commentary);
+        return comment;
     }
 
 
