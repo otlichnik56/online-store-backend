@@ -91,8 +91,9 @@ public class AdsController {
     @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @PatchMapping("/{id}")
     public ResponseEntity<Ads> updateAds(@RequestBody CreateAds update,
-                                            @PathVariable Integer id) {
-        return ResponseEntity.status(200).body(adsService.updateAds(id, update));
+                                         @PathVariable Integer id,
+                                         Authentication authentication) {
+        return ResponseEntity.status(200).body(adsService.updateAds(id, update, authentication));
     }
 
     /** НЕ ПРОВЕРЕН
@@ -102,8 +103,9 @@ public class AdsController {
      */
     @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAds(@PathVariable Integer id) {
-        adsService.removeAds(id);
+    public ResponseEntity<?> removeAds(@PathVariable Integer id,
+                                       Authentication authentication) {
+        adsService.removeAds(id, authentication);
         return ResponseEntity.status(204).build();
     }
 
@@ -152,8 +154,9 @@ public class AdsController {
     @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @PatchMapping("/{ad_pk}/comments/{id}")
     public Comment updateComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
-                                 @RequestBody Comment comment) {
-        return commentsService.updateComment(id, comment);
+                                 @RequestBody Comment comment,
+                                 Authentication authentication) {
+        return commentsService.updateComment(id, comment, authentication);
     }
 
 
@@ -165,8 +168,10 @@ public class AdsController {
      */
     @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @DeleteMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<?> removeComments(@PathVariable("ad_pk") Integer adPk, @PathVariable Integer id) {
-        commentsService.removeComment(id);
+    public ResponseEntity<?> removeComments(@PathVariable("ad_pk") Integer adPk,
+                                            @PathVariable Integer id,
+                                            Authentication authentication) {
+        commentsService.removeComment(id, authentication);
         return ResponseEntity.ok().build();
     }
 

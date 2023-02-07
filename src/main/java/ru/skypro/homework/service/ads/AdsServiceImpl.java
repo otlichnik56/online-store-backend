@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.UserAccessControl;
 import ru.skypro.homework.entity.Advert;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.entity.Picture;
@@ -30,6 +31,7 @@ import ru.skypro.homework.service.Mapper;
 public class AdsServiceImpl implements AdsService {
 
     Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
+    private UserAccessControl accessControl;
     private Mapper mapper;
     private final AdvertRepository advertRepository;
     private final ClientRepository clientRepository;
@@ -83,7 +85,7 @@ public class AdsServiceImpl implements AdsService {
      * данных дто
      */
     @Override
-    public Ads addAds(Ads ads, MultipartFile file, Authentication authentication) throws IOException {
+    public Ads addAds(Ads ads, MultipartFile file, Authentication authentication) {
         Client client = clientRepository.getUserName(authentication.getName());
         Advert advert = mapper.adsToAdvert(ads, client);
         advertRepository.save(advert);
@@ -92,21 +94,39 @@ public class AdsServiceImpl implements AdsService {
     }
 
 
+    /** НЕ ПРОВЕРЕН
+     * Разграничивается доступ к редактированию между пользователями
+     * @param id
+     * @param update
+     * @param authentication
+     * @return
+     */
     @Override
-    public Ads updateAds(Integer id, CreateAds update) {
-        Advert advert = advertRepository.findById(id).orElse(null);
-        if (advert == null) {
-            return null;
+    public Ads updateAds(Integer id, CreateAds update, Authentication authentication) {
+        if (accessControl.accessControl(id, authentication)) {
+            Advert advert = advertRepository.findById(id).orElse(null);
+            if (advert == null) {
+                return null;
+            } else {
+                Advert result = mapper.createAdsIntoAds(advert, update);
+                advertRepository.save(result);
+                return mapper.advertToAds(result);
+            }
         } else {
-            Advert result = mapper.createAdsIntoAds(advert, update);
-            advertRepository.save(result);
-            return mapper.advertToAds(result);
+            return null;
         }
     }
 
+    /** НЕ ПРОВЕРЕН
+     * Разграничивается доступ к редактированию между пользователями
+     * @param id
+     * @param authentication
+     */
     @Override
-    public void removeAds(Integer id) {
-        advertRepository.deleteById(id);
+    public void removeAds(Integer id, Authentication authentication) {
+        if (accessControl.accessControl(id, authentication)) {
+            advertRepository.deleteById(id);
+        }
     }
 
 

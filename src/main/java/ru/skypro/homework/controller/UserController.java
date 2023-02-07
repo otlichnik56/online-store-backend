@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.user.NewPassword;
@@ -24,6 +25,7 @@ public class UserController {
      * @param authentication
      * @return
      */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @GetMapping("/me")
     public User getUser(Authentication authentication) {
         return userService.getUser(authentication.getName());
@@ -35,6 +37,7 @@ public class UserController {
      * @param authentication
      * @return
      */
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword,
                                         Authentication authentication) {
@@ -46,6 +49,7 @@ public class UserController {
         }
     }
 
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @PutMapping("/me")
     public User updateUser(@RequestBody User user, Authentication authentication) {
         //System.out.println("Приходит JSON " + user);
@@ -54,6 +58,7 @@ public class UserController {
         return user;
     }
 
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     @PutMapping("/me/image")
     public User updateUserImage(@RequestBody User user) {
         return user;

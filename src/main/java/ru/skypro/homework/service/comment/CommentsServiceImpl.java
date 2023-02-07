@@ -1,8 +1,10 @@
 package ru.skypro.homework.service.comment;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import ru.skypro.homework.UserAccessControl;
 import ru.skypro.homework.entity.Commentary;
 import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
@@ -15,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentsServiceImpl implements CommentsService {
 
+    private UserAccessControl accessControl;
     private Mapper mapper;
     private final CommentaryRepository commentaryRepository;
 
@@ -60,11 +63,15 @@ public class CommentsServiceImpl implements CommentsService {
      * @return
      */
     @Override
-    public Comment updateComment(Integer id, Comment comment) {
-        Commentary commentary = commentaryRepository.findById(id).orElse(null);
-        assert commentary != null;
-        commentaryRepository.save(mapper.commentToCommentaryEdit(commentary, comment));
-        return comment;
+    public Comment updateComment(Integer id, Comment comment, Authentication authentication) {
+        if (accessControl.accessControl(id, authentication)) {
+            Commentary commentary = commentaryRepository.findById(id).orElse(null);
+            assert commentary != null;
+            commentaryRepository.save(mapper.commentToCommentaryEdit(commentary, comment));
+            return comment;
+        } else {
+            return null;
+        }
     }
 
     /** НЕ ПРОВЕРЕН
@@ -72,8 +79,10 @@ public class CommentsServiceImpl implements CommentsService {
      * @param id
      */
     @Override
-    public void removeComment(Integer id) {
-        commentaryRepository.deleteById(id);
+    public void removeComment(Integer id, Authentication authentication) {
+        if (accessControl.accessControl(id, authentication)) {
+            commentaryRepository.deleteById(id);
+        }
     }
 
 }
