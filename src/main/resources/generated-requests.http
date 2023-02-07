@@ -5,7 +5,7 @@ Content-Type: application/json
 Authorization: Basic user password
 
 ###
-GET http://localhost:8080/ads/asddsfsdf/comment
+GET http://localhost:8080/ads/asddsfsdf/commentary
 Content-Type: application/json
 Authorization: Basic user password
 
@@ -80,7 +80,7 @@ Content-Type: application/json
 Authorization: Basic user password
 
 {
-  "image": "123",
+  "picture": "123",
   "price": 123,
   "description": "123",
   "pk": 1233,
