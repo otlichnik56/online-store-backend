@@ -103,15 +103,12 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public Ads updateAds(Integer id, CreateAds update, Authentication authentication) {
-        if (accessControl.accessControl(id, authentication)) {
-            Advert advert = advertRepository.findById(id).orElse(null);
-            if (advert == null) {
-                return null;
-            } else {
-                Advert result = mapper.createAdsIntoAds(advert, update);
-                advertRepository.save(result);
-                return mapper.advertToAds(result);
-            }
+        Advert advert = advertRepository.findById(id).orElse(null);
+        assert advert != null;
+        if (accessControl.accessControl(advert.getAuthor(), authentication)) {
+            Advert result = mapper.createAdsIntoAds(advert, update);
+            advertRepository.save(result);
+            return mapper.advertToAds(result);
         } else {
             return null;
         }
@@ -124,7 +121,9 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public void removeAds(Integer id, Authentication authentication) {
-        if (accessControl.accessControl(id, authentication)) {
+        Advert advert = advertRepository.findById(id).orElse(null);
+        assert advert != null;
+        if (accessControl.accessControl(advert.getAuthor(), authentication)) {
             advertRepository.deleteById(id);
         }
     }

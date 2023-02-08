@@ -64,9 +64,9 @@ public class CommentsServiceImpl implements CommentsService {
      */
     @Override
     public Comment updateComment(Integer id, Comment comment, Authentication authentication) {
-        if (accessControl.accessControl(id, authentication)) {
-            Commentary commentary = commentaryRepository.findById(id).orElse(null);
-            assert commentary != null;
+        Commentary commentary = commentaryRepository.findById(id).orElse(null);
+        assert commentary != null;
+        if (accessControl.accessControl(commentary.getAuthor(), authentication)) {
             commentaryRepository.save(mapper.commentToCommentaryEdit(commentary, comment));
             return comment;
         } else {
@@ -80,7 +80,9 @@ public class CommentsServiceImpl implements CommentsService {
      */
     @Override
     public void removeComment(Integer id, Authentication authentication) {
-        if (accessControl.accessControl(id, authentication)) {
+        Commentary commentary = commentaryRepository.findById(id).orElse(null);
+        assert commentary != null;
+        if (accessControl.accessControl(commentary.getAuthor(), authentication)) {
             commentaryRepository.deleteById(id);
         }
     }
