@@ -3,6 +3,7 @@ package ru.skypro.homework.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import ru.skypro.homework.entity.Picture;
 import ru.skypro.homework.repository.AdvertRepository;
 import ru.skypro.homework.repository.PictureRepository;
@@ -26,7 +27,7 @@ public class ImageController {
     private final AdsService adsService;
     private final AdvertRepository advertRepository;
 
-    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
     @GetMapping
     public ResponseEntity<byte[]> getImage() {
         Picture picture = pictureRepository.getImage();
