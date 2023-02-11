@@ -1,77 +1,28 @@
 package ru.skypro.homework.service.ads;
 
-import org.springframework.stereotype.Service;
+import java.io.IOException;
 
-import lombok.AllArgsConstructor;
-import ru.skypro.homework.entity.Ad;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
+import ru.skypro.homework.model.ad.CreateAds;
 import ru.skypro.homework.model.ad.FullAd;
-import ru.skypro.homework.service.Mapper;
 
-@Service
-@AllArgsConstructor
-public class AdsService implements AdsInterface{
-
-    private Mapper mapper;
+public interface AdsService {
 
 
-    /**
-     * описание - метод сервиса, который вызывает метод
-     * маппера для перевода данных из сущности в дто
-     * и возвращает в api ответ в виде данных дто
-     */
-    @Override
-    public AdList getAds() {
-        Ad ad = new Ad();
-        return mapper.adToAds(ad);
-    }
+    AdList getAllAds();
 
-     /**
-     * описание - метод сервиса, который вызывает метод
-     * маппера для перевода данных из сущности в дто
-     * и возвращает в api ответ в виде данных дто
-     */
-    @Override
-    public AdList getAdsMe() {
-        Ad ad = new Ad();
-        return mapper.adToAds(ad);
-    }
+    AdList getAdsMe(String username);
 
-    /**
-     * описание - метод сервиса, который вызывает метод
-     * маппера для перевода данных из дто в сущность
-     * @param - дто (модель данных объявления)
-     * @return - возвращает для api ответ в виде 
-     * данных дто
-     */
-    @Override
-    public Ads addAds(Ads ads) {
-        // здесь будет операция сохранения данных в сущности
-        // Ad ad = mapper.adsToAd(ads);
-        // adRespoditory.save(ad);
-         mapper.adsToAd(ads);
-         return new Ads();
-    }
+    FullAd getFullAd(Integer id);
+    Ads addAds(Ads ads, MultipartFile file, Authentication authentication) throws IOException;
+    Ads updateAds(Integer id, CreateAds update, Authentication authentication);
+    void removeAds(Integer id, Authentication authentication);
 
-    @Override
-    public FullAd getFullAd(int id) {
-        return mapper.adToFullAd(new Ad());
-    }
+    byte[] getImage(Integer id);
 
-    @Override
-    public void removeAds(int id) {
-
-    }
-
-    @Override
-    public FullAd updateAds(int id) {
-        return new FullAd("descriptionupdate", 100, "titleupdate");
-    }
-
-    @Override
-    public String updateAdsImage(int id) {
-        return "image";
-    }
-
+    String setImage(Integer id, MultipartFile file);
 }

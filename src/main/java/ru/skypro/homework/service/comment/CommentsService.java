@@ -1,32 +1,19 @@
 package ru.skypro.homework.service.comment;
 
-import org.springframework.stereotype.Service;
-import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.model.comment.Comments;
+import org.springframework.security.core.Authentication;
+import ru.skypro.homework.model.comment.Comment;
+import ru.skypro.homework.model.comment.CommentsList;
 
-@Service
-public class CommentsService implements CommentsInterface {
+public interface CommentsService {
 
-    @Override
-    public Comments getComments(int ad_pk) {
-        return new Comments();
-    }
+    CommentsList getAllComments(Integer adPk);
 
-    @Override
-    public Comment addComments(int ad_pk) {
-        return new Comment();
-    }
+    Comment addComments(Integer adPk, Comment comment);
 
-    @Override
-    public Comment getComment(int pk, int id) {
-        return new Comment();
-    }
-    @Override
-    public void removeComment(int pk, int id) {
+    Comment getComment(Integer id);
 
-    }
-    @Override
-    public Comment updateComment(int pk, int id) {
-        return new Comment();
-    }
+    Comment updateComment(Integer id, Comment comment, Authentication authentication);
+
+    void removeComment(Integer id, Authentication authentication);
+
 }
