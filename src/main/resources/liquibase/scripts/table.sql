@@ -42,7 +42,7 @@ CREATE TABLE comments
 
 CREATE TABLE images
 (
-    id          SERIAL REFERENCES ads(pk),
+    id          SERIAL PRIMARY KEY,
     image       OID
 );
 
