@@ -1,7 +1,5 @@
 package ru.skypro.homework.model.ad;
 
-import java.util.List;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

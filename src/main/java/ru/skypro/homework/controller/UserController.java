@@ -2,9 +2,10 @@ package ru.skypro.homework.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import ru.skypro.homework.service.user.UserService;
 @RequestMapping("/users")
 public class UserController {
 
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     /** ПРОВЕРЕН
@@ -28,7 +30,9 @@ public class UserController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/me")
+
     public User getUser(Authentication authentication) {
+        logger.info("User Username = " + authentication.getName());
         return userService.getUser(authentication.getName());
     }
 

@@ -4,8 +4,6 @@ import ru.skypro.homework.entity.Commentary;
 import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -174,7 +172,6 @@ public class Mapper {
        fullAd.setAuthorLastName(client.getLastName());
        fullAd.setDescription(advert.getDescription());
        fullAd.setEmail(client.getEmail());
-       //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
        fullAd.setImage(advert.getImage());
        fullAd.setPhone(client.getPhone());
        fullAd.setPk(advert.getPk());

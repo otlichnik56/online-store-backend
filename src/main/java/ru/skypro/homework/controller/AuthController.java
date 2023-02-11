@@ -16,7 +16,6 @@ import ru.skypro.homework.model.user.LoginReq;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
 import ru.skypro.homework.service.auth.AuthService;
-import ru.skypro.homework.service.user.UserServiceImpl;
 
 import static ru.skypro.homework.model.user.Role.USER;
 

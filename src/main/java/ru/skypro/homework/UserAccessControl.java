@@ -1,27 +1,25 @@
 package ru.skypro.homework;
 
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.entity.Client;
-import ru.skypro.homework.model.user.Role;
-import ru.skypro.homework.repository.ClientRepository;
+import ru.skypro.homework.entity.Authority;
+import ru.skypro.homework.repository.AuthorityRepository;
 
 @Service
 public class UserAccessControl {
 
-    private final ClientRepository clientRepository;
+    private final AuthorityRepository authorityRepository;
 
-    public UserAccessControl(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    public UserAccessControl(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
     }
 
     public boolean accessControl(Integer id, Authentication authentication) {
-        Client client = clientRepository.findByUsername(authentication.getName());
-        if (client.getRole().equals(Role.ADMIN)) {
+        Authority authority = authorityRepository.findByUsername(authentication.getName());
+        if (authority.getAuthority().equals("ROLE_ADMIN")) {
             return true;
         } else {
-            return client.getId().equals(id);
+            return authority.getId().equals(id);
         }
     }
 

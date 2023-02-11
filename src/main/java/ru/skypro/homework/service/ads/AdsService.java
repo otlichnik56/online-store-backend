@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
-import ru.skypro.homework.entity.Picture;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.CreateAds;
@@ -24,4 +23,6 @@ public interface AdsService {
     void removeAds(Integer id, Authentication authentication);
 
     byte[] getImage(Integer id);
+
+    String setImage(Integer id, MultipartFile file);
 }

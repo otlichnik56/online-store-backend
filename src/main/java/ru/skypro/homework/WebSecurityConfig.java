@@ -38,7 +38,7 @@ public class WebSecurityConfig  {
                 .authorizeHttpRequests((authz) ->
                         authz
                                 .mvcMatchers(AUTH_WHITELIST).permitAll()
-                                .mvcMatchers("/ads/**", "/users/**", "/image/**").authenticated()
+                                .mvcMatchers("/ads/**", "/users/**").authenticated()
                 )
                 .cors().and()
                 .httpBasic(withDefaults());

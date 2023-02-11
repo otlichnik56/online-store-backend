@@ -2,8 +2,6 @@ package ru.skypro.homework.entity;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.Type;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
