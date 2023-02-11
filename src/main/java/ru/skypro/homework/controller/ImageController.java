@@ -27,14 +27,13 @@ public class ImageController {
     private final AdsService adsService;
     private final AdvertRepository advertRepository;
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
-    @GetMapping
-    public ResponseEntity<byte[]> getImage() {
-        Picture picture = pictureRepository.getImage();
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
+        byte[] picture = adsService.getImage(id);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(picture.getMediaType()));
-        headers.setContentLength(picture.getData().length);
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(picture.getData());
+        headers.setContentLength(picture.length);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(picture);
     }
 
 }

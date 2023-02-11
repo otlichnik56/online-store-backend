@@ -44,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
                         .roles(role.name())
                         .build()
         );
+
         return true;
     }
 }

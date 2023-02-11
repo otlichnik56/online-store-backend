@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Ads {
     private int author;
-    private List<String> image;
+    private String image;
     private int pk;
     private int price;
     private String title;

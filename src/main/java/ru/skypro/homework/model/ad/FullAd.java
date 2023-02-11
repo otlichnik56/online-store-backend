@@ -12,7 +12,7 @@ public class FullAd {
     private String authorLastName;
     private String description;
     private String email;
-    private List<String> image;
+    private String image;
     private String phone;
     private int pk;
     private int price;

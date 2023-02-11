@@ -43,10 +43,7 @@ CREATE TABLE comments
 CREATE TABLE images
 (
     id          SERIAL REFERENCES ads(pk),
-    file_size   BIGINT,
-    media_type  TEXT,
-    file_name   TEXT,
-    data        BYTEA
+    image       OID
 );
 
 CREATE TABLE authorities

@@ -26,7 +26,7 @@ public class UserController {
      * @param authentication
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/me")
     public User getUser(Authentication authentication) {
         return userService.getUser(authentication.getName());
@@ -38,7 +38,7 @@ public class UserController {
      * @param authentication
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword,
                                         Authentication authentication) {
@@ -49,14 +49,14 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PutMapping("/me")
     public User updateUser(@RequestBody User user, Authentication authentication) {
         userService.updateUser(user, authentication);
         return user;
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PutMapping("/me/image")
     public User updateUserImage(@RequestBody User user) {
         return user;

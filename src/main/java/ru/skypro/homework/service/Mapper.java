@@ -126,9 +126,9 @@ public class Mapper {
     }*/
   
     //
-    public Advert adsToAdvert(Ads ads, Client client) {
+    public Advert adsToAdvert(Ads ads, Client client, Integer pictureId) {
         Advert advert = new Advert();
-        advert.setImage("/image");
+        advert.setImage("/image/" + pictureId);
         advert.setPrice(ads.getPrice());
         advert.setTitle(ads.getTitle());
         advert.setAuthor(client.getId());
@@ -139,7 +139,7 @@ public class Mapper {
     public Ads advertToAds(Advert advert) {
         Ads ads = new Ads();
         ads.setAuthor(advert.getAuthor());
-        ads.setImage(new ArrayList<>());
+        ads.setImage(ads.getImage());
         ads.setPk(advert.getPk());
         ads.setPrice(advert.getPrice());
         ads.setTitle(advert.getTitle());
@@ -154,7 +154,7 @@ public class Mapper {
             .map(ad -> {
                 Ads ads = new Ads();
                         ads.setAuthor(ad.getAuthor());
-                        ads.setImage(Arrays.asList(ad.getImage()));
+                        ads.setImage(ad.getImage());
                         ads.setPk(ad.getPk());
                         ads.setPrice(ad.getPrice());
                         ads.setTitle(ad.getTitle());
@@ -174,7 +174,8 @@ public class Mapper {
        fullAd.setAuthorLastName(client.getLastName());
        fullAd.setDescription(advert.getDescription());
        fullAd.setEmail(client.getEmail());
-       fullAd.setImage(advertRepository.getImages(client.getId()));
+       //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+       fullAd.setImage(advert.getImage());
        fullAd.setPhone(client.getPhone());
        fullAd.setPk(advert.getPk());
        fullAd.setPrice(advert.getPrice());

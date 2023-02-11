@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,7 @@ import ru.skypro.homework.service.comment.CommentsService;
 @RequestMapping("/ads")
 public class AdsController {
 
+    private final Logger logger = LoggerFactory.getLogger(AdsController.class);
     private final AdsService adsService;
     private final CommentsService commentsService;
 
@@ -52,7 +55,7 @@ public class AdsController {
      * @return
      */
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/me")
     public AdList getAdsMe(Authentication authentication) {
         return adsService.getAdsMe(authentication.getName());
@@ -63,7 +66,7 @@ public class AdsController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public FullAd getFullAd(@PathVariable Integer id) {
         return adsService.getFullAd(id);
@@ -76,7 +79,7 @@ public class AdsController {
      * @return
      * @throws IOException
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") Ads ads,
                                       @RequestPart(value = "image") MultipartFile file,
@@ -90,7 +93,7 @@ public class AdsController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<Ads> updateAds(@RequestBody CreateAds update,
                                          @PathVariable Integer id,
@@ -103,7 +106,7 @@ public class AdsController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeAds(@PathVariable Integer id,
                                        Authentication authentication) {
@@ -116,7 +119,7 @@ public class AdsController {
      * @param adPk
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{ad_pk}/comments")
     public CommentsList getComments(@PathVariable(value =  "ad_pk") Integer adPk) {
         return commentsService.getAllComments(adPk);
@@ -127,7 +130,7 @@ public class AdsController {
      * @param adPk
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping("/{ad_pk}/comments")
     public Comment addComment(@PathVariable(value = "ad_pk") Integer adPk,
                               @RequestBody Comment comment) {
@@ -141,7 +144,7 @@ public class AdsController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{ad_pk}/comments/{id}")
     public Comment getAdComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id) {
         return commentsService.getComment(id);
@@ -153,7 +156,7 @@ public class AdsController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/{ad_pk}/comments/{id}")
     public Comment updateComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
                                  @RequestBody Comment comment,
@@ -168,7 +171,7 @@ public class AdsController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{ad_pk}/comments/{id}")
     public ResponseEntity<?> removeComments(@PathVariable("ad_pk") Integer adPk,
                                             @PathVariable Integer id,

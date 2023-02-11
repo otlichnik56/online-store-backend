@@ -1,8 +1,6 @@
 package ru.skypro.homework.service.ads;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,7 +15,6 @@ import ru.skypro.homework.entity.Advert;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.entity.Picture;
 import ru.skypro.homework.model.ad.CreateAds;
-import ru.skypro.homework.model.image.Image;
 import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
@@ -30,7 +27,7 @@ import ru.skypro.homework.service.Mapper;
 @AllArgsConstructor
 public class AdsServiceImpl implements AdsService {
 
-    Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
     private UserAccessControl accessControl;
     private Mapper mapper;
     private final AdvertRepository advertRepository;
@@ -85,11 +82,18 @@ public class AdsServiceImpl implements AdsService {
      * данных дто
      */
     @Override
-    public Ads addAds(Ads ads, MultipartFile file, Authentication authentication) {
+    public Ads addAds(Ads ads, MultipartFile file, Authentication authentication) throws IOException {
+        Picture picture = new Picture();
+        try {
+            byte[] bytes = file.getBytes();
+            picture.setImage(bytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Picture pictureSave = pictureRepository.save(picture);
         Client client = clientRepository.getUserName(authentication.getName());
-        Advert advert = mapper.adsToAdvert(ads, client);
+        Advert advert = mapper.adsToAdvert(ads, client, pictureSave.getId());
         advertRepository.save(advert);
-        addImage(file);
         return ads;
     }
 
@@ -128,28 +132,15 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
-
-
-    public Image addImage(MultipartFile imageFile) {
-        Image image = new Image();
-        Picture picture = new Picture();
-        try (
-                InputStream inputStream = imageFile.getInputStream();
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
-        ) {
-            byte[] imageByteas = bufferedInputStream.readAllBytes();
-            picture.setFileName(imageFile.getOriginalFilename());
-            picture.setFileSize(imageFile.getSize());
-            picture.setMediaType(imageFile.getContentType());
-            picture.setFileName(imageFile.getOriginalFilename());
-            picture.setData(imageByteas);
-        } catch(IOException exception) {
-            logger.info(exception.getMessage());
+    @Override
+    public byte[] getImage(Integer id) {
+        Picture picture = pictureRepository.findById(id).orElse(null);
+        if (picture != null) {
+            return picture.getImage();
+        } else {
+            return null;
         }
-        pictureRepository.save(picture);
-        List<String> getAddedImages = pictureRepository.getAddedImages();
-        image.setImage(getAddedImages);
-        return image;
     }
+
 
 }
