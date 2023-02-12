@@ -6,20 +6,20 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "comment")
-public class Comment {
+@Table(name = "ads")
+public class Advert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
 
-    private String createdAt;
+    private String title;
+    private Integer price;
     private String text;
+    private String image;
+    private String description;
 
     @JoinColumn(name = "author")
     private Integer author;
-
-    @JoinColumn(name = "ads_pk")
-    private Integer adsPk;
 
 }
