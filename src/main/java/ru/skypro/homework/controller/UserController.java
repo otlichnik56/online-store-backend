@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    @PatchMapping("/me/image")
+    @PatchMapping(value = "/me/image", consumes = "multipart/form-data")
     public ResponseEntity<?> updateUserImage(@RequestPart(value = "image") MultipartFile file,
                                              Authentication authentication) {
         if (userService.updateUserImage(file, authentication)) {

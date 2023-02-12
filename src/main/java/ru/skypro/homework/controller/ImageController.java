@@ -25,7 +25,7 @@ public class ImageController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<byte[]> getAdsImage(@PathVariable(value = "id") Integer id) {
         byte[] picture = adsService.getImage(id);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentLength(picture.length);
