@@ -46,6 +46,12 @@ CREATE TABLE images
     image       OID
 );
 
+CREATE TABLE avatars
+(
+    id          SERIAL PRIMARY KEY,
+    image       OID
+);
+
 CREATE TABLE authorities
 (
     id           SERIAL PRIMARY KEY,

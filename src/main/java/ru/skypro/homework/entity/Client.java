@@ -27,10 +27,6 @@ public class Client {
     private String city;
     private String image;
 
-    // @JsonIgnore
-    // @OneToOne(mappedBy = "client")
-    // private String image;
-
     public Client() {
 
     }

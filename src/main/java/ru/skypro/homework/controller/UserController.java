@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.model.user.NewPassword;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.user.UserService;
@@ -32,7 +33,7 @@ public class UserController {
     @GetMapping("/me")
 
     public User getUser(Authentication authentication) {
-        logger.info("User Username = " + authentication.getName());
+        logger.info("UserController. method getUser. Username = " + authentication.getName());
         return userService.getUser(authentication.getName());
     }
 
@@ -54,16 +55,22 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    @PutMapping("/me")
+    @PatchMapping("/me")
     public User updateUser(@RequestBody User user, Authentication authentication) {
+        logger.info("UserController. method updateUser, user = " + user + ". authentication = " + authentication.getName());
         userService.updateUser(user, authentication);
         return user;
     }
 
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    @PutMapping("/me/image")
-    public User updateUserImage(@RequestBody User user) {
-        return user;
+    @PatchMapping("/me/image")
+    public ResponseEntity<?> updateUserImage(@RequestPart(value = "image") MultipartFile file,
+                                             Authentication authentication) {
+        if (userService.updateUserImage(file, authentication)) {
+            return ResponseEntity.status(200).build();
+        } else {
+            return ResponseEntity.status(404).build();
+        }
     }
 
 }

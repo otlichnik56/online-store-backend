@@ -2,6 +2,7 @@ package ru.skypro.homework.service.ads;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class AdsServiceImpl implements AdsService {
      * данных дто
      */
     @Override
-    public Ads addAds(Ads ads, MultipartFile file, Authentication authentication) throws IOException {
+    public Ads addAds(Ads ads, MultipartFile file, Authentication authentication){
         Picture picture = new Picture();
         try {
             byte[] bytes = file.getBytes();
@@ -143,16 +144,19 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public String setImage(Integer id, MultipartFile file) {
-        Picture picture = pictureRepository.findById(id).orElseThrow();
+    public String updateImage(Integer id, MultipartFile file) {
+        Advert advert = advertRepository.findById(id).orElseThrow();
+        Picture picture = new Picture();
         try {
             byte[] bytes = file.getBytes();
             picture.setImage(bytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        pictureRepository.save(picture);
-        return "/image/" + picture.getId();
+        Picture pictureSave = pictureRepository.save(picture);
+        advert.setImage("/image/" + pictureSave.getId());
+        advertRepository.save(advert);
+        return advert.getImage();
     }
 
 

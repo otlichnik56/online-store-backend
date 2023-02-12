@@ -57,7 +57,7 @@ public class AdsController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/me")
     public AdList getAdsMe(Authentication authentication) {
-        logger.info("Ads Username = " + authentication.getName());
+        logger.info("AdsController. method getAdsMe. Username = " + authentication.getName());
         return adsService.getAdsMe(authentication.getName());
     }
 
@@ -68,7 +68,7 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
-    public FullAd getFullAd(@PathVariable Integer id) {
+    public FullAd getFullAd(@PathVariable(value = "id") Integer id) {
         return adsService.getFullAd(id);
     }
 
@@ -81,7 +81,7 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Ads> setAds(@RequestPart(value = "properties") Ads ads,
+    public ResponseEntity<Ads> addAds(@RequestPart(value = "properties") Ads ads,
                                       @RequestPart(value = "image") MultipartFile file,
                                       Authentication authentication) throws IOException {
         return ResponseEntity.status(201).body(adsService.addAds(ads, file, authentication));
@@ -96,7 +96,7 @@ public class AdsController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<Ads> updateAds(@RequestBody CreateAds update,
-                                         @PathVariable Integer id,
+                                         @PathVariable(value = "id") Integer id,
                                          Authentication authentication) {
         return ResponseEntity.status(200).body(adsService.updateAds(id, update, authentication));
     }
@@ -108,8 +108,9 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAds(@PathVariable Integer id,
+    public ResponseEntity<?> removeAds(@PathVariable(value = "id") Integer id,
                                        Authentication authentication) {
+        logger.info("AdsController. method getAdsMe. Username = " + authentication.getName() + ", AdId = " + id);
         adsService.removeAds(id, authentication);
         return ResponseEntity.status(204).build();
     }

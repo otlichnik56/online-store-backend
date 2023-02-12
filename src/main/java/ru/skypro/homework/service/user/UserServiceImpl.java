@@ -4,11 +4,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.entity.Avatar;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.user.NewPassword;
+import ru.skypro.homework.repository.AvatarRepository;
 import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.service.Mapper;
+
+import java.io.IOException;
 
 @Service
 @AllArgsConstructor
@@ -16,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private Mapper mapper;
     private final ClientRepository clientRepository;
+    private final AvatarRepository avatarRepository;
 
     /** ПРОВЕРЕН
      *
@@ -60,15 +66,30 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    //@Override
-    //public AdsUser getAdsMe() {
-      //  return mapper.clientToAdsUser();
-    //}
-
+    /**
+     *
+     * @param file
+     * @param authentication
+     * @return
+     */
     @Override
-    public User updateUserImage() {
-        return new User(0, "imageUpdate", null, null, null, null, null, null);
+    public boolean updateUserImage(MultipartFile file, Authentication authentication) {
+        Client client = clientRepository.findByUsername(authentication.getName());
+        if (client == null) {
+            return false;
+        } else {
+            Avatar avatar = new Avatar();
+            try {
+                byte[] bytes = file.getBytes();
+                avatar.setImage(bytes);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Avatar avatarSave = avatarRepository.save(avatar);
+            client.setImage("/image/" + avatarSave.getId());
+            clientRepository.save(client);
+            return true;
+        }
     }
 
-   
 }

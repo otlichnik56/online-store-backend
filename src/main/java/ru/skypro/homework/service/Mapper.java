@@ -21,7 +21,7 @@ import ru.skypro.homework.repository.CommentaryRepository;
 @Service
 public class Mapper {
 
-    Logger logger = LoggerFactory.getLogger(Mapper.class);
+    private final Logger logger = LoggerFactory.getLogger(Mapper.class);
 
     private final ClientRepository clientRepository;
     private final AdvertRepository advertRepository;

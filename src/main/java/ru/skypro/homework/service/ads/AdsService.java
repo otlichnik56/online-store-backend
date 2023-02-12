@@ -24,5 +24,5 @@ public interface AdsService {
 
     byte[] getImage(Integer id);
 
-    String setImage(Integer id, MultipartFile file);
+    String updateImage(Integer id, MultipartFile file);
 }
