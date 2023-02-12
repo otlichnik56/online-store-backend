@@ -36,7 +36,7 @@ public class AdsServiceImpl implements AdsService {
     private final PictureRepository pictureRepository;
 
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * описание - метод сервиса, который вызывает метод
      * маппера для перевода данных из сущности в дто
      * и возвращает в api ответ в виде данных дто
@@ -47,7 +47,7 @@ public class AdsServiceImpl implements AdsService {
         return mapper.listAdvertToAdList(allAds);
     }
 
-     /** НЕ ПРОВЕРЕН
+     /** ПРОВЕРЕН
      * описание - метод сервиса, который вызывает метод
      * маппера для перевода данных из сущности в дто
      * и возвращает в api ответ в виде данных дто
@@ -75,7 +75,7 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * описание - метод сервиса, который вызывает метод
      * маппера для перевода данных из дто в сущность
      * @param - дто (модель данных объявления)
@@ -99,7 +99,7 @@ public class AdsServiceImpl implements AdsService {
     }
 
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * Разграничивается доступ к редактированию между пользователями
      * @param id
      * @param update
@@ -119,7 +119,7 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * Разграничивается доступ к редактированию между пользователями
      * @param id
      * @param authentication
@@ -133,6 +133,11 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
+    /** ПРОВЕРЕН
+     *
+     * @param id
+     * @return
+     */
     @Override
     public byte[] getImage(Integer id) {
         Picture picture = pictureRepository.findById(id).orElse(null);
@@ -143,6 +148,12 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
+    /** Не доходит до сюды
+     *
+     * @param id
+     * @param file
+     * @return
+     */
     @Override
     public String updateImage(Integer id, MultipartFile file) {
         Advert advert = advertRepository.findById(id).orElseThrow();

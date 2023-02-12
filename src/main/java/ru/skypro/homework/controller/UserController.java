@@ -37,7 +37,7 @@ public class UserController {
         return userService.getUser(authentication.getName());
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** Надо поправить
      *
      * @param newPassword
      * @param authentication
@@ -54,6 +54,12 @@ public class UserController {
         }
     }
 
+    /** Работает
+     *
+     * @param user
+     * @param authentication
+     * @return
+     */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/me")
     public User updateUser(@RequestBody User user, Authentication authentication) {
@@ -62,6 +68,12 @@ public class UserController {
         return user;
     }
 
+    /** НЕ ПРОВЕРЕН до конца
+     *
+     * @param file
+     * @param authentication
+     * @return
+     */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/me/image", consumes = "multipart/form-data")
     public ResponseEntity<?> updateUserImage(@RequestPart(value = "image") MultipartFile file,

@@ -24,6 +24,11 @@ public class ImageController {
     private final AdsService adsService;
 
 
+    /** Работает
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getAdsImage(@PathVariable(value = "id") Integer id) {
         byte[] picture = adsService.getImage(id);
@@ -32,6 +37,13 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(picture);
     }
 
+    /** Не работает. Не знаю почему
+     *
+     * @param id
+     * @param file
+     * @param authentication
+     * @return
+     */
     @PatchMapping(value = "/{id}", consumes = "multipart/form-data")
     public String updateAdsImage(@PathVariable(value = "id") Integer id,
                                  @RequestPart(value = "image") MultipartFile file,

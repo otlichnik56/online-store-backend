@@ -17,6 +17,5 @@ public class Picture {
     @Lob
     private byte[] image;
 
-
     public Picture() {}
 }

@@ -39,28 +39,6 @@ public class Mapper {
         
     }
 
-    /**
-      // из dto RegisterReq в entity Client
-      public Client registerReqToClient(RegisterReq registerReq) {
-        Client client = new Client();
-        client.setUsername(registerReq.getUsername());
-        client.setPassword(registerReq.getPassword());
-        client.setFirstName(registerReq.getFirstName());
-        client.setLastName(registerReq.getLastName());
-        client.setPhone(registerReq.getPhone());
-        client.setRole(Role.USER);
-        return client;
-    } */
-
-    /**
-    // из entity Client в dto LoginReg
-    public LoginReq clientToLoginReg(String userName, String password) {
-        Client client = clientRepository.findByUsername(userName);
-        loginReq.setUsername(client.getUsername());
-        loginReq.setPassword(client.getPassword());
-        return loginReq;
-    }*/
-
     // из entity Client в dto User
     public User clientToUser(Client client) {
        User user = new User();
@@ -75,54 +53,7 @@ public class Mapper {
        return user;
     }
 
-    /**
-    // редактирование пароля, должно быть не здесь!!!!!!!!!!!!!!!!!!
-    public NewPassword newPassword(String currentPass, String newPass) {
-        NewPassword newPassword = new NewPassword();
-        newPassword.setCurrentPassword(currentPass);
-        newPassword.setNewPassword(newPass);
-        clientRepository.setNewPass(currentPass, newPass);
-        return newPassword;
-    }*/
 
-    // из entity Client в dto AdsUser
-    /**
-    public AdsUser clientToAdsUser() {
-        Client client = clientRepository.getUserName(loginReq.getUsername());
-        AdsUser adsUser = new AdsUser();
-        adsUser.setFirstName(client.getFirstName());
-        adsUser.setLastName(client.getLastName());
-        adsUser.setPassword(client.getPassword());
-        adsUser.setPhone(client.getPhone());
-        adsUser.setRole(client.getRole());
-        adsUser.setUsername(client.getUsername());
-        return adsUser;
-    }*/
-
-    /**
-    // Добавить Image. Должно быть не здесь!!!!!!!
-    public Image addImage(MultipartFile imageFile) throws IOException {
-        Image image = new ru.skypro.homework.model.image.Image();
-        Picture picture = new Picture();
-        try (
-            InputStream inputStream = imageFile.getInputStream();
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
-            ) {
-                byte[] imageByteas = bufferedInputStream.readAllBytes();
-                picture.setFileName(imageFile.getOriginalFilename());
-                picture.setFileSize(imageFile.getSize());
-                picture.setMediaType(imageFile.getContentType());
-                picture.setFileName(imageFile.getOriginalFilename());
-                picture.setData(imageByteas);
-            } catch(IOException exception) {
-                logger.info(exception.getMessage());
-            }
-            pictureRepository.save(picture);
-            List<String> getAddedImages = pictureRepository.getAddedImages();
-            image.setImage(getAddedImages);
-        return image;
-    }*/
-  
     //
     public Advert adsToAdvert(Ads ads, Client client, Integer pictureId) {
         Advert advert = new Advert();
@@ -149,15 +80,7 @@ public class Mapper {
         AdList adsList = new AdList();
         if(adsMe != null) {
             List<Ads> resultAds = adsMe.stream()
-            .map(ad -> {
-                Ads ads = new Ads();
-                        ads.setAuthor(ad.getAuthor());
-                        ads.setImage(ad.getImage());
-                        ads.setPk(ad.getPk());
-                        ads.setPrice(ad.getPrice());
-                        ads.setTitle(ad.getTitle());
-                        return ads;
-            }).collect(Collectors.toList());
+            .map(this::advertToAds).collect(Collectors.toList());
             adsList.setResults(resultAds);
             adsList.setCount(resultAds.size());
             return adsList;

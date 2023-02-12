@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /** НЕ ПРОВЕРЕН
+    /** Нужна доработка
      *
      * @param newPassword
      * @param username
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param user
      * @param authentication

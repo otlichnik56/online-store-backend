@@ -27,6 +27,11 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /** Работает
+     *
+     * @param req
+     * @return
+     */
     @Operation( summary = "авторизация пользователя",
                 description = "принимает логин и пароль, проверяет в базе среди зарегистрированных и если есть совпадение открывает доступ пользователю"
                 )
@@ -42,6 +47,11 @@ public class AuthController {
         }
     }
 
+    /** Работает
+     *
+     * @param req
+     * @return
+     */
     @Operation(summary = "регистрация пользователя",
                description = "принимает объект с регистрационными данными из формы пользовательского интерфейса и сохраняет пользователя в базе данных"
                ) @ApiResponse(responseCode = "201", description = "Пользователь создан")

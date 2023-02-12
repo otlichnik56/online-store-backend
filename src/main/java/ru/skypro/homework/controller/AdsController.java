@@ -34,7 +34,7 @@ public class AdsController {
     private final CommentsService commentsService;
 
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @return
      */
@@ -72,7 +72,7 @@ public class AdsController {
         return adsService.getFullAd(id);
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param ads
      * @param file
@@ -87,7 +87,7 @@ public class AdsController {
         return ResponseEntity.status(201).body(adsService.addAds(ads, file, authentication));
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param update
      * @param id
@@ -101,7 +101,7 @@ public class AdsController {
         return ResponseEntity.status(200).body(adsService.updateAds(id, update, authentication));
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН, на фронте как-то криво, на бэке нормально
      *
      * @param id
      * @return
