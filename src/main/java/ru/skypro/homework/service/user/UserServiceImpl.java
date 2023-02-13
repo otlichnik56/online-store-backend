@@ -1,9 +1,10 @@
 package ru.skypro.homework.service.user;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.entity.Picture;
@@ -16,12 +17,19 @@ import ru.skypro.homework.service.Mapper;
 import java.io.IOException;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private Mapper mapper;
+    private final Mapper mapper;
     private final ClientRepository clientRepository;
     private final PictureRepository pictureRepository;
+    private final PasswordEncoder encoder;
+
+    public UserServiceImpl(Mapper mapper, ClientRepository clientRepository, PictureRepository pictureRepository) {
+        this.mapper = mapper;
+        this.clientRepository = clientRepository;
+        this.pictureRepository = pictureRepository;
+        this.encoder = new BCryptPasswordEncoder();
+    }
 
     /** ПРОВЕРЕН
      *
@@ -35,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /** Нужна доработка
+    /** ПРОВЕРЕН. Работает
      *
      * @param newPassword
      * @param username
@@ -43,8 +51,10 @@ public class UserServiceImpl implements UserService {
      */
     public boolean setPassword(NewPassword newPassword, String username) {
         Client user = clientRepository.findByUsername(username);
-        if (user.getPassword().equals(newPassword.getCurrentPassword())) {
-            user.setPassword(newPassword.getNewPassword());
+        String encryptedPassword = user.getPassword();
+        String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
+        if (encoder.matches(newPassword.getCurrentPassword(), encryptedPasswordWithoutEncryptionType)) {
+            user.setPassword("{bcrypt}" + encoder.encode(newPassword.getNewPassword()));
             clientRepository.save(user);
             return true;
         } else {

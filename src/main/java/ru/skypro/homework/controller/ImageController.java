@@ -25,7 +25,7 @@ public class ImageController {
     private final AdsService adsService;
 
 
-    /** Работает
+    /** ПРОВЕРЕН
      *
      * @param id
      * @return
@@ -38,7 +38,7 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(picture);
     }
 
-    /** Не работает. Не знаю почему
+    /** ПРОВЕРЕН. На фронте не доходит до сюды, но в Swagger всё норма
      *
      * @param id
      * @param file

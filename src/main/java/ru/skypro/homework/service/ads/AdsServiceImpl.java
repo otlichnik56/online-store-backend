@@ -2,7 +2,6 @@ package ru.skypro.homework.service.ads;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +147,7 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
-    /** Не доходит до сюды
+    /** ПРОВЕРЕН
      *
      * @param id
      * @param file
@@ -167,20 +166,6 @@ public class AdsServiceImpl implements AdsService {
             pictureRepository.save(picture);
             return "/image/" + picture.getId();
         }
-
-        /**
-        Advert advert = advertRepository.findById(id).get();
-        Picture picture = new Picture();
-        try {
-            byte[] bytes = file.getBytes();
-            picture.setImage(bytes);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Picture pictureSave = pictureRepository.save(picture);
-        advert.setImage("/image/" + pictureSave.getId());
-        advertRepository.save(advert);
-        return advert.getImage();*/
         return null;
     }
 

@@ -37,7 +37,7 @@ public class UserController {
         return userService.getUser(authentication.getName());
     }
 
-    /** Надо поправить
+    /** ПРОВЕРЕН
      *
      * @param newPassword
      * @param authentication
@@ -54,7 +54,7 @@ public class UserController {
         }
     }
 
-    /** Работает
+    /** ПРОВЕРЕН
      *
      * @param user
      * @param authentication
@@ -68,7 +68,7 @@ public class UserController {
         return user;
     }
 
-    /** НЕ ПРОВЕРЕН до конца
+    /** ПРОВЕРЕН. На фронте не доходит до сюды, но в Swagger всё норма
      *
      * @param file
      * @param authentication

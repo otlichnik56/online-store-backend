@@ -27,7 +27,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /** Работает
+    /** ПРОВЕРЕН
      *
      * @param req
      * @return
@@ -47,7 +47,7 @@ public class AuthController {
         }
     }
 
-    /** Работает
+    /** ПРОВЕРЕН
      *
      * @param req
      * @return
