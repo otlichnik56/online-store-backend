@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.model.ad.*;
 import ru.skypro.homework.entity.Advert;
 import ru.skypro.homework.entity.Client;
+import ru.skypro.homework.model.user.RegisterReq;
+import ru.skypro.homework.model.user.Role;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.AdvertRepository;
 import ru.skypro.homework.repository.ClientRepository;
@@ -168,6 +170,18 @@ public class Mapper {
         client.setRegDate(user.getRegDate());
         client.setCity(user.getCity());
         client.setImage(user.getImage());
+        return client;
+    }
+
+    // из dto в entity
+    public Client registerReqToClient(RegisterReq registerReq) {
+        Client client = new Client();
+        client.setUsername(registerReq.getUsername());
+        client.setPassword(registerReq.getPassword());
+        client.setFirstName(registerReq.getFirstName());
+        client.setLastName(registerReq.getLastName());
+        client.setPhone(registerReq.getPhone());
+        client.setRole(Role.USER);
         return client;
     }
 

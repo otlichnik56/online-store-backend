@@ -1,24 +1,28 @@
 package ru.skypro.homework.service.auth;
 
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.skypro.homework.service.Mapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
+import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
+import ru.skypro.homework.repository.ClientRepository;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
+    private final ClientRepository clientRepository;
+    private final Mapper mapper;
 
-    public AuthServiceImpl(UserDetailsManager manager) {
+    public AuthServiceImpl(UserDetailsManager manager, PasswordEncoder encoder, ClientRepository clientRepository, Mapper mapper) {
         this.manager = manager;
-        this.encoder = new BCryptPasswordEncoder();
+        this.encoder = encoder;
+        this.clientRepository = clientRepository;
+        this.mapper = mapper;
     }
 
     /** Работает
@@ -29,23 +33,46 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean login(String userName, String password) {
+        Client client = clientRepository.findByUsername(userName);
+        if (client == null) {
+            return false;
+        }
+        String encryptedPassword = client.getPassword();
+        String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
+        encoder.encode(encryptedPassword);
+        return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
+        /**
         if (!manager.userExists(userName)) {
             return false;
         }
         UserDetails userDetails = manager.loadUserByUsername(userName);
         String encryptedPassword = userDetails.getPassword();
         String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
-        return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
+        encoder.encode(userDetails.getPassword());
+        return encoder.matches(password, encryptedPasswordWithoutEncryptionType);*/
     }
 
     /** Работает. Нужна доработка
      *
      * @param registerReq
-     * @param role
      * @return
      */
     @Override
-    public boolean register(RegisterReq registerReq, Role role) {
+    public boolean register(RegisterReq registerReq) {
+        Client client = clientRepository.findByUsername(registerReq.getUsername());
+        if (client == null) {
+            String encryptedPassword = encoder.encode(registerReq.getPassword());
+            client = mapper.registerReqToClient(registerReq);
+            client.setPassword("{bcrypt}" + encryptedPassword);
+            clientRepository.save(client);
+            return true;
+        } else {
+            return false;
+        }
+
+
+
+        /**
         if (manager.userExists(registerReq.getUsername())) {
             return false;
         }
@@ -57,6 +84,6 @@ public class AuthServiceImpl implements AuthService {
                         .build()
         );
 
-        return true;
+        return true;*/
     }
 }
