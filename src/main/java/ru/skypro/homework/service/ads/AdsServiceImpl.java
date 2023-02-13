@@ -156,7 +156,20 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public String updateImage(Integer id, MultipartFile file) {
-        Advert advert = advertRepository.findById(id).orElseThrow();
+        Picture picture = pictureRepository.findById(id).orElse(null);
+        if (picture != null) {
+            try {
+                byte[] bytes = file.getBytes();
+                picture.setImage(bytes);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            pictureRepository.save(picture);
+            return "/image/" + picture.getId();
+        }
+
+        /**
+        Advert advert = advertRepository.findById(id).get();
         Picture picture = new Picture();
         try {
             byte[] bytes = file.getBytes();
@@ -167,7 +180,8 @@ public class AdsServiceImpl implements AdsService {
         Picture pictureSave = pictureRepository.save(picture);
         advert.setImage("/image/" + pictureSave.getId());
         advertRepository.save(advert);
-        return advert.getImage();
+        return advert.getImage();*/
+        return null;
     }
 
 

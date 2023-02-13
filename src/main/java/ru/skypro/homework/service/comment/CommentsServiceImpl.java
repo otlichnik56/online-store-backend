@@ -21,18 +21,18 @@ public class CommentsServiceImpl implements CommentsService {
     private Mapper mapper;
     private final CommentaryRepository commentaryRepository;
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param adPk
      * @return
      */
     @Override
     public CommentsList getAllComments(Integer adPk) {
-        List<Commentary> comments = commentaryRepository.getAllUserComments(adPk);
+        List<Commentary> comments = commentaryRepository.getAllAdsComments(adPk);
         return mapper.commentaryToCommentsList(comments);
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param adPk
      * @param comment
@@ -44,7 +44,7 @@ public class CommentsServiceImpl implements CommentsService {
         return comment;
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param id
      * @return
@@ -56,7 +56,7 @@ public class CommentsServiceImpl implements CommentsService {
         return mapper.commentaryToComment(commentary);
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param id
      * @param comment
@@ -74,7 +74,7 @@ public class CommentsServiceImpl implements CommentsService {
         }
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param id
      */

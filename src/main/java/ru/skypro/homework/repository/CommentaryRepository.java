@@ -10,6 +10,6 @@ import ru.skypro.homework.entity.Commentary;
 
 public interface CommentaryRepository extends JpaRepository<Commentary, Integer> {
 
-    @Query(value = "SELECT * FROM comments WHERE author = :authorId", nativeQuery = true)
-    List<Commentary> getAllUserComments(@Param("authorId") Integer authorId);
+    @Query(value = "SELECT * FROM comments WHERE ads_pk = :adsPk", nativeQuery = true)
+    List<Commentary> getAllAdsComments(@Param("adsPk") Integer adsPk);
 }

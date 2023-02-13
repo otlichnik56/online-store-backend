@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.service.ads.AdsService;
@@ -44,6 +45,7 @@ public class ImageController {
      * @param authentication
      * @return
      */
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/{id}", consumes = "multipart/form-data")
     public String updateAdsImage(@PathVariable(value = "id") Integer id,
                                  @RequestPart(value = "image") MultipartFile file,

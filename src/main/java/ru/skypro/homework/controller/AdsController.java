@@ -115,18 +115,18 @@ public class AdsController {
         return ResponseEntity.status(204).build();
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * Возвращает все коментарии к объявлению
      * @param adPk
      * @return
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{ad_pk}/comments")
-    public CommentsList getComments(@PathVariable(value =  "ad_pk") Integer adPk) {
+    public CommentsList getComments(@PathVariable(value = "ad_pk") Integer adPk) {
         return commentsService.getAllComments(adPk);
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * Добавляет коментарий к объявлению
      * @param adPk
      * @return
@@ -139,7 +139,7 @@ public class AdsController {
     }
 
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * Возвращает коментарий
      * @param adPk
      * @param id
@@ -151,7 +151,7 @@ public class AdsController {
         return commentsService.getComment(id);
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * Редактирования коментария
      * @param adPk
      * @param id
@@ -166,7 +166,7 @@ public class AdsController {
     }
 
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      * Удаляет коментарий к объявлению
      * @param adPk
      * @param id
