@@ -85,10 +85,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUserImage(MultipartFile file, Authentication authentication) {
         Client client = clientRepository.findByUsername(authentication.getName());
+        Picture picture = new Picture();
         if (client == null) {
             return false;
         } else {
-            Picture picture = new Picture();
             try {
                 byte[] bytes = file.getBytes();
                 picture.setImage(bytes);
