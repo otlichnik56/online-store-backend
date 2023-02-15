@@ -8,7 +8,7 @@ public interface CommentsService {
 
     CommentsList getAllComments(Integer adPk);
 
-    Comment addComments(Integer adPk, Comment comment);
+    Comment addComments(Integer adPk, Comment comment, Authentication authentication);
 
     Comment getComment(Integer id);
 

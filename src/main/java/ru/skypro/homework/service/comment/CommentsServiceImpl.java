@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.comment;
 
+import ch.qos.logback.core.net.server.Client;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import ru.skypro.homework.UserAccessControl;
 import ru.skypro.homework.entity.Commentary;
 import ru.skypro.homework.model.comment.Comment;
 import ru.skypro.homework.model.comment.CommentsList;
+import ru.skypro.homework.repository.ClientRepository;
 import ru.skypro.homework.repository.CommentaryRepository;
 import ru.skypro.homework.service.Mapper;
 
@@ -20,6 +22,7 @@ public class CommentsServiceImpl implements CommentsService {
     private UserAccessControl accessControl;
     private Mapper mapper;
     private final CommentaryRepository commentaryRepository;
+    private final ClientRepository clientRepository;
 
     /** ПРОВЕРЕН
      *
@@ -39,8 +42,11 @@ public class CommentsServiceImpl implements CommentsService {
      * @return
      */
     @Override
-    public Comment addComments(Integer adPk, Comment comment) {
-        commentaryRepository.save(mapper.commentToCommentary(adPk, comment));
+    public Comment addComments(Integer adPk, Comment comment, Authentication authentication) {
+        Integer author = clientRepository.findByUsername(authentication.getName()).getId();
+        Commentary commentary = mapper.commentToCommentary(adPk, comment);
+        commentary.setAuthor(author);
+        commentaryRepository.save(commentary);
         return comment;
     }
 
@@ -52,8 +58,11 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     public Comment getComment(Integer id) {
         Commentary commentary = commentaryRepository.findById(id).orElse(null);
-        assert commentary != null;
-        return mapper.commentaryToComment(commentary);
+        if (commentary == null) {
+            return null;
+        } else {
+            return mapper.commentaryToComment(commentary);
+        }
     }
 
     /** ПРОВЕРЕН
@@ -65,12 +74,17 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     public Comment updateComment(Integer id, Comment comment, Authentication authentication) {
         Commentary commentary = commentaryRepository.findById(id).orElse(null);
-        assert commentary != null;
-        if (accessControl.accessControl(commentary.getAuthor(), authentication)) {
-            commentaryRepository.save(mapper.commentToCommentaryEdit(commentary, comment));
-            return comment;
-        } else {
+        if (commentary == null) {
             return null;
+        } else {
+            if (accessControl.accessControl(commentary.getAuthor(), authentication)) {
+                Commentary commentarySave = mapper.commentToCommentaryEdit(commentary, comment);
+                commentarySave.setPk(id);
+                commentaryRepository.save(commentarySave);
+                return comment;
+            } else {
+                return null;
+            }
         }
     }
 

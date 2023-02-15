@@ -20,6 +20,7 @@ import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
 import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.repository.AdvertRepository;
+import ru.skypro.homework.repository.CommentaryRepository;
 import ru.skypro.homework.repository.PictureRepository;
 import ru.skypro.homework.service.Mapper;
 
@@ -31,6 +32,7 @@ public class AdsServiceImpl implements AdsService {
     private UserAccessControl accessControl;
     private Mapper mapper;
     private final AdvertRepository advertRepository;
+    private final CommentaryRepository commentaryRepository;
     private final ClientRepository clientRepository;
     private final PictureRepository pictureRepository;
 
@@ -128,6 +130,7 @@ public class AdsServiceImpl implements AdsService {
         Advert advert = advertRepository.findById(id).orElse(null);
         assert advert != null;
         if (accessControl.accessControl(advert.getAuthor(), authentication)) {
+            commentaryRepository.deleteAllInBatch(commentaryRepository.findAllByAdsPk(id));
             advertRepository.deleteById(id);
         }
     }

@@ -3,6 +3,7 @@ package ru.skypro.homework.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.data.repository.query.Param;
@@ -12,4 +13,9 @@ public interface CommentaryRepository extends JpaRepository<Commentary, Integer>
 
     @Query(value = "SELECT * FROM comments WHERE ads_pk = :adsPk", nativeQuery = true)
     List<Commentary> getAllAdsComments(@Param("adsPk") Integer adsPk);
+
+
+    @Query(value = "SELECT * FROM comments WHERE ads_pk = :id", nativeQuery = true)
+    List<Commentary> findAllByAdsPk(@Param("id") Integer id);
+
 }

@@ -23,21 +23,7 @@ public class Mapper {
 
     private final Logger logger = LoggerFactory.getLogger(Mapper.class);
 
-    private final ClientRepository clientRepository;
-    private final AdvertRepository advertRepository;
-    private final CommentaryRepository commentaryRepository;
-    
 
-    public Mapper(
-        ClientRepository clientRepository, 
-        AdvertRepository advertRepository,
-        CommentaryRepository commentaryRepository
-        ) {
-        this.clientRepository = clientRepository;
-        this.advertRepository = advertRepository;
-        this.commentaryRepository = commentaryRepository;
-        
-    }
 
     // из entity Client в dto User
     public User clientToUser(Client client) {

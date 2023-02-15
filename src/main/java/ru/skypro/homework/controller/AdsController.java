@@ -84,7 +84,7 @@ public class AdsController {
     public ResponseEntity<Ads> addAds(@RequestPart(value = "properties") Ads ads,
                                       @RequestPart(value = "image") MultipartFile file,
                                       Authentication authentication) throws IOException {
-        return ResponseEntity.status(201).body(adsService.addAds(ads, file, authentication));
+        return ResponseEntity.status(200).body(adsService.addAds(ads, file, authentication));
     }
 
     /** ПРОВЕРЕН
@@ -110,9 +110,9 @@ public class AdsController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeAds(@PathVariable(value = "id") Integer id,
                                        Authentication authentication) {
-        logger.info("AdsController. method getAdsMe. Username = " + authentication.getName() + ", AdId = " + id);
+        logger.info("AdsController. method removeAds. Username = " + authentication.getName() + ", AdId = " + id);
         adsService.removeAds(id, authentication);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(200).build();
     }
 
     /** ПРОВЕРЕН
@@ -134,8 +134,9 @@ public class AdsController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping("/{ad_pk}/comments")
     public Comment addComment(@PathVariable(value = "ad_pk") Integer adPk,
-                              @RequestBody Comment comment) {
-        return commentsService.addComments(adPk, comment);
+                              @RequestBody Comment comment,
+                              Authentication authentication) {
+        return commentsService.addComments(adPk, comment, authentication);
     }
 
 
@@ -159,10 +160,10 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/{ad_pk}/comments/{id}")
-    public Comment updateComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
+    public ResponseEntity<Comment> updateComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
                                  @RequestBody Comment comment,
                                  Authentication authentication) {
-        return commentsService.updateComment(id, comment, authentication);
+        return ResponseEntity.status(200).body(commentsService.updateComment(id, comment, authentication));
     }
 
 
