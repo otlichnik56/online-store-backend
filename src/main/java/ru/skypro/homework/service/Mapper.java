@@ -54,7 +54,7 @@ public class Mapper {
     public Ads advertToAds(Advert advert) {
         Ads ads = new Ads();
         ads.setAuthor(advert.getAuthor());
-        ads.setImage(ads.getImage());
+        ads.setImage(advert.getImage());
         ads.setPk(advert.getPk());
         ads.setPrice(advert.getPrice());
         ads.setTitle(advert.getTitle());
