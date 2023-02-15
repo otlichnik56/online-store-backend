@@ -95,9 +95,15 @@ public class UserServiceImpl implements UserService {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Picture avatar = pictureRepository.save(picture);
-            client.setImage("/image/" + avatar.getId());
-            clientRepository.save(client);
+            if (client.getImage() == null) {
+                Picture avatar = pictureRepository.save(picture);
+                client.setImage("/image/" + avatar.getId());
+                clientRepository.save(client);
+            } else {
+                Integer imageId = Integer.valueOf(client.getImage().substring(7));
+                picture.setId(imageId);
+                pictureRepository.save(picture);
+            }
             return true;
         }
     }
