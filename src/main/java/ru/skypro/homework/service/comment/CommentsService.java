@@ -14,6 +14,6 @@ public interface CommentsService {
 
     Comment updateComment(Integer id, Comment comment, Authentication authentication);
 
-    void removeComment(Integer id, Authentication authentication);
+    boolean removeComment(Integer id, Authentication authentication);
 
 }

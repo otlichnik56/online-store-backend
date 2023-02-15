@@ -46,8 +46,9 @@ public class CommentsServiceImpl implements CommentsService {
         Integer author = clientRepository.findByUsername(authentication.getName()).getId();
         Commentary commentary = mapper.commentToCommentary(adPk, comment);
         commentary.setAuthor(author);
-        commentaryRepository.save(commentary);
-        return comment;
+        Commentary commentarySave = commentaryRepository.save(commentary);
+        System.out.println(commentarySave);
+        return mapper.commentaryToComment(commentarySave);
     }
 
     /** ПРОВЕРЕН
@@ -93,11 +94,14 @@ public class CommentsServiceImpl implements CommentsService {
      * @param id
      */
     @Override
-    public void removeComment(Integer id, Authentication authentication) {
+    public boolean removeComment(Integer id, Authentication authentication) {
         Commentary commentary = commentaryRepository.findById(id).orElse(null);
         assert commentary != null;
         if (accessControl.accessControl(commentary.getAuthor(), authentication)) {
             commentaryRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
         }
     }
 

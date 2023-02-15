@@ -98,7 +98,12 @@ public class AdsController {
     public ResponseEntity<Ads> updateAds(@RequestBody CreateAds update,
                                          @PathVariable(value = "id") Integer id,
                                          Authentication authentication) {
-        return ResponseEntity.status(200).body(adsService.updateAds(id, update, authentication));
+        Ads ads = adsService.updateAds(id, update, authentication);
+        if (ads == null) {
+            return ResponseEntity.status(401).body(null);
+        } else {
+            return ResponseEntity.status(200).body(ads);
+        }
     }
 
     /** ПРОВЕРЕН, на фронте как-то криво, на бэке нормально
@@ -111,8 +116,11 @@ public class AdsController {
     public ResponseEntity<?> removeAds(@PathVariable(value = "id") Integer id,
                                        Authentication authentication) {
         logger.info("AdsController. method removeAds. Username = " + authentication.getName() + ", AdId = " + id);
-        adsService.removeAds(id, authentication);
-        return ResponseEntity.status(200).build();
+        if (adsService.removeAds(id, authentication)) {
+            return ResponseEntity.status(200).build();
+        } else {
+            return ResponseEntity.status(401).build();
+        }
     }
 
     /** ПРОВЕРЕН
@@ -148,7 +156,7 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{ad_pk}/comments/{id}")
-    public Comment getAdComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id) {
+    public Comment getAdComment(@PathVariable(value = "ad_pk") Integer adPk, @PathVariable(value = "id") Integer id) {
         return commentsService.getComment(id);
     }
 
@@ -160,10 +168,15 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("ad_pk") Integer adPk, @PathVariable("id") Integer id,
+    public ResponseEntity<Comment> updateComment(@PathVariable(value = "ad_pk") Integer adPk, @PathVariable(value = "id") Integer id,
                                  @RequestBody Comment comment,
                                  Authentication authentication) {
-        return ResponseEntity.status(200).body(commentsService.updateComment(id, comment, authentication));
+        Comment updateComment = commentsService.updateComment(id, comment, authentication);
+        if (updateComment == null) {
+            return ResponseEntity.status(401).body(null);
+        } else {
+            return ResponseEntity.status(200).body(updateComment);
+        }
     }
 
 
@@ -175,11 +188,14 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<?> removeComments(@PathVariable("ad_pk") Integer adPk,
-                                            @PathVariable Integer id,
+    public ResponseEntity<?> removeComments(@PathVariable(value = "ad_pk") Integer adPk,
+                                            @PathVariable(value = "id") Integer id,
                                             Authentication authentication) {
-        commentsService.removeComment(id, authentication);
-        return ResponseEntity.ok().build();
+        if (commentsService.removeComment(id, authentication)) {
+            return ResponseEntity.status(200).build();
+        } else {
+            return ResponseEntity.status(401).build();
+        }
     }
 
 }

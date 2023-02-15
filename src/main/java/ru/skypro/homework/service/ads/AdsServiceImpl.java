@@ -110,13 +110,16 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public Ads updateAds(Integer id, CreateAds update, Authentication authentication) {
         Advert advert = advertRepository.findById(id).orElse(null);
-        assert advert != null;
-        if (accessControl.accessControl(advert.getAuthor(), authentication)) {
-            Advert result = mapper.createAdsIntoAds(advert, update);
-            advertRepository.save(result);
-            return mapper.advertToAds(result);
-        } else {
+        if (advert == null) {
             return null;
+        } else{
+            if (!(accessControl.accessControl(advert.getAuthor(), authentication))) {
+                return null;
+            } else {
+                Advert result = mapper.createAdsIntoAds(advert, update);
+                advertRepository.save(result);
+                return mapper.advertToAds(result);
+            }
         }
     }
 
@@ -126,12 +129,18 @@ public class AdsServiceImpl implements AdsService {
      * @param authentication
      */
     @Override
-    public void removeAds(Integer id, Authentication authentication) {
+    public boolean removeAds(Integer id, Authentication authentication) {
         Advert advert = advertRepository.findById(id).orElse(null);
-        assert advert != null;
-        if (accessControl.accessControl(advert.getAuthor(), authentication)) {
-            commentaryRepository.deleteAllInBatch(commentaryRepository.findAllByAdsPk(id));
-            advertRepository.deleteById(id);
+        if (advert == null) {
+            return false;
+        } else{
+            if (!(accessControl.accessControl(advert.getAuthor(), authentication))) {
+                return false;
+            } else {
+                commentaryRepository.deleteAllInBatch(commentaryRepository.findAllByAdsPk(id));
+                advertRepository.deleteById(id);
+                return true;
+            }
         }
     }
 

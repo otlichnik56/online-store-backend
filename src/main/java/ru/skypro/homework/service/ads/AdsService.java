@@ -20,7 +20,7 @@ public interface AdsService {
     FullAd getFullAd(Integer id);
     Ads addAds(Ads ads, MultipartFile file, Authentication authentication) throws IOException;
     Ads updateAds(Integer id, CreateAds update, Authentication authentication);
-    void removeAds(Integer id, Authentication authentication);
+    boolean removeAds(Integer id, Authentication authentication);
 
     byte[] getImage(Integer id);
 

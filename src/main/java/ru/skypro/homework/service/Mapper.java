@@ -14,9 +14,6 @@ import ru.skypro.homework.model.ad.*;
 import ru.skypro.homework.entity.Advert;
 import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.user.User;
-import ru.skypro.homework.repository.AdvertRepository;
-import ru.skypro.homework.repository.ClientRepository;
-import ru.skypro.homework.repository.CommentaryRepository;
 
 @Service
 public class Mapper {
@@ -117,10 +114,10 @@ public class Mapper {
      // из entity Commentary в dto Comment
      public Comment commentaryToComment(Commentary commentary) {
          Comment comment = new Comment();
-         comment.setAuthor(commentary.getAuthor());
-         comment.setCreatedAt(commentary.getCreatedAt());
          comment.setPk(commentary.getPk());
+         comment.setCreatedAt(commentary.getCreatedAt());
          comment.setText(commentary.getText());
+         comment.setAuthor(commentary.getAuthor());
          return comment;
      }
 
@@ -131,10 +128,10 @@ public class Mapper {
             List<Comment> commentList = comments.stream()
              .map(commentary -> {
                 Comment comment = new Comment();
-                comment.setAuthor(commentary.getAuthor());
-                comment.setCreatedAt(commentary.getCreatedAt());
                 comment.setPk(commentary.getPk());
+                comment.setCreatedAt(commentary.getCreatedAt());
                 comment.setText(commentary.getText());
+                comment.setAuthor(commentary.getAuthor());
                 return comment;
             }).collect(Collectors.toList());
             commentsList.setResults(commentList);
