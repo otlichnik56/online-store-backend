@@ -35,7 +35,7 @@ public class Mapper {
        user.setPhone(client.getPhone());
        user.setRegDate("");
        user.setCity("");
-       user.setImage("");
+       user.setImage(client.getImage());
        return user;
     }
 
