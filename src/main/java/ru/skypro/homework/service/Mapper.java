@@ -19,11 +19,7 @@ import ru.skypro.homework.model.user.User;
 @Service
 public class Mapper {
 
-    private final Logger logger = LoggerFactory.getLogger(Mapper.class);
 
-
-
-    // из entity Client в dto User
     public User clientToUser(Client client) {
        User user = new User();
        user.setId(client.getId());
@@ -38,7 +34,6 @@ public class Mapper {
     }
 
 
-    //
     public Advert adsToAdvert(Ads ads, Client client, Integer pictureId) {
         Advert advert = new Advert();
         advert.setImage("/image/" + pictureId);
@@ -48,7 +43,7 @@ public class Mapper {
         return advert;
     }
 
-    //
+
     public Ads advertToAds(Advert advert) {
         Ads ads = new Ads();
         ads.setAuthor(advert.getAuthor());
@@ -59,7 +54,7 @@ public class Mapper {
         return ads;
     }
 
-    //
+
     public AdList listAdvertToAdList(List<Advert> adsMe) {
         AdList adsList = new AdList();
         if(adsMe != null) {
@@ -72,7 +67,7 @@ public class Mapper {
         return adsList;
     }
 
-    // Создание FullAd из Advert и Client
+
     public FullAd linkageFullAd(Advert advert, Client client) {
        FullAd fullAd = new FullAd();
        fullAd.setAuthorFirstName(client.getFirstName());
@@ -87,7 +82,7 @@ public class Mapper {
        return fullAd; 
     }
 
-    //
+
      public Advert createAdsIntoAds(Advert advert, CreateAds update) {
        advert.setPrice(update.getPrice());
        advert.setTitle(update.getTitle());
@@ -95,7 +90,7 @@ public class Mapper {
        return advert;
     }
 
-    // из dto Comment в entity Commentary
+
     public Commentary commentToCommentary(Integer adPk, Comment comment) {
         Commentary commentary = new Commentary();
         commentary.setAuthor(comment.getAuthor());
@@ -105,6 +100,7 @@ public class Mapper {
         return commentary;
     }
 
+
     public Commentary commentToCommentaryEdit(Commentary commentary, Comment comment) {
         commentary.setAuthor(comment.getAuthor());
         commentary.setCreatedAt(comment.getCreatedAt());
@@ -112,7 +108,7 @@ public class Mapper {
         return commentary;
     }
 
-     // из entity Commentary в dto Comment
+
      public Comment commentaryToComment(Commentary commentary) {
          Comment comment = new Comment();
          comment.setPk(commentary.getPk());
@@ -122,7 +118,7 @@ public class Mapper {
          return comment;
      }
 
-    // из entity Commentary в dto CommentsList
+
      public CommentsList commentaryToCommentsList(List<Commentary> comments) {
         CommentsList commentsList = new CommentsList();
         if(comments != null) {
@@ -143,7 +139,6 @@ public class Mapper {
     }
 
 
-    // из dto User в entity Client
     public Client userToClient(User user, Client client) {
         client.setFirstName(user.getFirstName());
         client.setLastName(user.getLastName());

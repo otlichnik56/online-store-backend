@@ -68,7 +68,7 @@ public class UserController {
         return user;
     }
 
-    /** ПРОВЕРЕН. На фронте не доходит до сюды, но в Swagger всё норма
+    /** ПРОВЕРЕН
      *
      * @param file
      * @param authentication

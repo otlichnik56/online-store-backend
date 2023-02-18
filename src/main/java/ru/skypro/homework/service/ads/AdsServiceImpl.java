@@ -3,8 +3,6 @@ package ru.skypro.homework.service.ads;
 import java.io.IOException;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +25,6 @@ import ru.skypro.homework.service.Mapper;
 @Service
 @AllArgsConstructor
 public class AdsServiceImpl implements AdsService {
-
-    private final Logger logger = LoggerFactory.getLogger(AdsServiceImpl.class);
     private UserAccessControl accessControl;
     private Mapper mapper;
     private final AdvertRepository advertRepository;
@@ -60,7 +56,7 @@ public class AdsServiceImpl implements AdsService {
         return mapper.listAdvertToAdList(adsUser);
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param id
      * @return

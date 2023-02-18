@@ -61,7 +61,7 @@ public class AdsController {
         return adsService.getAdsMe(authentication.getName());
     }
 
-    /** НЕ ПРОВЕРЕН
+    /** ПРОВЕРЕН
      *
      * @param id
      * @return
@@ -106,7 +106,7 @@ public class AdsController {
         }
     }
 
-    /** ПРОВЕРЕН, на фронте как-то криво, на бэке нормально
+    /** ПРОВЕРЕН
      *
      * @param id
      * @return
@@ -147,7 +147,6 @@ public class AdsController {
         return commentsService.addComments(adPk, comment, authentication);
     }
 
-
     /** ПРОВЕРЕН
      * Возвращает коментарий
      * @param adPk
@@ -168,17 +167,16 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PatchMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable(value = "ad_pk") Integer adPk, @PathVariable(value = "id") Integer id,
+    public ResponseEntity<CommentsList> updateComment(@PathVariable(value = "ad_pk") Integer adPk, @PathVariable(value = "id") Integer id,
                                  @RequestBody Comment comment,
                                  Authentication authentication) {
         Comment updateComment = commentsService.updateComment(id, comment, authentication);
         if (updateComment == null) {
             return ResponseEntity.status(401).body(null);
         } else {
-            return ResponseEntity.status(200).body(updateComment);
+            return ResponseEntity.status(200).body(commentsService.getAllComments(adPk));
         }
     }
-
 
     /** ПРОВЕРЕН
      * Удаляет коментарий к объявлению
@@ -188,11 +186,11 @@ public class AdsController {
      */
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{ad_pk}/comments/{id}")
-    public ResponseEntity<?> removeComments(@PathVariable(value = "ad_pk") Integer adPk,
+    public ResponseEntity<CommentsList> removeComments(@PathVariable(value = "ad_pk") Integer adPk,
                                             @PathVariable(value = "id") Integer id,
                                             Authentication authentication) {
         if (commentsService.removeComment(id, authentication)) {
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).body(commentsService.getAllComments(adPk));
         } else {
             return ResponseEntity.status(401).build();
         }

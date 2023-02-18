@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /** ПРОВЕРЕН. Работает
+    /** ПРОВЕРЕН
      *
      * @param newPassword
      * @param username

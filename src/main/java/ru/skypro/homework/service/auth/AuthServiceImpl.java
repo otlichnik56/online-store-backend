@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
         this.encoder = new BCryptPasswordEncoder();
     }
 
-    /** Работает
+    /** ПРОВЕРЕН
      *
      * @param userName
      * @param password
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
         return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
     }
 
-    /** Работает. Нужна доработка
+    /** ПРОВЕРЕН
      *
      * @param registerReq
      * @param role

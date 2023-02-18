@@ -16,8 +16,6 @@ public class FullAd {
     private int price;
     private String title;
 
-
-
     public FullAd(String description, int price, String title) {
         this.description = description;
         this.price = price;
