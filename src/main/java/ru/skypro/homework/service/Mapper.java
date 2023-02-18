@@ -1,46 +1,145 @@
 package ru.skypro.homework.service;
+import ru.skypro.homework.entity.Commentary;
 
-import java.util.ArrayList;
+import ru.skypro.homework.model.comment.Comment;
+import ru.skypro.homework.model.comment.CommentsList;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.model.ad.*;
+import ru.skypro.homework.entity.Advert;
 import ru.skypro.homework.entity.Client;
-import ru.skypro.homework.model.ad.AdList;
-import ru.skypro.homework.model.ad.Ads;
-import ru.skypro.homework.model.ad.FullAd;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.User;
-import ru.skypro.homework.repository.ClientRepository;
 
 @Service
 public class Mapper {
 
-    private final ClientRepository clientRepository;
 
-    public Mapper(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
-
-    // из entity в dto  
     public User clientToUser(Client client) {
-        User user = new User();
-        user.setId(1);
-        user.setFirstName("first");
-        user.setLastName("last");
-        user.setEmail("email");
-        user.setPhone("phone");
-        user.setRegDate("reg");
-        user.setCity("city");
-        user.setImage("image");
-        return user;
+       User user = new User();
+       user.setId(client.getId());
+       user.setFirstName(client.getFirstName());
+       user.setLastName(client.getLastName());
+       user.setEmail(client.getUsername());
+       user.setPhone(client.getPhone());
+       user.setRegDate("");
+       user.setCity("");
+       user.setImage(client.getImage());
+       return user;
     }
 
-    // из dto в entity
-    public Client userToClient(User user) {
-        Client client = new Client();
-        client.setId(user.getId());
+
+    public Advert adsToAdvert(Ads ads, Client client, Integer pictureId) {
+        Advert advert = new Advert();
+        advert.setImage("/image/" + pictureId);
+        advert.setPrice(ads.getPrice());
+        advert.setTitle(ads.getTitle());
+        advert.setAuthor(client.getId());
+        return advert;
+    }
+
+
+    public Ads advertToAds(Advert advert) {
+        Ads ads = new Ads();
+        ads.setAuthor(advert.getAuthor());
+        ads.setImage(advert.getImage());
+        ads.setPk(advert.getPk());
+        ads.setPrice(advert.getPrice());
+        ads.setTitle(advert.getTitle());
+        return ads;
+    }
+
+
+    public AdList listAdvertToAdList(List<Advert> adsMe) {
+        AdList adsList = new AdList();
+        if(adsMe != null) {
+            List<Ads> resultAds = adsMe.stream()
+            .map(this::advertToAds).collect(Collectors.toList());
+            adsList.setResults(resultAds);
+            adsList.setCount(resultAds.size());
+            return adsList;
+        }
+        return adsList;
+    }
+
+
+    public FullAd linkageFullAd(Advert advert, Client client) {
+       FullAd fullAd = new FullAd();
+       fullAd.setAuthorFirstName(client.getFirstName());
+       fullAd.setAuthorLastName(client.getLastName());
+       fullAd.setDescription(advert.getDescription());
+       fullAd.setEmail(client.getEmail());
+       fullAd.setImage(advert.getImage());
+       fullAd.setPhone(client.getPhone());
+       fullAd.setPk(advert.getPk());
+       fullAd.setPrice(advert.getPrice());
+       fullAd.setTitle(advert.getTitle());
+       return fullAd; 
+    }
+
+
+     public Advert createAdsIntoAds(Advert advert, CreateAds update) {
+       advert.setPrice(update.getPrice());
+       advert.setTitle(update.getTitle());
+       advert.setDescription(update.getDescription());
+       return advert;
+    }
+
+
+    public Commentary commentToCommentary(Integer adPk, Comment comment) {
+        Commentary commentary = new Commentary();
+        commentary.setAuthor(comment.getAuthor());
+        commentary.setCreatedAt(comment.getCreatedAt());
+        commentary.setText(comment.getText());
+        commentary.setAdsPk(adPk);
+        return commentary;
+    }
+
+
+    public Commentary commentToCommentaryEdit(Commentary commentary, Comment comment) {
+        commentary.setAuthor(comment.getAuthor());
+        commentary.setCreatedAt(comment.getCreatedAt());
+        commentary.setText(comment.getText());
+        return commentary;
+    }
+
+
+     public Comment commentaryToComment(Commentary commentary) {
+         Comment comment = new Comment();
+         comment.setPk(commentary.getPk());
+         comment.setCreatedAt(commentary.getCreatedAt());
+         comment.setText(commentary.getText());
+         comment.setAuthor(commentary.getAuthor());
+         return comment;
+     }
+
+
+     public CommentsList commentaryToCommentsList(List<Commentary> comments) {
+        CommentsList commentsList = new CommentsList();
+        if(comments != null) {
+            List<Comment> commentList = comments.stream()
+             .map(commentary -> {
+                Comment comment = new Comment();
+                comment.setPk(commentary.getPk());
+                comment.setCreatedAt(commentary.getCreatedAt());
+                comment.setText(commentary.getText());
+                comment.setAuthor(commentary.getAuthor());
+                return comment;
+            }).collect(Collectors.toList());
+            commentsList.setResults(commentList);
+            commentsList.setCount(commentList.size());
+            return commentsList;
+        }
+        return commentsList;
+    }
+
+
+    public Client userToClient(User user, Client client) {
         client.setFirstName(user.getFirstName());
         client.setLastName(user.getLastName());
         client.setEmail(user.getEmail());
@@ -51,99 +150,11 @@ public class Mapper {
         return client;
     }
 
-     // из entity в dto 
-     public RegisterReq clientToregisterReq(Client client) {
-        RegisterReq registerReq = new RegisterReq();
-        registerReq.setUsername(client.getUsername());
-        registerReq.setPassword(client.getPassword());
-        registerReq.setFirstName(client.getFirstName());
-        registerReq.setLastName(client.getLastName());
-        registerReq.setPhone(client.getPhone());
-        registerReq.setRole(client.getRole());
-        return registerReq;
-    }
-
-    // из dto в entity
-    public Client registerReqToClient(RegisterReq registerReq) {
-        Client client = new Client();
-        client.setUsername(registerReq.getUsername());
-        client.setPassword(registerReq.getPassword());
+    public Client registerReqToClient(RegisterReq registerReq, Client client) {
         client.setFirstName(registerReq.getFirstName());
         client.setLastName(registerReq.getLastName());
         client.setPhone(registerReq.getPhone());
-        client.setRole(registerReq.getRole());
         return client;
     }
-
-    /**
-     * описание - метод который переводит данные из сущности в дто 
-     * @param ad - сущность (таблица объявлениЯ)
-     * @return - возвращает дто из двух полей:<br>
-     * 1. count<br>
-     * 2. List<Ads> - список объявлениЙ, 
-     * который содержит объявления
-     * из сущности Ad
-     */
-
-    // из entity в dto
-    public AdList adToAds(Ad ad) {
-        Ads ads = new Ads();
-        AdList adList = new AdList();
-        
-        ads.setAuthor(1);
-        ads.setImage("image");
-        ads.setPk(1);
-        ads.setPrice(100);
-        ads.setTitle("title");
-
-        adList.setResults(new ArrayList<>(List.of(ads)));
-        adList.setCount(1);
-        return adList;
-    }
-
-    /**
-     * описание - метод который переводит данные из дто в сущность 
-     * @param ads - дто (модель данных)
-     * @return - возвращает сущность
-     */
-    // из dto в entity
-    public Ad adsToAd(Ads ads) {
-        Ad ad = new Ad();
-        ad.setAuthor(ads.getAuthor());
-        ad.setImage(ads.getImage());
-        ad.setPk(ads.getPk());
-        ad.setPrice(ads.getPrice());
-        ad.setTitle(ads.getTitle());
-        return ad;
-    }
-
-    // из entity в dto
-    public FullAd adToFullAd(Ad ad) {
-        Client client = clientRepository.findById(ad.getAuthor()).get();
-        FullAd fullAd = new FullAd();
-        fullAd.setAuthorFirstName(client.getFirstName());
-        fullAd.setAuthorLastName(client.getLastName());
-        fullAd.setDescription(ad.getDescription());
-        fullAd.setEmail(client.getEmail());
-        fullAd.setImage(client.getImage());
-        fullAd.setPhone(client.getPhone());
-        fullAd.setPk(ad.getPk());
-        fullAd.setPrice(ad.getPrice());
-        fullAd.setTitle(ad.getTitle());
-        return fullAd;
-    }
-
-    // из dto в entity
-    public Ad fullAdToAd(FullAd fullAd) {
-        Client client = clientRepository.findById(fullAd.getPk()).get();
-        Ad ad = new Ad();
-        ad.setAuthor(client.getId());
-        ad.setImage(fullAd.getImage());
-        ad.setPk(fullAd.getPk());
-        ad.setPrice(fullAd.getPrice());
-        ad.setTitle(fullAd.getTitle());
-        return ad;
-    }
-
 
 }

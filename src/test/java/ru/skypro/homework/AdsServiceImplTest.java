@@ -11,13 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ru.skypro.homework.model.ad.AdList;
 import ru.skypro.homework.model.ad.Ads;
-import ru.skypro.homework.service.ads.AdsService;
+import ru.skypro.homework.service.ads.AdsServiceImpl;
 
 @SpringBootTest
-public class AdsServiceTest {
+public class AdsServiceImplTest {
 
     @Autowired
-    public AdsService adsService;
+    public AdsServiceImpl adsServiceImpl;
 
     /**
      * описание - метод проверяет:<br>
@@ -27,7 +27,7 @@ public class AdsServiceTest {
      */
     @Test
     public void shoudlReturnResponseValueAsAdListDto() {
-        AdList adList = adsService.getAds();
+        AdList adList = adsServiceImpl.getAllAds();
         Ads ads = new Ads();
         List<Ads> listAds = new ArrayList<Ads>(Arrays.asList(ads));
         adList.setResults(listAds);

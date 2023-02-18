@@ -1,7 +1,5 @@
 package ru.skypro.homework.model.ad;
 
-import java.util.Set;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,8 +15,6 @@ public class FullAd {
     private int pk;
     private int price;
     private String title;
-
-
 
     public FullAd(String description, int price, String title) {
         this.description = description;
