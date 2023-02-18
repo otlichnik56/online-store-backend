@@ -7,17 +7,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
+import ru.skypro.homework.entity.Client;
 import ru.skypro.homework.model.user.RegisterReq;
 import ru.skypro.homework.model.user.Role;
+import ru.skypro.homework.repository.ClientRepository;
+import ru.skypro.homework.service.Mapper;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
+    private final ClientRepository clientRepository;
+    private final Mapper mapper;
 
-    public AuthServiceImpl(UserDetailsManager manager) {
+    public AuthServiceImpl(UserDetailsManager manager, ClientRepository clientRepository, Mapper mapper) {
         this.manager = manager;
+        this.clientRepository = clientRepository;
+        this.mapper = mapper;
         this.encoder = new BCryptPasswordEncoder();
     }
 
@@ -56,7 +63,9 @@ public class AuthServiceImpl implements AuthService {
                         .roles(role.name())
                         .build()
         );
-
+        Client client = clientRepository.findByUsername(registerReq.getUsername());
+        mapper.registerReqToClient(registerReq, client);
+        clientRepository.save(client);
         return true;
     }
 }

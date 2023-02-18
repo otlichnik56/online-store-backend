@@ -15,7 +15,7 @@ CREATE TABLE users
     email        TEXT,
     reg_date     TEXT,
     city         TEXT,
-    picture      TEXT
+    image        TEXT
 );
 
 

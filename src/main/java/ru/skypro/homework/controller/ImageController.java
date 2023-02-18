@@ -34,7 +34,6 @@ public class ImageController {
     public ResponseEntity<byte[]> getAdsImage(@PathVariable(value = "id") Integer id) {
         byte[] picture = adsService.getImage(id);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentLength(picture.length);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(picture);
     }
 
@@ -50,7 +49,7 @@ public class ImageController {
     public String updateAdsImage(@PathVariable(value = "id") Integer id,
                                  @RequestPart(value = "image") MultipartFile file,
                                  Authentication authentication) {
-        logger.info("ImageController. method updateAdsImage. Username = " + authentication);
+        logger.info("ImageController. method updateAdsImage. Username = " + authentication + " id = " + id);
         return adsService.updateImage(id, file);
     }
 
